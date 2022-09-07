@@ -4,6 +4,14 @@
         <v-col
             cols="8"
         >
+            <v-btn
+                text
+                class="mt-5 ml-5"
+                @click="$router.push({name: '/'})"
+            >
+                <v-icon>mdi-chevron-left</v-icon>
+                back
+            </v-btn>
             <v-card
                 v-for="(room, roomindex) in get_selected_room.actual_rooms"
                 :key="roomindex"

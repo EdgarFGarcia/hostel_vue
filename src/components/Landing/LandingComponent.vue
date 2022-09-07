@@ -9,21 +9,41 @@
             <v-tabs-slider></v-tabs-slider>
 
             <v-tab
-                v-for="(nav, navindex) in navigation"
-                :key="navindex"
-                :href="nav.href"
                 ripple
+                href="#tab-1"
             >
-                <h2
-                    style="textTransform: none !important;"
-                >{{nav.label}}</h2>
+                <h2>Home</h2>
             </v-tab>
+
+            <v-tab
+                ripple
+                href="#tab-2"
+            >
+                <h2>Special Offers</h2>
+            </v-tab>
+
+            <v-tab
+                ripple
+                href="#tab-3"
+                v-if="get_user_data == null"
+            >
+                <h2>Book Direct</h2>
+            </v-tab>
+
+            <v-tab
+                ripple
+                href="#tab-4"
+                v-if="get_user_data != null"
+            >
+                <h2>Rooms</h2>
+            </v-tab>
+
         </v-tabs>
         <v-tabs-items v-model="tab">
             <v-tab-item
                 value="tab-1"
             >
-                Home with iamge carousel
+                <Home/>
             </v-tab-item>
         </v-tabs-items>
         <v-tabs-items v-model="tab">
@@ -37,7 +57,7 @@
             <v-tab-item
                 value="tab-3"
             >
-                Book Direct
+                <Rooms/>
             </v-tab-item>
         </v-tabs-items>
         <v-tabs-items v-model="tab">
@@ -47,43 +67,32 @@
                 <Rooms/>
             </v-tab-item>
         </v-tabs-items>
+        
     </div>
 </template>
 
 <script>
 import Rooms from './components/RoomComponent.vue'
+import Home from './components/pages/HomeComponent.vue'
+import { mapGetters } from 'vuex'
 export default {
   components: {
-    Rooms
+    Rooms,
+    Home
   },
   props: [
   ],
   data: () => ({
-    tab: null,
-    navigation: [
-        {
-            label:      'Home',
-            href:       '#tab-1'
-        },
-        {
-            label:      'Special Offers',
-            href:       '#tab-2'
-        },
-        {
-            label:      'Book Direct',
-            href:       '#tab-3'
-        },
-        {
-            label:      'Rooms',
-            href:       '#tab-4'
-        }
-    ]
+    tab: null
   }),
   mounted () {
   },
   created () {
   },
   computed: {
+    ...mapGetters({
+        get_user_data:              'auth/get_user_data'
+    })
   },
   methods: {
   },

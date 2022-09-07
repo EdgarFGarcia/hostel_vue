@@ -98,6 +98,14 @@ export default {
   data: () => ({
     navigation: [
         {
+            icon:       'mdi-chevron-left',
+            label:      'Back',
+            style:      'color: white',
+            url:        {
+                name:   '/'
+            }
+        },
+        {
             icon:       'mdi-home-outline',
             label:      'Home',
             style:      'color: white',

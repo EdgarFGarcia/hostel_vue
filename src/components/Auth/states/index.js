@@ -12,7 +12,8 @@ export default{
         }
     },
     getters: {
-        get_user : state => state.user
+        get_user : state => state.user,
+        get_user_data: state => state.user.udata
     },
     actions: {
         set_user({commit}, payload){
