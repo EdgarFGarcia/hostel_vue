@@ -11,6 +11,12 @@ export default{
         }
     },
     mutations: {
+        clear_reserve_this_room(state){
+            state.reserve_this_room = {
+                room: {},
+                selected: {}
+            }
+        },
         set_rooms_list(state, payload){
             state.rooms_list = [...payload]
         },

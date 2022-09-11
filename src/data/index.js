@@ -7,6 +7,7 @@ import createPersistedState from 'vuex-persistedstate'
  */
 import RoomState from '../components/Landing/states/index.js'
 import AuthState from '../components/Auth/states/index.js'
+import UserState from '../components_user/dashboard/states/index.js'
 
 /**
  * end import from app
@@ -17,7 +18,8 @@ Vue.use(Vuex);
 export default new Vuex.Store({
     modules: {
         room:           RoomState,
-        auth:           AuthState
+        auth:           AuthState,
+        user:           UserState
     },
     plugins: [createPersistedState()]
 });

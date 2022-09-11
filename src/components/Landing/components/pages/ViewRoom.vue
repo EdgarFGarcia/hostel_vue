@@ -7,7 +7,7 @@
             <v-btn
                 text
                 class="mt-5 ml-5"
-                @click="$router.push({name: '/'})"
+                @click="back_home"
             >
                 <v-icon>mdi-chevron-left</v-icon>
                 back
@@ -71,7 +71,7 @@
                     </v-row>
                 </v-card-title>
                 <v-card-text>
-                    <v-list
+                    <!-- <v-list
                         subheader
                         two-line
                     >
@@ -113,17 +113,29 @@
                                 </v-btn>
                             </v-list-item-action>
                         </v-list-item>
-                    </v-list>
+                    </v-list> -->
                 </v-card-text>
+                <v-card-actions>
+                    <v-btn
+                        block
+                        dark
+                        color="#596377"
+                        @click="select_room_for_reservation(room, get_selected_room)"
+                    >
+                        Select room
+                    </v-btn>
+                </v-card-actions>
             </v-card>
         </v-col>
         <v-col
-            cols="3"
+            cols="4"
             style="
                 position: sticky;
                 top: 0;
-                height: 650px;
+                height: 620px;
+                overflow-y: scroll;
             "
+            class="mt-15"
         >
             <v-card
                 class="ma-5"
@@ -134,30 +146,69 @@
                 <v-card-subtitle
                     v-if="Object.keys(get_reserve_this_room_selected).length > 0"
                 >
-                    Total {{ get_reserve_this_room_selected.price | currency('₱') }}
-                </v-card-subtitle>
-                <v-card-subtitle
-                    v-if="Object.keys(get_reserve_this_room_selected).length > 0"
-                >
                     {{ get_reserve_this_room.room_name }}
                 </v-card-subtitle>
                 <v-card-text>
                     <v-row>
                         <v-col
-                            cols="6"
+                            cols="12"
                         >
-                            {{get_reserve_this_room_selected.capacity}} guests
-                            <label>1 night</label>
+                            <label>Reservation Date</label>
+                            <v-date-picker
+                                v-model="dates"
+                                range
+                                color="#596377"
+                                width="inherit"
+                                :min="new Date().toISOString().substr(0, 10)"
+                            ></v-date-picker>
+                            <label>{{ format(dates) }}</label>
+                            <label
+                                style="display: block;"
+                                v-if="total != null"
+                            >total days of stay: {{ total }}</label>
                         </v-col>
                         <v-col
                             cols="6"
                         >
-                            {{ get_reserve_this_room_selected.price | currency('₱') }}
+                            <v-text-field
+                                v-model="b.adult"
+                                dense
+                                type="number"
+                                outlined
+                                label="# of Adult"
+                                class="input_count"
+                            >
+                            </v-text-field>
+                        </v-col>
+                        <v-col
+                            cols="6"
+                        >
+                            <v-text-field
+                                v-model="b.child"
+                                dense
+                                type="number"
+                                outlined
+                                label="# of Child"
+                                class="input_count"
+                            >
+                            </v-text-field>
+                        </v-col>
+                        <v-col
+                            cols="6"
+                        >
+                            <!-- {{get_reserve_this_room_selected.capacity}} guests -->
+                            {{ parseInt(b.adult) + parseInt(b.child) }} guest(s) - 
+                            <label>{{total}} day(s)</label>
+                        </v-col>
+                        <v-col
+                            cols="6"
+                        >
+                            {{ get_reserve_this_room_selected.price * total | currency('₱') }}
                         </v-col>
                         <v-col
                             cols="12"
                         >
-                            Total {{ get_reserve_this_room_selected.price | currency('₱') }}
+                            Total {{ get_reserve_this_room_selected.price * total | currency('₱') }}
                         </v-col>
                     </v-row>
                 </v-card-text>
@@ -166,6 +217,7 @@
                         block
                         color="#596377"
                         dark
+                        @click="book_now"
                     >
                         Book
                     </v-btn>
@@ -184,7 +236,14 @@ export default {
   props: [
   ],
   data: () => ({
-    img_url: null
+    img_url: null,
+    dates: [],
+    result: null,
+    total: null,
+    b: {
+        adult: null,
+        child: null
+    }
   }),
   mounted () {
     this.img_url = process.env.VUE_APP_URL
@@ -202,6 +261,64 @@ export default {
     select_room_for_reservation(room_data, selected_room_data){
         this.$store.dispatch('room/set_reserve_this_room', room_data)
         this.$store.dispatch('room/set_selected_room_for_reservation', selected_room_data)
+    },
+    back_home(){
+        this.$router.push({name: '/'})
+        this.$store.commit('room/clear_reserve_this_room')
+    },
+    dates_fn(){
+        this.first = this.dates[0]
+        this.last = this.dates.pop()
+    },
+    format(data){
+        let first;
+        let last;
+        if(data.length > 0){
+            first = new Date(data[0]).toLocaleDateString(
+                'en-us',
+                {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                }
+            )
+            last = new Date(data[1]).toLocaleDateString(
+                'en-us',
+                {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                }
+            )
+            const ff = Number(new Date(first))
+            const ll = Number(new Date(last))
+            const difference_in_time = parseInt(ll) - parseInt(ff)
+            this.total = difference_in_time / (1000 * 3600 * 24) + 1
+        }
+        return first + ' to ' + last;
+    },
+    async book_now(){
+        const adult = this.b.adult
+        const child = this.b.child
+        if(parseInt(adult) + parseInt(child) > this.get_reserve_this_room_selected.capacity){
+            alert('This room only has 4 max capacity / head count')
+            return
+        }
+        await this.$axios.post('/r/rooms/book_room_now', {
+            actual_room_data:           this.get_reserve_this_room,
+            capacity:                   parseInt(adult) + parseInt(child),
+            date:                       this.dates,
+            payable:                    this.get_reserve_this_room_selected.price * this.total
+        })
+        .then(({data}) => {
+            if(data.response){
+                alert('booking successful')
+                this.$router.push({name: '/'})
+                return
+            }
+            alert(data.message)
+            return
+        })
     }
   },
   watch: {
@@ -210,4 +327,14 @@ export default {
 </script>
 
 <style scoped lang="scss">
+/* Chrome, Safari, Edge, Opera */
+.input_count >>> input[type="number"] {
+  -moz-appearance: textfield;
+}
+.input_count >>> input::-webkit-outer-spin-button,
+.input_count >>> input::-webkit-inner-spin-button {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
 </style>
