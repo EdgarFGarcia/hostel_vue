@@ -40,7 +40,7 @@
                 dark
                 outlined
                 class="pl-10 pr-10"
-                @click="$router.push({name: '/user_dashboard'})"
+                @click="go_to_board"
             >
                 Dashboard
             </v-btn>
@@ -73,6 +73,16 @@ export default{
         go_to_home(){
             this.$router.push({name: '/'})
             this.$store.commit('room/clear_selected_states')
+        },
+        go_to_board(){
+            switch(this.get_user.udata.role_id){
+                case 1:
+                    this.$router.push({name: '/user_dashboard'})
+                    return
+                case 2:
+                    this.$router.push({name: '/admin_dashboard'})
+                    return
+            }
         }
     }),
     computed: {

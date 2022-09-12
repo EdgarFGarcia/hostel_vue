@@ -8,9 +8,11 @@ import Vue2Filters from 'vue2-filters'
 
 import Default from './layouts/DefaultComponent.vue'
 import UserDashboard from './layouts/UserDashboard.vue'
+import AdminDashboard from './layouts/AdminLayout.vue'
 
 Vue.component('default-layout', Default)
 Vue.component('user_dashboard-layout', UserDashboard)
+Vue.component('admin_dashboard-layout', AdminDashboard)
 
 Vue.config.productionTip = false
 

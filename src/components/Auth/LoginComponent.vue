@@ -94,6 +94,16 @@
                             <v-text-field
                                 dense
                                 outlined
+                                label="Name"
+                                v-model="r.name"
+                                type="text"
+                                prepend-inner-icon="mdi-card-text-outline"
+                            >
+
+                            </v-text-field>
+                            <v-text-field
+                                dense
+                                outlined
                                 label="Password"
                                 v-model="r.password"
                                 :type="show_r_password ? 'text' : 'password'"
@@ -155,6 +165,7 @@ export default {
     show_r_password2: false,
     r: {
         email: null,
+        name: null,
         password: null,
         r_password: null
     }
@@ -170,6 +181,7 @@ export default {
         this.$emit('close_dialog')
         this.v = {}
         this.r = {}
+        this.login_state = true
     },
     async login(){
         await this.$axios.post('user/login', {
@@ -179,12 +191,34 @@ export default {
         .then(({data}) => {
             if(data.response){
                 this.$store.dispatch('auth/set_user', data)
-                this.$router.push({name: '/user_dashboard'})
+                switch(data.udata.role_id){
+                    case 1:
+                        this.close_dialog()
+                        this.$router.push({name: '/user_dashboard'})
+                        return
+                    case 2:
+                        this.close_dialog()
+                        this.$router.push({name: '/admin_dashboard'})
+                        return
+                }
             }
         })
     },
-    register(){
-        alert('register')
+    async register(){
+        await this.$axios.post('/user/register', {
+            uname:              this.r.email,
+            name:               this.r.name,
+            password:           this.r.password,
+            repeat_password:    this.r.r_password
+        })
+        .then(({data}) => {
+            if(data.response){
+                this.close_dialog()
+                alert(data.message)
+                return
+            }
+            alert(data.message)
+        })
     }
   },
   watch: {
