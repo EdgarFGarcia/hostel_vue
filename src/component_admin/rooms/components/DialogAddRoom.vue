@@ -19,6 +19,7 @@
                         label="Room Name"
                         hint="Room Name"
                         v-model="a.room_name"
+                        @keyup.enter="add_room_from_dialog"
                     >
                     </v-text-field>
                 </v-card-text>
