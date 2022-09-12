@@ -137,7 +137,6 @@ export default {
   methods: {
     async select_room(data){
         // console.log(data, this.tab)
-        console.log(data)
         await this.$axios.get(`admin/rooms/actual_rooms/${data.id}`)
         .then(({data}) => {
             this.$store.dispatch('admin_room/set_rooms', data.data)
@@ -158,6 +157,7 @@ export default {
             if(data.response){
                 alert(data.message)
                 this.close_add_dialog()
+                this.select_room(this.get_rooms[0])
                 return
             }
             alert(data.message)
