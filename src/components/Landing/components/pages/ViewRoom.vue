@@ -1,6 +1,23 @@
 <template>
     <v-container fluid class="pa-0 ma-0">
-      <v-row>
+      <v-row
+        v-if="get_selected_room.actual_rooms.length === 0"
+        class="mt-15"
+        justify="center"
+      >
+        <strong>
+            <v-btn
+                text
+                @click="back_home"
+            >
+                <v-icon>mdi-chevron-left</v-icon>
+                back
+            </v-btn>
+        Page Under Construction</strong>
+      </v-row>
+      <v-row
+        v-else
+      >
         <v-col
             cols="8"
         >
@@ -170,6 +187,76 @@
                         <v-col
                             cols="6"
                         >
+                            <v-menu
+                                ref="menu2"
+                                v-model="menuin"
+                                :close-on-content-click="false"
+                                :nudge-right="40"
+                                :return-value.sync="time_in"
+                                transition="scale-transition"
+                                offset-y
+                                max-width="290px"
+                                min-width="290px"
+                            >
+                                <template v-slot:activator="{ on, attrs }">
+                                <v-text-field
+                                    v-model="time_in"
+                                    label="Time in"
+                                    prepend-inner-icon="mdi-clock-time-four-outline"
+                                    readonly
+                                    v-bind="attrs"
+                                    v-on="on"
+                                    outlined
+                                    dense
+                                ></v-text-field>
+                                </template>
+                                <v-time-picker
+                                    v-if="menuin"
+                                    v-model="time_in"
+                                    full-width
+                                    @click:minute="$refs.menu2.save(time_in)"
+                                    ampm-in-title
+                                ></v-time-picker>
+                            </v-menu>
+                        </v-col>
+                        <v-col
+                            cols="6"
+                        >
+                            <v-menu
+                                ref="menu"
+                                v-model="menuout"
+                                :close-on-content-click="false"
+                                :nudge-right="40"
+                                :return-value.sync="time_out"
+                                transition="scale-transition"
+                                offset-y
+                                max-width="290px"
+                                min-width="290px"
+                            >
+                                <template v-slot:activator="{ on, attrs }">
+                                <v-text-field
+                                    v-model="time_out"
+                                    label="Time out"
+                                    prepend-inner-icon="mdi-clock-time-four-outline"
+                                    readonly
+                                    v-bind="attrs"
+                                    v-on="on"
+                                    outlined
+                                    dense
+                                ></v-text-field>
+                                </template>
+                                <v-time-picker
+                                    v-if="menuout"
+                                    v-model="time_out"
+                                    full-width
+                                    @click:minute="$refs.menu.save(time_out)"
+                                    ampm-in-title
+                                ></v-time-picker>
+                            </v-menu>
+                        </v-col>
+                        <v-col
+                            cols="6"
+                        >
                             <v-text-field
                                 v-model="b.adult"
                                 dense
@@ -243,7 +330,11 @@ export default {
     b: {
         adult: null,
         child: null
-    }
+    },
+    time_in: null,
+    time_out: null,
+    menuin: false,
+    menuout: false,
   }),
   mounted () {
     this.img_url = process.env.VUE_APP_URL
@@ -308,7 +399,9 @@ export default {
             actual_room_data:           this.get_reserve_this_room,
             capacity:                   parseInt(adult) + parseInt(child),
             date:                       this.dates,
-            payable:                    this.get_reserve_this_room_selected.price * this.total
+            payable:                    this.get_reserve_this_room_selected.price * this.total,
+            time_in:                    this.time_in,
+            time_out:                   this.time_out
         })
         .then(({data}) => {
             if(data.response){

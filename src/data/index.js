@@ -9,6 +9,7 @@ import RoomState from '../components/Landing/states/index.js'
 import AuthState from '../components/Auth/states/index.js'
 import UserState from '../components_user/dashboard/states/index.js'
 import AdminRoomState from '../component_admin/rooms/states/index.js'
+import UserProfileState from '../components_user/profile/states/index.js'
 
 /**
  * end import from app
@@ -21,7 +22,8 @@ export default new Vuex.Store({
         room:           RoomState,
         auth:           AuthState,
         user:           UserState,
-        admin_room:     AdminRoomState
+        admin_room:     AdminRoomState,
+        user_profile:   UserProfileState
     },
     plugins: [createPersistedState()]
 });

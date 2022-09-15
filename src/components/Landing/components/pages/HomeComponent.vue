@@ -1,22 +1,26 @@
 <template>
     <v-container fluid class="pa-0 ma-0">
-        <v-carousel
-            cycle
-            hide-delimiter-background
-            show-arrows-on-hover
-            height="960px"
+        <div
+            style="height: 550px;"
         >
-            <v-carousel-item
-                v-for="(slide, i) in images"
-                :key="i"
+            <v-carousel
+                cycle
+                hide-delimiter-background
+                show-arrows-on-hover
+                height="inherit"
             >
-                <v-img
-                    :src="slide.location"
-                    :lazy-src="slide.location"
-                    aspect-ratio="16/1"
-                />
-            </v-carousel-item>
-        </v-carousel>
+                <v-carousel-item
+                    v-for="(slide, i) in images"
+                    :key="i"
+                >
+                    <v-img
+                        :src="slide.location"
+                        :lazy-src="slide.location"
+                        aspect-ratio="1/16"
+                    />
+                </v-carousel-item>
+            </v-carousel>
+        </div>
     </v-container>
 </template>
 

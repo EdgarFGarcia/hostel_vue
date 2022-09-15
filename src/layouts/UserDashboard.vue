@@ -34,6 +34,7 @@
                 >
                     <v-list-item two-line
                         style="cursor: pointer;"
+                        @click="$router.push({name: '/profile'})"
                     >
                         <v-avatar
                             color="grey"
@@ -80,6 +81,34 @@
                         </v-list-item-content>
                     </v-list-item>
                 </v-list>
+                <v-divider></v-divider>
+                <template v-slot:append>
+                    <div>
+                        <v-list
+                            dense
+                            rounded
+                        >
+                            <v-list-item
+                                v-for="(item, itemindex) in navigation2"
+                                :key="itemindex"
+                                link
+                                @click="item.url.name == '' ?  logout_fn() : $router.push(item.url)"
+                            >
+                                <v-list-item-icon>
+                                    <v-icon
+                                        :style="item.style"
+                                    >{{ item.icon }}</v-icon>
+                                </v-list-item-icon>
+
+                                <v-list-item-content>
+                                    <v-list-item-title
+                                        :style="item.style"
+                                    >{{ item.label }}</v-list-item-title>
+                                </v-list-item-content>
+                            </v-list-item>
+                        </v-list>
+                    </div>
+                </template>
             </v-navigation-drawer>
         </v-card>
         <main class="main">
@@ -113,13 +142,26 @@ export default {
                 name:   '/user_dashboard'
             }
         },
+        
+    ],
+    navigation2: [
+        {
+            icon:       'mdi-account',
+            label:      'Profile',
+            style:      'color: white',
+            url:        {
+                name:   '/profile'
+            }
+        },
         {
             icon:       'mdi-logout',
             label:      'Logout',
             style:      'color: white',
-            url:        ''
+            url:        {
+                name:   ''
+            }
         }
-    ],
+    ]
   }),
   mounted () {
   },
@@ -131,7 +173,7 @@ export default {
     })
   },
   methods: {
-    async logout(){
+    async logout_fn(){
         await this.$axios.post('user/auth_user/logout')
         .then(({data}) => {
             if(data.response){

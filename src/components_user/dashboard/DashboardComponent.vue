@@ -23,13 +23,13 @@
               </small>
             </v-card-title>
             <v-card-subtitle>
-              <label>Check-in Date: {{room.check_in_date_time}}</label>
+              <label>Check-in Date: {{room.check_in_date_time}},  {{ room.time_in }}</label>
               <label
                 style="display: block;"
-              >Check-out Date: {{room.will_be_available_at}}</label>
+              >Check-out Date: {{room.will_be_available_at}},  {{ room.time_out }}</label>
             </v-card-subtitle>
             <v-card-text>
-              <label>Total Payable: {{room.payable | currency('₱')}}</label>
+              <label>Total Payable: <strong style="text-decoration: underline;" >{{room.payable | currency('₱')}}</strong></label>
             </v-card-text>
             <v-card-actions>
               <v-spacer/>
