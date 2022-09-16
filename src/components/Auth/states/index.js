@@ -9,6 +9,9 @@ export default{
         },
         clear_user_state(state){
             state.user = {}
+        },
+        update_user_information(state, payload){
+            state.user.udata = payload
         }
     },
     getters: {
@@ -18,6 +21,9 @@ export default{
     actions: {
         set_user({commit}, payload){
             commit('set_user', payload)
+        },
+        update_user_information({commit}, payload){
+            commit('update_user_information', payload)
         }
     }
 }

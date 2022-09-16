@@ -50,7 +50,12 @@
             <v-tab-item
                 value="tab-2"
             >
-                <label>Offers tab</label>
+                <strong
+                    justify-center
+                    align-center
+                >
+                    Page Under Construction
+                </strong>
             </v-tab-item>
         </v-tabs-items>
         <v-tabs-items v-model="tab">

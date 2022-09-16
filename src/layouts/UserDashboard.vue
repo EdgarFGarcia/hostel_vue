@@ -41,7 +41,8 @@
                             size="30"
                             class="mr-2"
                         >
-                            {{get_user.udata.name[0]}}
+                            <v-img height="220" v-if="get_user.udata.image == null" src="https://pic.onlinewebfonts.com/svg/img_546302.png"></v-img>
+                            <v-img height="220" v-else :src="`${img_src}/${get_user.udata.image}`"></v-img>
                         </v-avatar>
                         <v-list-item-content>
                         <v-list-item-title
@@ -161,11 +162,13 @@ export default {
                 name:   ''
             }
         }
-    ]
+    ],
+    img_src: null
   }),
   mounted () {
   },
   created () {
+    this.img_src = process.env.VUE_APP_URL
   },
   computed: {
     ...mapGetters({
