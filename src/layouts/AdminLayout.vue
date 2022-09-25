@@ -106,6 +106,14 @@ export default {
             }
         },
         {
+            icon:       'mdi-account-group-outline',
+            label:      'Reservations',
+            style:      'color: white',
+            url:        {
+                name:   '/admin_reservations'
+            }
+        },
+        {
             icon:       'mdi-logout',
             label:      'Logout',
             style:      'color: white',

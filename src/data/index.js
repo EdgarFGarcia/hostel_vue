@@ -8,8 +8,13 @@ import createPersistedState from 'vuex-persistedstate'
 import RoomState from '../components/Landing/states/index.js'
 import AuthState from '../components/Auth/states/index.js'
 import UserState from '../components_user/dashboard/states/index.js'
-import AdminRoomState from '../component_admin/rooms/states/index.js'
 import UserProfileState from '../components_user/profile/states/index.js'
+
+/**
+ * Admin state management
+ */
+import AdminRoomState from '../component_admin/rooms/states/index.js'
+import AdminReservation from '../component_admin/reservations/states/index.js'
 
 /**
  * end import from app
@@ -19,11 +24,12 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
     modules: {
-        room:           RoomState,
-        auth:           AuthState,
-        user:           UserState,
-        admin_room:     AdminRoomState,
-        user_profile:   UserProfileState
+        room:               RoomState,
+        auth:               AuthState,
+        user:               UserState,
+        user_profile:       UserProfileState,
+        admin_reservation:  AdminReservation,
+        admin_room:         AdminRoomState,
     },
     plugins: [createPersistedState()]
 });
