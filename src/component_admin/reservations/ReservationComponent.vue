@@ -26,6 +26,15 @@
                         {{item.get_room_info.room_name}}
                     </td>
                     <td>
+                        {{item.check_in_date_time}}
+                    </td>
+                    <td>
+                        {{item.duration}}
+                    </td>
+                    <td>
+                        {{item.total_checked_in}}
+                    </td>
+                    <td>
                         {{item.payable | currency('₱')}}
                     </td>
                     <td>
@@ -57,6 +66,15 @@ export default {
         },
         {
             text: 'Room'
+        },
+        {
+            text: 'From'
+        },
+        {
+            text: 'Duration'
+        },
+        {
+            text: 'Head Count'
         },
         {
             text: 'Payable'
