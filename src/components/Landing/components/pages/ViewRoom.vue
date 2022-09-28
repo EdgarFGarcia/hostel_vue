@@ -285,7 +285,7 @@
                         >
                             <!-- {{get_reserve_this_room_selected.capacity}} guests -->
                             {{ parseInt(b.adult) + parseInt(b.child) }} guest(s) - 
-                            <label>{{total}} day(s)</label>
+                            <label>{{total}} day(s) & {{ total - 1 }} night(s)</label>
                         </v-col>
                         <v-col
                             cols="6"
