@@ -69,6 +69,7 @@ export default {
   components: {
   },
   props: [
+    
   ],
   data: () => ({
     img_url: null
