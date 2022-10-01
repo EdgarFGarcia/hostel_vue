@@ -11,41 +11,126 @@
             :items="get_reservation_list"
             class="elevation-1"
         >
-            <template v-slot:item="{ item }">
+            <template v-slot:item="{ item, expand, isExpanded }">
                 <tr
                     style="cursor: pointer;"
                     class="mx-5"
+                    @click="expand(!isExpanded)"
                 >
                     <td>
-                        {{item.get_user.name}}
+                        {{item.name}}
                     </td>
                     <td>
-                        {{item.get_user.email}}
+                        {{item.email}}
                     </td>
                     <td>
-                        {{item.get_room_info.room_name}}
-                    </td>
-                    <td>
-                        {{item.check_in_date_time}}
-                    </td>
-                    <td>
-                        {{item.duration}}
-                    </td>
-                    <td>
-                        {{item.total_checked_in}}
-                    </td>
-                    <td>
-                        {{item.payable | currency('₱')}}
-                    </td>
-                    <td>
-                        {{item.is_paid}}
-                    </td>
-                    <td>
-                        {{item.is_verified}}
+                        {{item.created_at}}
                     </td>
                 </tr>
             </template>
+            <template v-slot:expanded-item="{ headers, item }">
+                <td :colspan="headers.length">
+                    <v-data-table
+                        :items="item.get_reservations"
+                        class="elevation-1"
+                        :headers="inner_table_headers"
+                    >
+                        <template v-slot:item="{item}">
+                            <tr>
+                                <td>
+                                    {{item.check_in_date_time}}
+                                </td>
+                                <td>
+                                    {{item.will_be_available_at}}
+                                </td>
+                                <td>
+                                    {{item.duration}} Day(s)
+                                </td>
+                                <td>
+                                    {{item.total_checked_in}}
+                                </td>
+                                <td>
+                                    {{item.adult_count}}
+                                </td>
+                                <td>
+                                    {{item.child_count}}
+                                </td>
+                                <td>
+                                    {{item.payable | currency('₱')}}
+                                </td>
+                                <td>
+                                    <label
+                                        v-if="item.is_paid"
+                                    >
+                                        Paid
+                                    </label>
+                                    <label v-else></label>
+                                </td>
+                                <td>
+                                    <label
+                                        v-if="item.is_verified"
+                                    >
+                                        Verified
+                                    </label>
+                                    <label v-else></label>
+                                </td>
+                                <td>
+                                    <v-btn
+                                        dark
+                                        @click="check_details(item)"
+                                    >
+                                        Check  room details
+                                    </v-btn>
+                                </td>
+                            </tr>
+                        </template>
+                    </v-data-table>
+                </td>
+            </template>
         </v-data-table>
+        <v-row justify="center">
+            <v-dialog
+                v-model="dialog_room_information"
+                persistent
+                max-width="560"
+            >
+            <v-card>
+                <v-card-title class="text-h5">
+                    Room Information of: {{get_room_information.room_name}}
+                </v-card-title>
+                <v-card-subtitle>
+                    {{get_room_information.get_room_parent_information.description}}
+                </v-card-subtitle>
+                <v-card-text>
+                    <v-img
+                        :src="`${img_src}/images/${get_room_information.get_room_parent_information.image}`"
+                    />
+                </v-card-text>
+                <v-card-text>
+                    <v-row>
+                        <v-col
+                            cols="4"
+                            v-for="(item, itemindex) in get_room_information.get_room_parent_information.facilities"
+                            :key="itemindex"
+                        >
+                            <v-icon>mdi-check</v-icon>
+                            {{item}}
+                        </v-col>
+                    </v-row>
+                </v-card-text>
+                <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn
+                    color="green darken-1"
+                    text
+                    @click="dialog_room_information = false"
+                >
+                    Done
+                </v-btn>
+                </v-card-actions>
+            </v-card>
+            </v-dialog>
+        </v-row>
     </v-container>
 </template>
 
@@ -65,16 +150,27 @@ export default {
             text: 'Email'
         },
         {
-            text: 'Room'
+            text: 'Registered at'
+        }
+    ],
+    inner_table_headers:[
+        {
+            text: 'Check-in Date'
         },
         {
-            text: 'From'
+            text: 'Check-out Date'
         },
         {
             text: 'Duration'
         },
         {
-            text: 'Head Count'
+            text: 'Total check-ins'
+        },
+        {
+            text: 'Adult Count'
+        },
+        {
+            text: 'Child Count'
         },
         {
             text: 'Payable'
@@ -84,20 +180,38 @@ export default {
         },
         {
             text: 'Verified'
+        },
+        {
+            text: ''
         }
-    ]
+    ],
+    dialog_room_information: false,
+    img_src: null
   }),
   async mounted () {
     await this.$store.dispatch('admin_reservation/fetch_reservations')
   },
   created () {
+    this.img_src = process.env.VUE_APP_URL
   },
   computed: {
     ...mapGetters({
-        get_reservation_list:           'admin_reservation/get_reservation_list'
+        get_reservation_list:           'admin_reservation/get_reservation_list',
+        get_room_information:           'admin_reservation/get_room_information'
     })
   },
   methods: {
+    async check_details(data){
+        await this.$axios.get('/admin/reservation/g_reservation_details', {
+            room_id:            data.actual_room_id
+        })
+        .then(({data}) => {
+            if(data.response){
+                this.dialog_room_information = true
+            }
+            this.$store.dispatch('admin_reservation/set_room_information', data.data)
+        })
+    }
   },
   watch: {
   }

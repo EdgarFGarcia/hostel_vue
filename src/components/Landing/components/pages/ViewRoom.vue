@@ -401,7 +401,9 @@ export default {
             date:                       this.dates,
             payable:                    this.get_reserve_this_room_selected.price * this.total,
             time_in:                    this.time_in,
-            time_out:                   this.time_out
+            time_out:                   this.time_out,
+            adult_count:                this.b.adult,
+            child_count:                this.b.child
         })
         .then(({data}) => {
             if(data.response){
