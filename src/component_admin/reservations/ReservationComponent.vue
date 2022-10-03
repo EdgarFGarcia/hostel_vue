@@ -94,7 +94,9 @@
                 persistent
                 max-width="560"
             >
-            <v-card>
+            <v-card
+                v-if="Object.keys(get_room_information).length > 0"
+            >
                 <v-card-title class="text-h5">
                     Room Information of: {{get_room_information.room_name}}
                 </v-card-title>
