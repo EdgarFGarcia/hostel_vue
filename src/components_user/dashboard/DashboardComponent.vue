@@ -48,12 +48,61 @@
                 color="#596377"
                 dark
                 class="pl-10 pr-10"
+                @click="show_qr_code(room)"
               >
                 Pay now
               </v-btn>
             </v-card-actions>
           </v-card>
         </v-col>
+      </v-row>
+      <v-row justify="center">
+        <v-dialog
+          v-model="qr_code_model"
+          persistent
+          max-width="320"
+        >
+          <v-card>
+            <v-card-title>
+              <small>Account Payable Amount:</small>
+            </v-card-title>
+            <v-card-subtitle>
+              {{get_payable_data.payable | currency('₱')}}
+            </v-card-subtitle>
+            <v-card-text>
+              <strong>Scan QR Code using GCash App</strong>
+              <v-row
+                align="center"
+                justify="center"
+                class="mt-5"
+              >
+                <img
+                  :src="require('../../assets/gcash_connector_hostel.png')"
+                  contain
+                  style="max-width: 175px; max-height: 175px;"
+                  justify="center"
+                />
+              </v-row>
+            </v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn
+                color="green darken-1"
+                text
+                @click="qr_code_model = false"
+              >
+                Cancel
+              </v-btn>
+              <v-btn
+                color="green darken-1"
+                text
+                @click="qr_code_model = false"
+              >
+                Send
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
       </v-row>
     </v-container>
 </template>
@@ -66,6 +115,7 @@ export default {
   props: [
   ],
   data: () => ({
+    qr_code_model: false
   }),
   async mounted () {
     await this.$store.dispatch('user/set_my_rooms')
@@ -74,7 +124,8 @@ export default {
   },
   computed: {
     ...mapGetters({
-      get_my_rooms:           'user/get_my_rooms'
+      get_my_rooms:           'user/get_my_rooms',
+      get_payable_data:       'user/get_payable_data'
     })
   },
   methods: {
@@ -86,6 +137,10 @@ export default {
           this.$store.dispatch('user/set_my_rooms')
         }
       })
+    },
+    show_qr_code(data){
+      this.$store.dispatch('user/set_payable_data', data)
+      this.qr_code_model = true
     }
   },
   watch: {

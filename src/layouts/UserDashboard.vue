@@ -143,7 +143,14 @@ export default {
                 name:   '/user_dashboard'
             }
         },
-        
+        {
+            icon:       'mdi-face-agent',
+            label:      'Request for services',
+            style:      'color: white',
+            url:        {
+                name:   '/user_fnb_order'
+            }
+        }        
     ],
     navigation2: [
         {
