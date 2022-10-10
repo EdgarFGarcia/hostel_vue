@@ -45,13 +45,28 @@
                             >
                             </v-text-field>
                         </v-col>
-                        <v-col
+                        <!-- <v-col
                             cols="8"
                         >
                             Don't have an account yet? <label style="color: blue; cursor: pointer; text-decoration: underline;" @click="login_state = false">register here</label>
                         </v-col>
+                        <v-col
+                            cols="4"
+                        >
+                            Forgot Password
+                        </v-col> -->
                     </v-row>
                 </v-card-text>
+                <v-card-title>
+                    <small>Don't have an account yet? <label style="color: blue; cursor: pointer; text-decoration: underline;" @click="login_state = false">register here</label></small>
+                    <v-spacer/>
+                    <small 
+                        style="text-decoration: underline; cursor:pointer;"
+                        @click="reset_password_fn"
+                    >
+                        Forgot Password
+                    </small>
+                </v-card-title>
                 <v-card-actions>
                     <v-spacer></v-spacer>
                     <v-btn
@@ -144,6 +159,44 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
+        <v-dialog
+            v-model="reset_password_model"
+            persistent
+            width="500px"
+        >
+            <v-card>
+                <v-card-title>
+                    <small>Forgot your password? No worries we got your back</small>
+                </v-card-title>
+                <v-card-text>
+                    <v-text-field
+                        label="enter your email here..."
+                        filled
+                        dense
+                        v-model="reset_password_email"
+                        @keyup.enter="resend_password_fn"
+                    >
+                    </v-text-field>
+                </v-card-text>
+                <v-card-actions>
+                    <v-spacer/>
+                    <v-btn
+                        text
+                        class="pl-10 pr-10"
+                        @click="cancel_forgot_password"
+                    >
+                        Cancel
+                    </v-btn>
+                    <v-btn
+                        color="primary"
+                        class="pl-10 pr-10"
+                        @click="resend_password_fn"
+                    >
+                        Resend New Password
+                    </v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
     </div>
 </template>
 
@@ -168,7 +221,9 @@ export default {
         name: null,
         password: null,
         r_password: null
-    }
+    },
+    reset_password_model: false,
+    reset_password_email: null
   }),
   mounted () {
   },
@@ -218,6 +273,30 @@ export default {
                 return
             }
             alert(data.message)
+        })
+    },
+    reset_password_fn(){
+        this.reset_password_model = true
+    },
+    cancel_forgot_password(){
+        this.reset_password_model = false
+        this.reset_password_email = null
+    },
+    async resend_password_fn(){
+        // console.log(this.reset_password_email)
+        let tp = {
+            email:  this.reset_password_email
+        }
+        await this.$axios.post('user/forgot_password', tp)
+        .then(({data}) => {
+            if(data.response){
+                alert(data.message)
+                this.cancel_forgot_password()
+                return
+            }else{
+                alert(data.message)
+                return
+            }
         })
     }
   },
