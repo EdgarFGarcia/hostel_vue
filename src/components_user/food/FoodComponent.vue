@@ -155,6 +155,92 @@
                     </v-col>
                 </v-row>
             </v-tab-item>
+            <v-tab-item
+                value="tab-4"
+            >
+                <v-row>
+                    <v-col
+                        cols="3"
+                        v-for="(food, foodindex) in massage"
+                        :key="foodindex"
+                    >
+                        <v-card
+                            width="300"
+                            elevation="0"
+                            class="ma-5"
+                        >
+                            <v-card-title>
+                                <strong>{{food.name}}</strong>
+                                <v-spacer/>
+                                <small>{{food.price | currency('₱')}}</small>
+                            </v-card-title>
+                            <v-card-subtitle>
+                                <label>{{food.desc}}</label>
+                            </v-card-subtitle>
+                            <v-card-text>
+                                <img
+                                    :src="food.image"
+                                    contain
+                                    style="max-width: 250px; max-height: 250px;"
+                                />
+                            </v-card-text>
+                            <v-card-actions>
+                                <v-spacer/>
+                                <v-btn
+                                    text
+                                    outlined
+                                    style="textTransform: none !important;"
+                                >
+                                    Request
+                                </v-btn>
+                            </v-card-actions>
+                        </v-card>
+                    </v-col>
+                </v-row>
+            </v-tab-item>
+            <v-tab-item
+                value="tab-5"
+            >
+                <v-row>
+                    <v-col
+                        cols="3"
+                        v-for="(food, foodindex) in massage"
+                        :key="foodindex"
+                    >
+                        <v-card
+                            width="300"
+                            elevation="0"
+                            class="ma-5"
+                        >
+                            <v-card-title>
+                                <strong>{{food.name}}</strong>
+                                <v-spacer/>
+                                <small>{{food.price | currency('₱')}}</small>
+                            </v-card-title>
+                            <v-card-subtitle>
+                                <label>{{food.desc}}</label>
+                            </v-card-subtitle>
+                            <v-card-text>
+                                <img
+                                    :src="food.image"
+                                    contain
+                                    style="max-width: 250px; max-height: 250px;"
+                                />
+                            </v-card-text>
+                            <v-card-actions>
+                                <v-spacer/>
+                                <v-btn
+                                    text
+                                    outlined
+                                    style="textTransform: none !important;"
+                                >
+                                    Request
+                                </v-btn>
+                            </v-card-actions>
+                        </v-card>
+                    </v-col>
+                </v-row>
+            </v-tab-item>
         </v-tabs-items>
     </v-container>
 </template>
@@ -179,6 +265,14 @@ export default {
         {
             id:     3,
             name:   'Spa & Massage'
+        },
+        {
+            id:     4,
+            name:   'Dr. Wine'
+        },
+        {
+            id:     5,
+            name:   'Dr. Bread'
         }
     ],
     foods: [
