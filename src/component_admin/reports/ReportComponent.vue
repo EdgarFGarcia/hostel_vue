@@ -31,43 +31,31 @@
             >
                 <v-row>
                     <v-col
-                        cols="10"
+                        cols="12"
                     >
-                    <v-menu
-                        v-model="menu1"
-                        :close-on-content-click="false"
-                        :nudge-right="40"
-                        transition="scale-transition"
-                        offset-y
-                        min-width="auto"
-                    >
-                        <template v-slot:activator="{ on, attrs }">
-                            <v-text-field
+                        <v-menu
+                            v-model="menu1"
+                            :close-on-content-click="false"
+                            :nudge-right="40"
+                            transition="scale-transition"
+                            offset-y
+                            min-width="auto"
+                        >
+                            <template v-slot:activator="{ on, attrs }">
+                                <v-text-field
+                                    v-model="date"
+                                    label="Picker without buttons"
+                                    prepend-icon="mdi-calendar"
+                                    readonly
+                                    v-bind="attrs"
+                                    v-on="on"
+                                ></v-text-field>
+                            </template>
+                            <v-date-picker
                                 v-model="date"
-                                label="Picker without buttons"
-                                prepend-icon="mdi-calendar"
-                                readonly
-                                v-bind="attrs"
-                                v-on="on"
-                            ></v-text-field>
-                        </template>
-                        <v-date-picker
-                            v-model="date"
-                            range
-                        ></v-date-picker>
-                    </v-menu>
-                    </v-col>
-                    <v-col
-                        cols="2"
-                        text
-                        outlined
-                    >
-                        <v-btn>
-                            <v-icon
-                                class="mr-2"
-                            >mdi-magnify</v-icon>
-                            Search
-                        </v-btn>
+                                range
+                            ></v-date-picker>
+                        </v-menu>
                     </v-col>
                 </v-row>
                 <v-data-table

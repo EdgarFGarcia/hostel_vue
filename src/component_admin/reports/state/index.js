@@ -30,7 +30,7 @@ export default{
     getters: {
         get_pending_data : state => (value) => {
             if((value[0] !== undefined && value[1] !== undefined)){
-                return state.done_data.filter(q => {
+                return state.pending_data.filter(q => {
                     return q.created_at >= value[0] && q.created_at <= value[1]
                 })
             }
@@ -46,7 +46,7 @@ export default{
         },
         get_cancelled_data : state => (value) => {
             if((value[0] !== undefined && value[1] !== undefined)){
-                return state.done_data.filter(q => {
+                return state.cancelled_data.filter(q => {
                     return q.created_at >= value[0] && q.created_at <= value[1]
                 })
             }
