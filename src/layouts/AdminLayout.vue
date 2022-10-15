@@ -114,6 +114,14 @@ export default {
             }
         },
         {
+            icon:       'mdi-chart-arc',
+            label:      'Report',
+            style:      'color: white',
+            url:        {
+                name:   '/report_component'
+            }
+        },
+        {
             icon:       'mdi-logout',
             label:      'Logout',
             style:      'color: white',

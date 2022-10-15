@@ -6,6 +6,7 @@ import AdminDashboard from '../component_admin/dashboard/router/index.js'
 import RoomAdmin from '../component_admin/rooms/router/index.js'
 import ProfileComponent from '../components_user/profile/router/index.js'
 import AdminReservation from '../component_admin/reservations/router/index.js'
+import ReportComponent from '../component_admin/reports/router/index.js'
 
 /**
  * user routes
@@ -28,6 +29,7 @@ export default new VueRouter({
         ...RoomAdmin,
         ...ProfileComponent,
         ...AdminReservation,
-        ...FoodRoutes
+        ...FoodRoutes,
+        ...ReportComponent
     ]
 });

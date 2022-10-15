@@ -201,7 +201,7 @@
                                 <template v-slot:activator="{ on, attrs }">
                                 <v-text-field
                                     v-model="time_in"
-                                    label="Time in"
+                                    label="Check in"
                                     prepend-inner-icon="mdi-clock-time-four-outline"
                                     readonly
                                     v-bind="attrs"
@@ -236,7 +236,7 @@
                                 <template v-slot:activator="{ on, attrs }">
                                 <v-text-field
                                     v-model="time_out"
-                                    label="Time out"
+                                    label="Check out"
                                     prepend-inner-icon="mdi-clock-time-four-outline"
                                     readonly
                                     v-bind="attrs"
@@ -264,6 +264,7 @@
                                 outlined
                                 label="# of Adult"
                                 class="input_count"
+                                @click="check_head_count"
                             >
                             </v-text-field>
                         </v-col>
@@ -277,6 +278,7 @@
                                 outlined
                                 label="# of Child"
                                 class="input_count"
+                                @change="check_head_count"
                             >
                             </v-text-field>
                         </v-col>
@@ -388,13 +390,21 @@ export default {
         }
         return first + ' to ' + last;
     },
-    async book_now(){
+    check_head_count(){
         const adult = this.b.adult
         const child = this.b.child
         if(parseInt(adult) + parseInt(child) > this.get_reserve_this_room_selected.capacity){
-            alert('This room only has 4 max capacity / head count')
+            alert('This room only has 4 max capacity / head count. Any additional head count will be charged.')
             return
         }
+    },
+    async book_now(){
+        const adult = this.b.adult
+        const child = this.b.child
+        // if(parseInt(adult) + parseInt(child) > this.get_reserve_this_room_selected.capacity){
+        //     alert('This room only has 4 max capacity / head count')
+        //     return
+        // }
         await this.$axios.post('/r/rooms/book_room_now', {
             actual_room_data:           this.get_reserve_this_room,
             capacity:                   parseInt(adult) + parseInt(child),
