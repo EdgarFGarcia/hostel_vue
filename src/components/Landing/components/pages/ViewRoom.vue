@@ -474,8 +474,8 @@ export default {
         }
         if(parseInt(adult) + parseInt(child) > this.get_reserve_this_room_selected.capacity){
             const additional_capacity = parseInt(adult) + parseInt(child) - this.get_reserve_this_room_selected.capacity
-            this.additional_price = 100 * additional_capacity
-            alert('This room charges an additional ' + this.additional_price + ' per head above ' + this.get_reserve_this_room_selected.capacity + ' guests.')
+            this.additional_price = 200 * additional_capacity
+            alert('This room charges an additional 200 per head above ' + this.get_reserve_this_room_selected.capacity + ' guests.')
             return
         }
         else{
