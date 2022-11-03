@@ -5,6 +5,7 @@ import axios from './plugins/axios.js'
 import router from './router/router'
 import store from './data/index.js'
 import Vue2Filters from 'vue2-filters'
+import moment from 'moment'
 
 import Default from './layouts/DefaultComponent.vue'
 import UserDashboard from './layouts/UserDashboard.vue'
@@ -18,10 +19,12 @@ Vue.config.productionTip = false
 
 Vue.use(axios)
 Vue.use(Vue2Filters)
+Vue.use(require('moment'))
 
 new Vue({
   router,
   store,
   vuetify,
+  moment,
   render: h => h(App)
 }).$mount('#app')

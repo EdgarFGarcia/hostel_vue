@@ -8,7 +8,7 @@
         <strong>
             <v-btn
                 text
-                @click="back_home"
+                @click="back_to_rooms"
             >
                 <v-icon>mdi-chevron-left</v-icon>
                 back
@@ -24,7 +24,7 @@
             <v-btn
                 text
                 class="mt-5 ml-5"
-                @click="back_home"
+                @click="back_to_rooms"
             >
                 <v-icon>mdi-chevron-left</v-icon>
                 back
@@ -143,15 +143,58 @@
                     </v-btn>
                 </v-card-actions>
             </v-card>
+            <v-card class="ma-5">
+                <v-card-title>
+                    <v-row class="ml-2 mb-5" v-if="get_selected_room.reviews.length > 0">
+                        <v-col
+                            cols="12"
+                            class="mb-5"
+                        >
+                            <strong>Reviews</strong>
+                        </v-col>
+                        <div
+                            v-for="(review, reviewindex) in orderBy(get_selected_room.reviews, 'created_at', -1)"
+                            :key="reviewindex"
+                            class="ml-5 pl-5 pt-5 pr-5 pb-5 mb-5"
+                            style="box-shadow:0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%);width:80%"
+                        >
+                            <v-col cols="12" style="padding:0!important; display:flex;">
+                                <strong style="font-size:18px">{{review.get_user.name}}</strong>
+                                <star-rating
+                                    read-only
+                                    :increment=0.5
+                                    :rating="review.rating"
+                                    :show-rating=false
+                                    :star-size=15
+                                    class="ml-3"
+                                />
+                            </v-col>
+                            <v-col cols="12" style="padding:0!important">
+                                <v-icon>mdi-calendar</v-icon> <small>{{ moment(review.created_at).format("MMM DD, YYYY")}}</small>
+                            </v-col>
+                            <v-col cols="12" style="padding:0!important" class="mb-2">
+                                
+                            </v-col>
+                            <v-col cols="12" style="padding:0!important">
+                                <small>"{{review.review}}"</small>
+                            </v-col>
+                        </div>
+                    </v-row>
+                    <v-row class="ml-2 mb-5" v-else>
+                        <v-col
+                            cols="12"
+                        >
+                            <strong>Reviews</strong><br>
+                            <small>No reviews yet</small>
+                        </v-col>
+                    </v-row>
+                </v-card-title>
+            </v-card>
         </v-col>
+        
         <v-col
             cols="4"
-            style="
-                position: sticky;
-                top: 0;
-                height: 620px;
-                overflow-y: scroll;
-            "
+            style="position: sticky;top: 0;height: 620px;overflow-y: scroll;"
             class="mt-15"
         >
             <v-card
@@ -165,7 +208,7 @@
                 >
                     {{ get_reserve_this_room.room_name }}
                 </v-card-subtitle>
-                <v-card-text>
+                <v-card-text v-if="get_reserve_this_room.room_name != null">
                     <v-row>
                         <v-col
                             cols="12"
@@ -178,10 +221,10 @@
                                 width="inherit"
                                 :min="new Date().toISOString().substr(0, 10)"
                             ></v-date-picker>
-                            <label>{{ format(dates) }}</label>
+                            <label v-if="dates.length == 2">{{ format(dates) }}</label>
                             <label
                                 style="display: block;"
-                                v-if="total != null"
+                                v-if="total != null && dates.length == 2"
                             >total days of stay: {{ total }}</label>
                         </v-col>
                         <v-col
@@ -192,7 +235,7 @@
                                 v-model="menuin"
                                 :close-on-content-click="false"
                                 :nudge-right="40"
-                                :return-value.sync="time_in"
+                                :return-value.sync="check_in"
                                 transition="scale-transition"
                                 offset-y
                                 max-width="290px"
@@ -200,7 +243,7 @@
                             >
                                 <template v-slot:activator="{ on, attrs }">
                                 <v-text-field
-                                    v-model="time_in"
+                                    v-model="check_in"
                                     label="Check in"
                                     prepend-inner-icon="mdi-clock-time-four-outline"
                                     readonly
@@ -212,9 +255,9 @@
                                 </template>
                                 <v-time-picker
                                     v-if="menuin"
-                                    v-model="time_in"
+                                    v-model="check_in"
                                     full-width
-                                    @click:minute="$refs.menu2.save(time_in)"
+                                    @click:minute="$refs.menu2.save(check_in)"
                                     ampm-in-title
                                 ></v-time-picker>
                             </v-menu>
@@ -227,7 +270,7 @@
                                 v-model="menuout"
                                 :close-on-content-click="false"
                                 :nudge-right="40"
-                                :return-value.sync="time_out"
+                                :return-value.sync="check_out"
                                 transition="scale-transition"
                                 offset-y
                                 max-width="290px"
@@ -235,7 +278,7 @@
                             >
                                 <template v-slot:activator="{ on, attrs }">
                                 <v-text-field
-                                    v-model="time_out"
+                                    v-model="check_out"
                                     label="Check out"
                                     prepend-inner-icon="mdi-clock-time-four-outline"
                                     readonly
@@ -247,9 +290,9 @@
                                 </template>
                                 <v-time-picker
                                     v-if="menuout"
-                                    v-model="time_out"
+                                    v-model="check_out"
                                     full-width
-                                    @click:minute="$refs.menu.save(time_out)"
+                                    @click:minute="$refs.menu.save(check_out)"
                                     ampm-in-title
                                 ></v-time-picker>
                             </v-menu>
@@ -261,10 +304,12 @@
                                 v-model="b.adult"
                                 dense
                                 type="number"
+                                min="0"
+                                oninput="validity.valid||(value='');"
                                 outlined
                                 label="# of Adult"
                                 class="input_count"
-                                @click="check_head_count"
+                                @change="check_head_count"
                             >
                             </v-text-field>
                         </v-col>
@@ -275,6 +320,7 @@
                                 v-model="b.child"
                                 dense
                                 type="number"
+                                min="0"
                                 outlined
                                 label="# of Child"
                                 class="input_count"
@@ -286,29 +332,43 @@
                             cols="6"
                         >
                             <!-- {{get_reserve_this_room_selected.capacity}} guests -->
-                            {{ parseInt(b.adult) + parseInt(b.child) }} guest(s) - 
-                            <label>{{total}} day(s) & {{ total - 1 }} night(s)</label>
+                            {{ parseInt(b.adult) + parseInt(b.child) }} guest(s)
+                            <label v-if="total > 0"> - {{total}} day(s) & {{ total - 1 }} night(s)</label>
                         </v-col>
                         <v-col
                             cols="6"
+                            v-if="total > 0"
                         >
-                            {{ get_reserve_this_room_selected.price * total | currency('₱') }}
+                            {{ get_reserve_this_room_selected.price * total + additional_price | currency('₱') }}
                         </v-col>
                         <v-col
                             cols="12"
+                            v-if="total > 0"
                         >
-                            Total {{ get_reserve_this_room_selected.price * total | currency('₱') }}
+                            Total {{ get_reserve_this_room_selected.price * total + additional_price | currency('₱') }}
                         </v-col>
                     </v-row>
                 </v-card-text>
-                <v-card-actions>
+                <v-card-text v-else>
+                    Please select a room...
+                </v-card-text>
+                <v-card-actions v-if="get_reserve_this_room.room_name != null">
                     <v-btn
+                        v-if="!booked"
                         block
                         color="#596377"
                         dark
                         @click="book_now"
                     >
                         Book
+                    </v-btn>
+                    <v-btn
+                        v-else
+                        block
+                        color="#596377"
+                        disabled
+                    >
+                        Please Wait
                     </v-btn>
                 </v-card-actions>
             </v-card>
@@ -319,8 +379,13 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import moment from 'moment'
+import StarRating from 'vue-star-rating'
+import Vue2Filters from 'vue2-filters'
 export default {
+  mixins: [Vue2Filters.mixin],
   components: {
+    StarRating
   },
   props: [
   ],
@@ -329,14 +394,16 @@ export default {
     dates: [],
     result: null,
     total: null,
+    additional_price: 0,
     b: {
-        adult: null,
-        child: null
+        adult: 0,
+        child: 0
     },
-    time_in: null,
-    time_out: null,
+    check_in: null,
+    check_out: null,
     menuin: false,
     menuout: false,
+    booked: false
   }),
   mounted () {
     this.img_url = process.env.VUE_APP_URL
@@ -351,12 +418,19 @@ export default {
     })
   },
   methods: {
+    moment: function () {
+        return moment();
+    },
     select_room_for_reservation(room_data, selected_room_data){
         this.$store.dispatch('room/set_reserve_this_room', room_data)
         this.$store.dispatch('room/set_selected_room_for_reservation', selected_room_data)
     },
     back_home(){
         this.$router.push({name: '/'})
+        this.$store.commit('room/clear_reserve_this_room')
+    },
+    back_to_rooms(){
+        this.$router.push({name: '/room-component'})
         this.$store.commit('room/clear_reserve_this_room')
     },
     dates_fn(){
@@ -393,12 +467,22 @@ export default {
     check_head_count(){
         const adult = this.b.adult
         const child = this.b.child
-        if(parseInt(adult) + parseInt(child) > this.get_reserve_this_room_selected.capacity){
-            alert('This room only has 4 max capacity / head count. Any additional head count will be charged.')
+        if(parseInt(adult) + parseInt(child) > this.get_reserve_this_room_selected.max_capacity){
+            alert('This room only has ' + this.get_reserve_this_room_selected.max_capacity + ' max capacity / head count.')
             return
+        }
+        if(parseInt(adult) + parseInt(child) > this.get_reserve_this_room_selected.capacity){
+            const additional_capacity = parseInt(adult) + parseInt(child) - this.get_reserve_this_room_selected.capacity
+            this.additional_price = this.get_reserve_this_room_selected.additional_price * additional_capacity
+            alert('This room charges an additional ' + this.get_reserve_this_room_selected.additional_price + ' per head above ' + this.get_reserve_this_room_selected.capacity + ' guests.')
+            return
+        }
+        else{
+            this.additional_price = 0
         }
     },
     async book_now(){
+        this.booked = true
         const adult = this.b.adult
         const child = this.b.child
         // if(parseInt(adult) + parseInt(child) > this.get_reserve_this_room_selected.capacity){
@@ -409,18 +493,20 @@ export default {
             actual_room_data:           this.get_reserve_this_room,
             capacity:                   parseInt(adult) + parseInt(child),
             date:                       this.dates,
-            payable:                    this.get_reserve_this_room_selected.price * this.total,
-            time_in:                    this.time_in,
-            time_out:                   this.time_out,
+            payable:                    this.get_reserve_this_room_selected.price * this.total + this.additional_price,
+            check_in:                   this.check_in,
+            check_out:                  this.check_out,
             adult_count:                this.b.adult,
             child_count:                this.b.child
         })
         .then(({data}) => {
+            console.log(data)
             if(data.response){
                 alert('booking successful')
                 this.$router.push({name: '/'})
                 return
             }
+            this.booked = false
             alert(data.message)
             return
         })

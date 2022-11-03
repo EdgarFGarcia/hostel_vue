@@ -22,15 +22,15 @@
                 max-height="450"
                 max-width="fit"
               />
-              <label>
+              <label style="display:block;height:120px">
                 {{room.description}}
-                <label
+                <!--<label
                   style="color: blue; text-decoration: underline; cursor: pointer;"
                 >
                   read more details...
-                </label>   
+                </label>-->
               </label>
-              <v-row>
+              <v-row style="height:200px">
                 <div
                   v-for="(facilities, facility_id) in room.facilities"
                   :key="facility_id"
@@ -46,12 +46,10 @@
               </v-row>
             </v-card-text>
             <v-card-actions>
-              <v-spacer></v-spacer>
               <v-btn
                 color="#596377"
-                style="textTransform: none !important;"
+                style="textTransform: none !important;width:50%"
                 dark
-                class="pl-15 pr-15"
                 @click="select_room(room)"
               >
                 Book now

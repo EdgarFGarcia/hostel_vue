@@ -7,7 +7,7 @@
           elevation="2"
           fab
           icon
-          style="position: absolute; botton: 0; right: 0"
+          style="position: fixed; bottom: 30px; right: 30px; background-color:white;"
           color="primary"
           @click="open_chat_bot"
         >
