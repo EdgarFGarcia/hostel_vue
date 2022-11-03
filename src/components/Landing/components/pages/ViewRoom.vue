@@ -467,8 +467,9 @@ export default {
     check_head_count(){
         const adult = this.b.adult
         const child = this.b.child
-        if(parseInt(adult) + parseInt(child) > this.get_reserve_this_room_selected.max_capacity){
-            alert('This room only has ' + this.get_reserve_this_room_selected.max_capacity + ' max capacity / head count.')
+        const capacity = this.get_reserve_this_room_selected.capacity + 4
+        if(parseInt(adult) + parseInt(child) > capacity){
+            alert('This room only has ' + capacity + ' max capacity / head count.')
             return
         }
         if(parseInt(adult) + parseInt(child) > this.get_reserve_this_room_selected.capacity){
