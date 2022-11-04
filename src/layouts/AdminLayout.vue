@@ -141,11 +141,9 @@ export default {
   methods: {
     async logout(){
         await this.$axios.post('user/auth_user/logout')
-        .then(({data}) => {
-            if(data.response){
-                this.$store.commit('auth/clear_user_state')
-                this.$router.push({name: '/'})
-            }
+        .then(() => {
+            this.$store.commit('auth/clear_user_state')
+            this.$router.push({name: '/'})
         })
     }
   },

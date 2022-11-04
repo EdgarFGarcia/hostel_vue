@@ -50,6 +50,7 @@
             cols="8"
         >
             test
+                <v-btn @click="create_bookkeeping()">Create bookkeeping account (don't click)</v-btn>
         </v-col>
       </v-row>
         <v-dialog
@@ -185,6 +186,12 @@ export default {
     })
   },
   methods: {
+    async create_bookkeeping(){
+        await this.$axios.post('user/create_bookkeeping')
+        .then(({data}) => {
+            console.log(data)
+        })
+    },
     edit_profile(){
         this.profile_edit_state = true
     },
