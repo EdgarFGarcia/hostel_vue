@@ -209,11 +209,10 @@
                         >
                             <v-card-title>
                                 <strong>{{food.name}}</strong>
-                                <v-spacer/>
-                                <small>{{food.price | currency('₱')}}</small>
                             </v-card-title>
                             <v-card-subtitle>
-                                <label>{{food.desc}}</label>
+                                {{food.price | currency('₱')}}
+                                <div style="height:100px"><label>{{food.desc}}</label></div>
                             </v-card-subtitle>
                             <v-card-text>
                                 <img

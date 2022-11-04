@@ -90,7 +90,7 @@
               Payment options
             </v-card-subtitle>
             <v-card-text>
-              <v-btn
+              <!--<v-btn
                 color="#596377"
                 class="mr-3"
                 dark
@@ -105,10 +105,26 @@
                 @click="paymongo_gcash_create_source(get_payable_data)"
               >
                 GCash
-              </v-btn>
+              </v-btn>-->
+              
+              <strong>Scan QR Code using GCash App</strong>
+              <v-row
+                align="center"
+                justify="center"
+                class="mt-5 mb-5"
+                style="height:200px"
+              >
+                <img
+                  :src="require('../../assets/gcash_connector_hostel.png')"
+                  contain
+                  style="width: 175px; height: 175px;"
+                  justify="center"
+                />
+              </v-row>
+              <strong>Or pay with credit/debit card</strong><br><br>
               <v-btn
                 color="#596377"
-                class="mr-3"
+                style="margin-left:28%"
                 dark
                 @click="paymongo_card_create_intent(get_payable_data)"
               >

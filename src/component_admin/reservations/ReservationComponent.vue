@@ -82,6 +82,14 @@
                                         Check  room details
                                     </v-btn>
                                 </td>
+                                <td>
+                                    <v-btn
+                                        dark
+                                        @click="charge(item)"
+                                    >
+                                        Charge additional
+                                    </v-btn>
+                                </td>
                             </tr>
                         </template>
                     </v-data-table>
@@ -128,6 +136,49 @@
                     @click="dialog_room_information = false"
                 >
                     Done
+                </v-btn>
+                </v-card-actions>
+            </v-card>
+            </v-dialog>
+        </v-row>
+        
+        <v-row justify="center">
+            <v-dialog
+                v-model="dialog_additional"
+                persistent
+                max-width="560"
+            >
+            <v-card>
+                <v-card-title class="text-h5">
+                    Charge additional for damages, penalties etc.
+                </v-card-title>
+                <v-card-text>
+                    <v-text-field
+                        placeholder="Reason"
+                        v-model="reason"
+                    >
+                    </v-text-field>
+                    <v-text-field
+                        placeholder="Amount"
+                        v-model="amount_due"
+                    >
+                    </v-text-field>
+                </v-card-text>
+                <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn
+                    color="green darken-1"
+                    text
+                    @click="dialog_additional = false"
+                >
+                    Cancel
+                </v-btn>
+                <v-btn
+                    color="green darken-1"
+                    text
+                    @click="confirm_additional_payment()"
+                >
+                    Confirm additional
                 </v-btn>
                 </v-card-actions>
             </v-card>
@@ -185,9 +236,16 @@ export default {
         },
         {
             text: ''
+        },
+        {
+            text: ''
         }
     ],
     dialog_room_information: false,
+    dialog_additional: false,
+    reason: null,
+    amount_due: null,
+    additional_check_in_id: null,
     img_src: null
   }),
   async mounted () {
@@ -212,6 +270,27 @@ export default {
                 this.dialog_room_information = true
             }
             this.$store.dispatch('admin_reservation/set_room_information', data.data)
+        })
+    },
+    charge(data){
+        this.additional_check_in_id = data.id
+        console.log(data.id)
+        this.dialog_additional = true
+    },
+    async confirm_additional_payment(){
+        await this.$axios.post('/admin/reservation/charge_additional', {
+            check_in_id: this.additional_check_in_id,
+            reason: this.reason,
+            amount_due: this.amount_due
+        })
+        .then(({data}) => {
+            if(!data.response){
+                alert(data.message)
+            }
+            else{
+                this.dialog_additional = false
+                alert('Charged successfully')
+            }
         })
     }
   },
