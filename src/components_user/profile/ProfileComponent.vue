@@ -49,8 +49,6 @@
         <v-col
             cols="8"
         >
-            test
-                <v-btn @click="create_bookkeeping()">Create bookkeeping account (don't click)</v-btn>
         </v-col>
       </v-row>
         <v-dialog
