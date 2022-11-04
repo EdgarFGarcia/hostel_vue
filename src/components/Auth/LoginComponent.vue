@@ -255,6 +255,10 @@ export default {
                         this.close_dialog()
                         this.$router.push({name: '/admin_dashboard'})
                         return
+                    case 3:
+                        this.close_dialog()
+                        this.$router.push({name: '/admin_dashboard'})
+                        return
                 }
             }
         })

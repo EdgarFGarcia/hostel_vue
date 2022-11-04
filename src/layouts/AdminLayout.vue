@@ -18,8 +18,15 @@
                 </v-card-title>
                 <v-card-subtitle
                     style="color: white;"
+                    v-if="get_user.udata.role_id == 2"
                 >
                     Admin Connector Hostel
+                </v-card-subtitle>
+                <v-card-subtitle
+                    style="color: white;"
+                    v-else-if="get_user.udata.role_id == 3"
+                >
+                    Housekeeping Connector Hostel
                 </v-card-subtitle>
                 <v-card-text
                     style="color: white !important;"

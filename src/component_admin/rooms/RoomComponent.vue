@@ -8,7 +8,6 @@
           background-color="deep-purple accent-4"
         >
           <v-tabs-slider color="yellow"></v-tabs-slider>
-
           <v-tab
             v-for="room in get_room_categories"
             :key="room.id"
@@ -100,6 +99,29 @@
                         </v-row>
                     </v-card-text>
                 </v-card>
+                <v-text-field
+                    v-model="description"
+                    placeholder="Description"
+                >
+                </v-text-field>
+                <v-text-field
+                    v-model="full_details"
+                    placeholder="Full details"
+                >
+                </v-text-field>
+                <v-text-field
+                    v-model="capacity"
+                    placeholder="Capacity"
+                >
+                </v-text-field>
+                <v-text-field
+                    v-model="room_count"
+                    placeholder="Room count"
+                >
+                </v-text-field>
+                <v-btn @click="update()">
+                    Update
+                </v-btn>
             </v-tab-item>
         </v-tabs-items>
         <AddRoomDialog
@@ -121,7 +143,11 @@ export default {
   ],
   data: () => ({
     tab: null,
-    add_room_state: false
+    add_room_state: false,
+    description: null,
+    full_details: null,
+    capacity: null,
+    room_count: null
   }),
   async mounted () {
     await this.$store.dispatch('admin_room/set_room_categories')
@@ -147,6 +173,18 @@ export default {
     },
     close_add_dialog(){
         this.add_room_state = false
+    },
+    update(){
+        this.$axios.post('admin/rooms/update', {
+            id: this.get_rooms[0].id,
+            description: this.description,
+            full_details: this.full_details,
+            capacity: this.capacity,
+            room_count: this.room_count
+        })
+        .then(({data}) => {
+            console.log(data)
+        })
     },
     async add_room_from_dialog(data){
         await this.$axios.post('admin/rooms/add_room', {

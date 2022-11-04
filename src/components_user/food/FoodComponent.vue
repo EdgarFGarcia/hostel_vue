@@ -506,13 +506,6 @@ export default {
             price:  'Depends on Driver',
             desc:   'Street Taxis',
             image:  require('../../assets/taxi.jpg')
-        },
-        {
-            id:     2,
-            name:   'Angkas',
-            price:  'Depends on Driver',
-            desc:   'Angkas Motorcycle',
-            image:  require('../../assets/motorcycle.jpg')
         }
     ],
     massage: [
@@ -521,28 +514,28 @@ export default {
             name:   'Swedish Massage',
             price:  '250',
             desc:   'It can help release muscle knots, and it’s also a good choice for when you want to fully relax during a massage.',
-            //image:  'https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg'
+            image:  require('../../assets/massage1.jpg')
         },
         {
             id:     2,
             name:   'Hot stone massage',
             price:  '250',
             desc:   'This type of therapeutic massage is similar to a Swedish massage, only the massage therapist uses heated stones in lieu of or in addition to their hands.',
-            //image:  'https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg'
+            image:  require('../../assets/massage2.jpg')
         },
         {
             id:     3,
             name:   'Aromatherapy massage',
             price:  '250',
             desc:   'Aromatherapy massages are best for people who enjoy scent and want to have an emotional healing component to their massage.',
-            //image:  'https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg'
+            image:  require('../../assets/massage3.jpg')
         },
         {
             id:     4,
             name:   'Deep tissue massage',
             price:  '250',
             desc:   'Deep tissue massage uses more pressure than a Swedish massage. It’s a good option if you have muscle problems',
-            //image:  'https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg'
+            image:  require('../../assets/massage4.jpg')
         }
     ]
   }),
