@@ -71,6 +71,15 @@
               >
                 Reviewed
               </v-btn>
+              <v-btn
+                color="#596377"
+                dark
+                class="pl-10 pr-10"
+                @click="pay_additional(room)"
+                v-if="room.get_additional != null"
+              >
+                Pay Additional
+              </v-btn>
             </v-card-actions>
           </v-card>
         </v-col>
@@ -137,6 +146,60 @@
                 color="green darken-1"
                 text
                 @click="paymongo_model = false"
+              >
+                Cancel
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+      </v-row>
+      
+      <v-row justify="center">
+        <v-dialog
+          v-model="additional_model"
+          persistent
+          max-width="400"
+        >
+          <v-card>
+            <v-card-title class="mb-5" v-if="get_payable_data.get_additional != null">
+              <small>Payable Amount: {{get_payable_data.get_additional.amount_due | currency('₱')}}</small><br>
+              <small>Additional reason: {{get_payable_data.get_additional.reason}}</small>
+            </v-card-title>
+            <v-card-subtitle>
+              Payment options
+            </v-card-subtitle>
+            <v-card-text>
+              
+              <strong>Scan QR Code using GCash App</strong>
+              <v-row
+                align="center"
+                justify="center"
+                class="mt-5 mb-5"
+                style="height:200px"
+              >
+                <img
+                  :src="require('../../assets/gcash_connector_hostel.png')"
+                  contain
+                  style="width: 175px; height: 175px;"
+                  justify="center"
+                />
+              </v-row>
+              <strong>Or pay with credit/debit card</strong><br><br>
+              <v-btn
+                color="#596377"
+                style="margin-left:28%"
+                dark
+                @click="paymongo_card_create_intent(get_payable_data)"
+              >
+                Credit/Debit
+              </v-btn>
+            </v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn
+                color="green darken-1"
+                text
+                @click="additional_model = false"
               >
                 Cancel
               </v-btn>
@@ -317,6 +380,7 @@ export default {
   data: () => ({
     //qr_code_model: false,
     paymongo_model: false,
+    additional_model: false,
     redirect_model: false,
     card_details_model: false,
     review_model: false,
@@ -352,6 +416,10 @@ export default {
         }
       })
     },
+    pay_additional(data){
+      this.$store.dispatch('user/set_payable_data', data)
+      this.additional_model = true
+    },
     paymongo(data){
       this.$store.dispatch('user/set_payable_data', data)
       this.paymongo_model = true
@@ -372,6 +440,10 @@ export default {
       })
     },
     async paymongo_card_create_intent(data) { // PAY WITH CARD, CREATE PAYMENT
+      if(this.additional_model == true){
+        data.payable = data.get_additional.amount_due
+        this.additional_model = false
+      }
       this.paymongo_model = false
       this.redirect_model = true
       await this.$axios.post('r/payment/paymongo_card_create_intent', data)

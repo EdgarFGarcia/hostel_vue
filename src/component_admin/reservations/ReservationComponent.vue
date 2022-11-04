@@ -79,15 +79,37 @@
                                         dark
                                         @click="check_details(item)"
                                     >
-                                        Check  room details
+                                        Check room details
                                     </v-btn>
                                 </td>
                                 <td>
                                     <v-btn
+                                        v-if="item.get_additional == null"
                                         dark
                                         @click="charge(item)"
                                     >
                                         Charge additional
+                                    </v-btn>
+                                    <v-btn
+                                        v-else
+                                        disabled
+                                    >
+                                        Charge additional
+                                    </v-btn>
+                                </td>
+                                <td>
+                                    <v-btn
+                                        v-if="!item.is_paid"
+                                        dark
+                                        @click="mark_as_paid(item)"
+                                    >
+                                        Mark paid
+                                    </v-btn>
+                                    <v-btn
+                                        v-else
+                                        disabled
+                                    >
+                                        Paid
                                     </v-btn>
                                 </td>
                             </tr>
@@ -239,6 +261,9 @@ export default {
         },
         {
             text: ''
+        },
+        {
+            text: ''
         }
     ],
     dialog_room_information: false,
@@ -276,6 +301,11 @@ export default {
         this.additional_check_in_id = data.id
         console.log(data.id)
         this.dialog_additional = true
+    },
+    mark_as_paid(data){
+        this.$axios.post('/admin/reservation/mark_as_paid', {
+            check_in_id: data.id
+        })
     },
     async confirm_additional_payment(){
         await this.$axios.post('/admin/reservation/charge_additional', {

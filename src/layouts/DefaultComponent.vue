@@ -82,6 +82,9 @@ export default{
                 case 2:
                     this.$router.push({name: '/admin_dashboard'})
                     return
+                case 3:
+                    this.$router.push({name: '/admin_dashboard'})
+                    return
             }
         }
     }),

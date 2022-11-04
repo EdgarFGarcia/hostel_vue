@@ -61,21 +61,85 @@
                     rounded
                 >
                     <v-list-item
-                        v-for="(item, itemindex) in navigation"
-                        :key="itemindex"
                         link
-                        @click="item.url == '' ? logout() : $router.push(item.url)"
+                        @click="$router.push('/')"
                     >
                         <v-list-item-icon>
                             <v-icon
-                                :style="item.style"
-                            >{{ item.icon }}</v-icon>
+                                style="color: white"
+                            >mdi-chevron-left</v-icon>
                         </v-list-item-icon>
 
                         <v-list-item-content>
                             <v-list-item-title
-                                :style="item.style"
-                            >{{ item.label }}</v-list-item-title>
+                                style="color: white"
+                            >Back</v-list-item-title>
+                        </v-list-item-content>
+                    </v-list-item>
+                    <v-list-item
+                        link
+                        @click="$router.push('/admin_rooms')"
+                    >
+                        <v-list-item-icon>
+                            <v-icon
+                                style="color: white"
+                            >mdi-bed-double-outline</v-icon>
+                        </v-list-item-icon>
+
+                        <v-list-item-content>
+                            <v-list-item-title
+                                style="color: white"
+                            >Room(s)</v-list-item-title>
+                        </v-list-item-content>
+                    </v-list-item>
+                    <v-list-item
+                        link
+                        v-if="get_user.udata.role_id == 2"
+                        @click="$router.push('/admin_reservations')"
+                    >
+                        <v-list-item-icon>
+                            <v-icon
+                                style="color: white"
+                            >mdi-account-group-outline</v-icon>
+                        </v-list-item-icon>
+
+                        <v-list-item-content>
+                            <v-list-item-title
+                                style="color: white"
+                            >Reservations</v-list-item-title>
+                        </v-list-item-content>
+                    </v-list-item>
+                    <v-list-item
+                        link
+                        v-if="get_user.udata.role_id == 2"
+                        @click="$router.push('/report_component')"
+                    >
+                        <v-list-item-icon>
+                            <v-icon
+                                style="color: white"
+                            >mdi-chart-arc</v-icon>
+                        </v-list-item-icon>
+
+                        <v-list-item-content>
+                            <v-list-item-title
+                                style="color: white"
+                            >Report</v-list-item-title>
+                        </v-list-item-content>
+                    </v-list-item>
+                    <v-list-item
+                        link
+                        @click="logout"
+                    >
+                        <v-list-item-icon>
+                            <v-icon
+                                style="color: white"
+                            >mdi-logout</v-icon>
+                        </v-list-item-icon>
+
+                        <v-list-item-content>
+                            <v-list-item-title
+                                style="color: white"
+                            >Logout</v-list-item-title>
                         </v-list-item-content>
                     </v-list-item>
                 </v-list>
