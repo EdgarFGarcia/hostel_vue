@@ -78,6 +78,7 @@
                     </v-list-item>
                     <v-list-item
                         link
+                        v-if="get_user.udata.role_id == 2"
                         @click="$router.push('/admin_rooms')"
                     >
                         <v-list-item-icon>
@@ -94,7 +95,6 @@
                     </v-list-item>
                     <v-list-item
                         link
-                        v-if="get_user.udata.role_id == 2"
                         @click="$router.push('/admin_reservations')"
                     >
                         <v-list-item-icon>
