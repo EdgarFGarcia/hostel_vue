@@ -20,8 +20,3 @@ pnpm-debug.log*
 *.njsproj
 *.sln
 *.sw?
-dist/standard-double-room.png:Zone.Identifier
-dist/bunk-bed-room.png:Zone.Identifier
-public/bunk-bed-room.png:Zone.Identifier
-public/standard-double-room.png:Zone.Identifier
-package-lock.json

@@ -94,14 +94,6 @@
                 color="#596377"
                 class="mr-3"
                 dark
-                @click="qr_code = true; paymongo_model = false;"
-              >
-                QR
-              </v-btn>
-              <v-btn
-                color="#596377"
-                class="mr-3"
-                dark
                 @click="paymongo_gcash_create_source(get_payable_data)"
               >
                 GCash
@@ -121,45 +113,6 @@
                 color="green darken-1"
                 text
                 @click="paymongo_model = false"
-              >
-                Cancel
-              </v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
-      </v-row>
-      
-      <v-row justify="center">
-        <v-dialog
-          v-model="qr_code"
-          persistent
-          max-width="400"
-        >
-          <v-card>
-            <v-card-title class="mb-5">
-              <small>Payable Amount: {{get_payable_data.payable | currency('₱')}}</small>
-            </v-card-title>
-            <v-card-text>
-              <strong>Scan QR Code using GCash App</strong>
-              <v-row
-                align="center"
-                justify="center"
-                class="mt-5"
-              >
-                <img
-                  :src="require('../../assets/gcash_connector_hostel.png')"
-                  contain
-                  style="max-width: 175px; max-height: 175px;"
-                  justify="center"
-                />
-              </v-row>
-            </v-card-text>
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn
-                color="green darken-1"
-                text
-                @click="qr_code = false"
               >
                 Cancel
               </v-btn>
@@ -306,13 +259,14 @@ export default {
     review_model: false,
     review_text: null,
     rating: 0,
-    qr_code: false,
+    //paymongo_paynow_link: null,
     details: {
       card_number: null,
       exp_month: null,
       exp_year: null,
       cvc: null
     }
+    
   }),
   async mounted () {
     await this.$store.dispatch('user/set_my_rooms')
