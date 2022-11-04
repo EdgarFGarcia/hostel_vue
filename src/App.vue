@@ -3,7 +3,7 @@
     <v-main>
       <component :is="layout">
         <router-view />
-        <v-btn
+        <!--<v-btn
           elevation="2"
           fab
           icon
@@ -12,10 +12,10 @@
           @click="open_chat_bot"
         >
           <v-icon>mdi-chat</v-icon>
-        </v-btn>
+        </v-btn>-->
       </component>
     </v-main>
-    <v-dialog
+    <!--<v-dialog
       v-model="chat_bot_model"
       persistent
       width="720"
@@ -89,7 +89,7 @@
           </v-btn>
         </v-card-actions>
       </v-card>
-    </v-dialog>
+    </v-dialog>-->
   </v-app>
 </template>
 
