@@ -33,7 +33,10 @@
               <label
                 style="display: block;"
               >Child Count: {{room.child_count}}</label>
-              <label>Total Payable: <strong style="text-decoration: underline;" >{{room.payable | currency('₱')}}</strong></label>
+              <label>Total Payable: 
+                <strong v-if="!room.is_paid" style="text-decoration: underline;" >{{room.payable | currency('₱')}}</strong>
+                <strong v-else-if="room.get_additional.amount_due > room.get_additional.amount_paid" style="text-decoration: underline;" >{{room.get_additional.amount_due | currency('₱')}} (additional payment)</strong>
+              </label>
             </v-card-text>
             <v-card-actions>
               <v-spacer/>
@@ -76,9 +79,9 @@
                 dark
                 class="pl-10 pr-10"
                 @click="pay_additional(room)"
-                v-if="room.get_additional != null"
+                v-if="room.get_additional.amount_paid < room.get_additional.amount_due && room.is_paid"
               >
-                Pay Additional
+                Pay Charge
               </v-btn>
             </v-card-actions>
           </v-card>
@@ -418,6 +421,7 @@ export default {
     },
     pay_additional(data){
       this.$store.dispatch('user/set_payable_data', data)
+      console.log(this.get_payable_data.get_additional.id)
       this.additional_model = true
     },
     paymongo(data){
@@ -471,7 +475,12 @@ export default {
       await this.$axios.post('r/payment/paymongo_card_create_method', payload)
       .then(({data}) => {
         if(data.response){
-          this.$router.push('/payment_successful')
+          if(this.get_payable_data.get_additional != null){
+            this.$axios.post('r/payment/pay_additional', this.get_payable_data.get_additional)
+            .then(() => {
+              this.$router.push('/payment_successful')
+            })
+          }
         }
         else{
           alert(data.message)

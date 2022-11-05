@@ -67,6 +67,17 @@
                                     <label v-else></label>
                                 </td>
                                 <td>
+                                    {{item.get_additional.amount_due | currency('₱')}}
+                                </td>
+                                <td>
+                                    <label
+                                        v-if="item.get_additional.amount_paid >= item.get_additional.amount_due"
+                                    >
+                                        Paid
+                                    </label>
+                                    <label v-else></label>
+                                </td>
+                                <td>
                                     <label
                                         v-if="item.is_verified"
                                     >
@@ -79,22 +90,7 @@
                                         dark
                                         @click="check_details(item)"
                                     >
-                                        Check room details
-                                    </v-btn>
-                                </td>
-                                <td>
-                                    <v-btn
-                                        v-if="item.get_additional == null"
-                                        dark
-                                        @click="charge(item)"
-                                    >
-                                        Charge additional
-                                    </v-btn>
-                                    <v-btn
-                                        v-else
-                                        disabled
-                                    >
-                                        Charge additional
+                                        Details
                                     </v-btn>
                                 </td>
                                 <td>
@@ -103,13 +99,43 @@
                                         dark
                                         @click="mark_as_paid(item)"
                                     >
-                                        Mark paid
+                                        Room paid
                                     </v-btn>
                                     <v-btn
                                         v-else
                                         disabled
                                     >
-                                        Paid
+                                        Room paid
+                                    </v-btn>
+                                </td>
+                                <td>
+                                    <v-btn
+                                        v-if="item.get_additional == null"
+                                        dark
+                                        @click="charge(item)"
+                                    >
+                                        Add Charge
+                                    </v-btn>
+                                    <v-btn
+                                        v-else
+                                        disabled
+                                    >
+                                        Add Charge
+                                    </v-btn>
+                                </td>
+                                <td>
+                                    <v-btn
+                                        v-if="item.get_additional.amount_paid < item.get_additional.amount_due"
+                                        dark
+                                        @click="extra_paid(item)"
+                                    >
+                                        Extra paid
+                                    </v-btn>
+                                    <v-btn
+                                        v-else
+                                        disabled
+                                    >
+                                        Extra paid
                                     </v-btn>
                                 </td>
                             </tr>
@@ -248,7 +274,13 @@ export default {
             text: 'Child Count'
         },
         {
-            text: 'Payable'
+            text: 'Room Price'
+        },
+        {
+            text: 'Paid'
+        },
+        {
+            text: 'Additional'
         },
         {
             text: 'Paid'
@@ -306,6 +338,19 @@ export default {
         this.$axios.post('/admin/reservation/mark_as_paid', {
             check_in_id: data.id
         })
+        .then(() => {
+            this.$router.go(0)
+        })
+    },
+    extra_paid(data){
+        console.log(data)
+        this.$axios.post('/admin/reservation/extra_paid', {
+            check_in_id: data.id,
+            amount_due: data.get_additional.amount_due
+        })
+        .then(() => {
+            this.$router.go(0)
+        })
     },
     async confirm_additional_payment(){
         await this.$axios.post('/admin/reservation/charge_additional', {
@@ -320,6 +365,7 @@ export default {
             else{
                 this.dialog_additional = false
                 alert('Charged successfully')
+                this.$router.go(0)
             }
         })
     }
