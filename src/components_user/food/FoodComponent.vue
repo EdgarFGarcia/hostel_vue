@@ -156,6 +156,7 @@
             <v-tab-item
                 value="tab-2"
             >
+                <h1 class="ml-5">Request a Car Service</h1>
                 <v-row>
                     <v-col
                         cols="3"
@@ -170,7 +171,7 @@
                             <v-card-title>
                                 <strong>{{food.name}}</strong>
                                 <v-spacer/>
-                                <small>{{food.price | currency('₱')}}</small>
+                                <small>{{food.price}}</small>
                             </v-card-title>
                             <v-card-subtitle>
                                 <label>{{food.desc}}</label>
@@ -200,6 +201,7 @@
             <v-tab-item
                 value="tab-3"
             >
+                <h1 class="ml-5">Spa and Massage</h1>
                 <v-row>
                     <v-col
                         cols="3"
@@ -496,13 +498,6 @@ export default {
             image:  require('../../assets/Seafood platter.jpg')
         },
     ],
-    transportation: [
-        {
-            id:     1,
-            name:   'Request a car service',
-            image:  require('../../assets/suv.jpg')
-        }
-    ],
     massage: [
         {
             id:     33,
@@ -532,7 +527,27 @@ export default {
             desc:   'Deep tissue massage uses more pressure than a Swedish massage. It’s a good option if you have muscle problems',
             image:  require('../../assets/massage4.jpg')
         }
-    ]
+    ],
+    transportation: [
+        {
+            id:     37,
+            name:   'Car',
+            price:  'Price varies',
+            image:  require('../../assets/car.jpg')
+        },
+        {
+            id:     38,
+            name:   'Sedan',
+            price:  'Price varies',
+            image:  require('../../assets/suv.jpg')
+        },
+        {
+            id:     39,
+            name:   'SUV',
+            price:  'Price varies',
+            image:  require('../../assets/sedan.jpg')
+        }
+    ],
   }),
   mounted () {
   },
