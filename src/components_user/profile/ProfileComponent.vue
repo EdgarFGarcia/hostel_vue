@@ -49,6 +49,7 @@
         <v-col
             cols="8"
         >
+            <v-btn @click="set_status_booked"></v-btn>
         </v-col>
       </v-row>
         <v-dialog
@@ -189,6 +190,9 @@ export default {
         .then(({data}) => {
             console.log(data)
         })
+    },
+    set_status_booked(){
+        this.$axios.post('user/set_status_booked')
     },
     edit_profile(){
         this.profile_edit_state = true
