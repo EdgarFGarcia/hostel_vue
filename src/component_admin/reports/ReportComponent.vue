@@ -78,7 +78,7 @@
                                 {{item.will_be_available_at}}
                             </td>
                             <td>
-                                {{item.created_at}}
+                                {{moment(item.created_at).format("MMM DD, YYYY")}}
                             </td>
                         </tr>
                     </template>
@@ -143,7 +143,7 @@
                                 {{item.will_be_available_at}}
                             </td>
                             <td>
-                                {{item.created_at}}
+                                {{moment(item.created_at).format("MMM DD, YYYY")}}
                             </td>
                         </tr>
                     </template>
@@ -208,7 +208,7 @@
                                 {{item.will_be_available_at}}
                             </td>
                             <td>
-                                {{item.created_at}}
+                                {{moment(item.created_at).format("MMM DD, YYYY")}}
                             </td>
                         </tr>
                     </template>
@@ -226,6 +226,28 @@
             >
                 <BarChart/>
             </v-col>
+            <v-col
+                cols="12"
+            >
+                <h2>Weekly Revenue</h2>
+            </v-col>
+            <v-col
+                cols="9"
+            >
+                <div
+                    v-for="(day, index) in get_weekly"
+                    :key="index"
+                    class="mb-5"
+                >
+                    <div
+                        v-for="(data, index) in day"
+                        :key="index"
+                        class="mb-5"
+                    >
+                        {{data.payable}}
+                    </div>
+                </div>
+            </v-col>
         </v-row>
     </v-container>
 </template>
@@ -233,6 +255,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import BarChart from './BarChart'
+import moment from 'moment'
 export default {
   components: {
     BarChart
@@ -272,12 +295,39 @@ export default {
             text: 'Created At'
         }
     ],
+    weekly_table_headers: [
+        {
+            text: 'Room'
+        },
+        {
+            text: 'Sunday'
+        },
+        {
+            text: 'Monday'
+        },
+        {
+            text: 'Tuesday'
+        },
+        {
+            text: 'Wednesday'
+        },
+        {
+            text: 'Thursday'
+        },
+        {
+            text: 'Friday'
+        },
+        {
+            text: 'Saturday'
+        }
+    ],
     date: [],
     menu1: false,
     dates: [],
     menu2: false,
     date3: [],
     menu3: false,
+    get_weekly: []
   }),
   async mounted () {
     await this.$axios.get('/admin/r_groups/get_list')
@@ -285,8 +335,11 @@ export default {
         this.$store.dispatch('admin_report/set_pending_data', data.data_pending)
         this.$store.dispatch('admin_report/set_done_data', data.data_done)
         this.$store.dispatch('admin_report/set_cancelled_data', data.data_canceled)
-        //this.chartData.datasets[0].data = data.monthly
-        //console.log(data.monthly)
+    }),
+    await this.$axios.get('/admin/r_groups/get_weekly')
+    .then(({data}) => {
+        this.get_weekly = data.weekly_room_1
+        console.log(this.get_weekly)
     })
   },
   created () {
@@ -308,6 +361,9 @@ export default {
     }
   },
   methods: {
+    moment: function (time) {
+        return moment(time);
+    },
   },
   watch: {
   }

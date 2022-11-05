@@ -62,6 +62,7 @@
                                     text
                                     outlined
                                     style="textTransform: none !important;"
+                                    @click="order(food)"
                                 >
                                     Order
                                 </v-btn>
@@ -102,6 +103,7 @@
                                     text
                                     outlined
                                     style="textTransform: none !important;"
+                                    @click="order(food)"
                                 >
                                     Order
                                 </v-btn>
@@ -142,6 +144,7 @@
                                     text
                                     outlined
                                     style="textTransform: none !important;"
+                                    @click="order(food)"
                                 >
                                     Order
                                 </v-btn>
@@ -185,6 +188,7 @@
                                     text
                                     outlined
                                     style="textTransform: none !important;"
+                                    @click="order(food)"
                                 >
                                     Request
                                 </v-btn>
@@ -227,6 +231,7 @@
                                     text
                                     outlined
                                     style="textTransform: none !important;"
+                                    @click="order(food)"
                                 >
                                     Request
                                 </v-btn>
@@ -400,91 +405,91 @@ export default {
     ],
     dr_wine: [
         {
-            id:     1,
+            id:     20,
             name:   'Salmon Rillettes',
             price:  '475',
             desc:   'Salmon confit with lemon and olive oil, topped with fresh herbs bavarois',
             image:  require('../../assets/Salmon Rilettes.jpg')
         },
         {
-            id:     2,
+            id:     21,
             name:   'Cold Cuts Board',
             price:  '890',
             desc:   'Chefs selection of 4 Europeean cured meats served with pickles',
             image:  require('../../assets/Coldcuts on board.jpg')
         },
         {
-            id:     3,
+            id:     22,
             name:   'Cheese Board',
             price:  '990',
             desc:   'Assortment of 4 cheeses served with pineapple mostarda',
             image:  require('../../assets/Cheeseboard.jpg')
         },
         {
-            id:     4,
+            id:     23,
             name:   'Escargots (6 pcs)',
             price:  '590',
             desc:   'Traditional burgundy snails in shell, white wine almond powder & parsley garlic butter',
             image:  require('../../assets/Escargot.jpg')
         },
         {
-            id:     5,
+            id:     24,
             name:   'French Oyster Fine De Claire',
             price:  '770',
             desc:   '3 oysters',
             image:  require('../../assets/French Oyster Fine De Claire.jpg')
         },
         {
-            id:     12,
+            id:     25,
             name:   'French Oyster Fine De Claire',
             price:  '1400',
             desc:   '6 oysters',
             image:  require('../../assets/French Oyster Fine De Claire.jpg')
         },
         {
-            id:     13,
+            id:     26,
             name:   'French Oyster Fine De Claire',
             price:  '2700',
             desc:   '12 oysters',
             image:  require('../../assets/French Oyster Fine De Claire.jpg')
         },
         {
-            id:     6,
+            id:     27,
             name:   'La Soupe A Loignon Gratinee',
             price:  '550',
             desc:   '3 different kinds of onions, countryside bread crouton, gratinated with emmental cheese',
             image:  require('../../assets/La Soupe A Loignon Gratinee.jpg')
         },
         {
-            id:     7,
+            id:     28,
             name:   'Osso Buco',
             price:  '1190',
             desc:   'Slow cooked beef shank (500 gr.) served with basil & garlic pasta',
             image:  require('../../assets/Osso Buco.jpg')
         },
         {
-            id:     8,
+            id:     29,
             name:   'Penne Pasta',
             price:  '720',
             desc:   'Oyster and gemini mushrooms with penne in a truffle paste cream sauce, pecorino and parmigiano reggiano cheese',
             image:  require('../../assets/Pasta.jpg')
         },
         {
-            id:     9,
+            id:     30,
             name:   'Poulet grand mere',
             price:  '880',
             desc:   'Yellow chicken breast on a rich tomato, mushrooms, potatoes and lardon sauce',
             image:  require('../../assets/Poulet grand mere.jpg')
         },
         {
-            id:     10,
+            id:     31,
             name:   'Sausage platter',
             price:  '990',
             desc:   'A mix of 4 flavorful sausages',
             image:  require('../../assets/Sausage platter.jpg')
         },
         {
-            id:     11,
+            id:     32,
             name:   'Seafood platter',
             price:  '1180',
             desc:   'Fresh tasmanian salmon fillet served with a rich seafood and vermouth sauce as basmati rice',
@@ -494,43 +499,34 @@ export default {
     transportation: [
         {
             id:     1,
-            name:   'Grab Car',
-            price:  'Depends on Grab App',
-            desc:   'Sedan. SUV',
+            name:   'Request a car service',
             image:  require('../../assets/suv.jpg')
-        },
-        {
-            id:     2,
-            name:   'Taxi',
-            price:  'Depends on Driver',
-            desc:   'Street Taxis',
-            image:  require('../../assets/taxi.jpg')
         }
     ],
     massage: [
         {
-            id:     1,
+            id:     33,
             name:   'Swedish Massage',
             price:  '250',
-            desc:   'It can help release muscle knots, and it’s also a good choice for when you want to fully relax during a massage.',
+            desc:   'It can help release muscle knots, and its also a good choice for when you want to fully relax during a massage.',
             image:  require('../../assets/massage1.jpg')
         },
         {
-            id:     2,
+            id:     34,
             name:   'Hot stone massage',
             price:  '250',
             desc:   'This type of therapeutic massage is similar to a Swedish massage, only the massage therapist uses heated stones in lieu of or in addition to their hands.',
             image:  require('../../assets/massage2.jpg')
         },
         {
-            id:     3,
+            id:     35,
             name:   'Aromatherapy massage',
             price:  '250',
             desc:   'Aromatherapy massages are best for people who enjoy scent and want to have an emotional healing component to their massage.',
             image:  require('../../assets/massage3.jpg')
         },
         {
-            id:     4,
+            id:     36,
             name:   'Deep tissue massage',
             price:  '250',
             desc:   'Deep tissue massage uses more pressure than a Swedish massage. It’s a good option if you have muscle problems',
@@ -545,6 +541,14 @@ export default {
   computed: {
   },
   methods: {
+    async order(food){
+        console.log(food)
+        await this.$axios.post('/user/auth_user/order_food', food)
+        .then(({data}) => {
+            console.log(data)
+            alert('Sent!')
+        })
+    }
   },
   watch: {
   }

@@ -33,7 +33,7 @@
             <v-tab
                 ripple
                 href="#tab-4"
-                v-if="get_user_data != null"
+                v-if="get_user_data != null && get_user_data.role_id == 1"
             >
                 <h2>Rooms</h2>
             </v-tab>

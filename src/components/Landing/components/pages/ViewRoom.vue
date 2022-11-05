@@ -418,8 +418,8 @@ export default {
     })
   },
   methods: {
-    moment: function () {
-        return moment();
+    moment: function (time) {
+        return moment(time);
     },
     select_room_for_reservation(room_data, selected_room_data){
         this.$store.dispatch('room/set_reserve_this_room', room_data)

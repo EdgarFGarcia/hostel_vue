@@ -95,6 +95,23 @@
                     </v-list-item>
                     <v-list-item
                         link
+                        v-if="get_user.udata.role_id != 1"
+                        @click="$router.push('/orders')"
+                    >
+                        <v-list-item-icon>
+                            <v-icon
+                                style="color: white"
+                            >mdi-food</v-icon>
+                        </v-list-item-icon>
+
+                        <v-list-item-content>
+                            <v-list-item-title
+                                style="color: white"
+                            >Order(s)</v-list-item-title>
+                        </v-list-item-content>
+                    </v-list-item>
+                    <v-list-item
+                        link
                         @click="$router.push('/admin_reservations')"
                     >
                         <v-list-item-icon>

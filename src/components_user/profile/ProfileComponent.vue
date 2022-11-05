@@ -49,7 +49,6 @@
         <v-col
             cols="8"
         >
-            <v-btn @click="set_status_booked"></v-btn>
         </v-col>
       </v-row>
         <v-dialog
