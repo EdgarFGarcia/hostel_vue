@@ -481,6 +481,9 @@ export default {
               this.$router.push('/payment_successful')
             })
           }
+          else{
+              this.$router.push('/payment_successful')
+          }
         }
         else{
           alert(data.message)

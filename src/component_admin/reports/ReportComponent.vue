@@ -268,6 +268,7 @@ export default {
   async mounted () {
     await this.$axios.get('/admin/r_groups/get_list')
     .then(({data}) => {
+        console.log(data)
         this.$store.dispatch('admin_report/set_pending_data', data.data_pending)
         this.$store.dispatch('admin_report/set_done_data', data.data_done)
         this.$store.dispatch('admin_report/set_cancelled_data', data.data_canceled)
