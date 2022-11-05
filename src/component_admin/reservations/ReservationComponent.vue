@@ -66,12 +66,15 @@
                                     </label>
                                     <label v-else></label>
                                 </td>
-                                <td>
+                                <td v-if="item.get_additional != null">
                                     {{item.get_additional.amount_due | currency('₱')}}
+                                </td>
+                                <td v-else>
+                                    
                                 </td>
                                 <td>
                                     <label
-                                        v-if="item.get_additional.amount_paid >= item.get_additional.amount_due"
+                                        v-if="item.get_additional != null && item.get_additional.amount_paid >= item.get_additional.amount_due"
                                     >
                                         Paid
                                     </label>
@@ -125,7 +128,7 @@
                                 </td>
                                 <td>
                                     <v-btn
-                                        v-if="item.get_additional.amount_paid < item.get_additional.amount_due"
+                                        v-if="item.get_additional != null && item.get_additional.amount_paid < item.get_additional.amount_due"
                                         dark
                                         @click="extra_paid(item)"
                                     >
