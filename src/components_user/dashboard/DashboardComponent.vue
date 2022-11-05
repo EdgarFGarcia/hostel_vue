@@ -35,7 +35,7 @@
               >Child Count: {{room.child_count}}</label>
               <label>Total Payable: 
                 <strong v-if="!room.is_paid" style="text-decoration: underline;" >{{room.payable | currency('₱')}}</strong>
-                <strong v-else-if="room.get_additional.amount_due > room.get_additional.amount_paid" style="text-decoration: underline;" >{{room.get_additional.amount_due | currency('₱')}} (additional payment)</strong>
+                <strong v-else-if="room.get_additional != null && room.get_additional.amount_due > room.get_additional.amount_paid" style="text-decoration: underline;" >{{room.get_additional.amount_due | currency('₱')}} (additional payment)</strong>
               </label>
             </v-card-text>
             <v-card-actions>
@@ -79,7 +79,7 @@
                 dark
                 class="pl-10 pr-10"
                 @click="pay_additional(room)"
-                v-if="room.get_additional.amount_paid < room.get_additional.amount_due && room.is_paid"
+                v-if="room.get_additional != null && room.get_additional.amount_paid < room.get_additional.amount_due && room.is_paid"
               >
                 Pay Charge
               </v-btn>
