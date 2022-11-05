@@ -215,13 +215,27 @@
                 </v-data-table>
             </v-tab-item>
         </v-tabs-items>
+        <v-row>
+            <v-col
+                cols="12"
+            >
+                <h2>Monthly Bookings</h2>
+            </v-col>
+            <v-col
+                cols="12"
+            >
+                <BarChart/>
+            </v-col>
+        </v-row>
     </v-container>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
+import BarChart from './BarChart'
 export default {
   components: {
+    BarChart
   },
   props: [
   ],
@@ -263,15 +277,16 @@ export default {
     dates: [],
     menu2: false,
     date3: [],
-    menu3: false
+    menu3: false,
   }),
   async mounted () {
     await this.$axios.get('/admin/r_groups/get_list')
     .then(({data}) => {
-        console.log(data)
         this.$store.dispatch('admin_report/set_pending_data', data.data_pending)
         this.$store.dispatch('admin_report/set_done_data', data.data_done)
         this.$store.dispatch('admin_report/set_cancelled_data', data.data_canceled)
+        //this.chartData.datasets[0].data = data.monthly
+        //console.log(data.monthly)
     })
   },
   created () {
