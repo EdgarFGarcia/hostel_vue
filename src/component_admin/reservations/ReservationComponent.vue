@@ -66,6 +66,14 @@
                                     </label>
                                     <label v-else></label>
                                 </td>
+                                <td>
+                                    <label
+                                        v-if="item.checked"
+                                    >
+                                        Checked
+                                    </label>
+                                    <label v-else></label>
+                                </td>
                                 <td v-if="item.get_additional != null">
                                     {{item.get_additional.amount_due | currency('₱')}}
                                 </td>
@@ -102,7 +110,7 @@
                                         dark
                                         @click="mark_as_paid(item)"
                                     >
-                                        Room paid
+                                        Paid room
                                     </v-btn>
                                     <v-btn
                                         v-else
@@ -113,32 +121,17 @@
                                 </td>
                                 <td>
                                     <v-btn
-                                        v-if="item.get_additional == null"
+                                        v-if="item.to_check == 0"
                                         dark
-                                        @click="charge(item)"
+                                        @click="check(item)"
                                     >
-                                        Add Charge
+                                        Mark to check
                                     </v-btn>
                                     <v-btn
                                         v-else
                                         disabled
                                     >
-                                        Add Charge
-                                    </v-btn>
-                                </td>
-                                <td>
-                                    <v-btn
-                                        v-if="item.get_additional != null && item.get_additional.amount_paid < item.get_additional.amount_due"
-                                        dark
-                                        @click="extra_paid(item)"
-                                    >
-                                        Extra paid
-                                    </v-btn>
-                                    <v-btn
-                                        v-else
-                                        disabled
-                                    >
-                                        Extra paid
+                                        To check
                                     </v-btn>
                                 </td>
                             </tr>
@@ -283,10 +276,13 @@ export default {
             text: 'Paid'
         },
         {
+            text: 'Checked'
+        },
+        {
             text: 'Additional'
         },
         {
-            text: 'Paid'
+            text: 'Additional Paid'
         },
         {
             text: 'Verified'
@@ -341,8 +337,8 @@ export default {
         this.$axios.post('/admin/reservation/mark_as_paid', {
             check_in_id: data.id
         })
-        .then(() => {
-            this.$router.go(0)
+        .then(({data}) => {
+            this.$store.dispatch('admin_reservation/set_reservations', data.data)
         })
     },
     extra_paid(data){
@@ -353,6 +349,15 @@ export default {
         })
         .then(() => {
             this.$router.go(0)
+        })
+    },
+    async check(data){
+        console.log(data)
+        await this.$axios.post('/admin/reservation/to_check', {
+            check_in_id: data.id
+        })
+        .then(({data}) => {
+            this.$store.dispatch('admin_reservation/set_reservations', data.data)
         })
     },
     async confirm_additional_payment(){

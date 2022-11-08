@@ -71,7 +71,7 @@
                     <v-spacer></v-spacer>
                     <v-btn
                         class="pl-15 pr-15"
-                        color="#596377"
+                        color="#6757F7"
                         dark
                         @click="login"
                     >
@@ -253,11 +253,11 @@ export default {
                         return
                     case 2:
                         this.close_dialog()
-                        this.$router.push({name: '/admin_dashboard'})
+                        this.$router.push({name: '/admin_rooms'})
                         return
                     case 3:
                         this.close_dialog()
-                        this.$router.push({name: '/admin_dashboard'})
+                        this.$router.push({name: '/housekeeping_request'})
                         return
                 }
             }

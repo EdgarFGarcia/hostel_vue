@@ -3,6 +3,30 @@
     <v-main>
       <component :is="layout">
         <router-view />
+        <div class="mt-10 mb-10 pl-10">
+          Check us out
+          <v-btn
+              class="ml-5"
+              icon
+              color="#6757F7"
+              href="https://web.facebook.com/whitebananamnl"
+              target='#'
+          >
+              <v-icon
+                  small
+              >mdi-facebook</v-icon>
+          </v-btn>
+          <v-btn
+              icon
+              color="#6757F7"
+              href="https://www.instagram.com/connectorhostel/"
+              target='#'
+          >
+              <v-icon
+                  small
+              >mdi-instagram</v-icon>
+          </v-btn>
+        </div>
         <!--<v-btn
           elevation="2"
           fab

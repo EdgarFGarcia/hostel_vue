@@ -150,7 +150,15 @@ export default {
             url:        {
                 name:   '/user_fnb_order'
             }
-        }        
+        },
+        {
+            icon:       'mdi-food',
+            label:      'Orders',
+            style:      'color: white',
+            url:        {
+                name:   '/orders_user'
+            }
+        }
     ],
     navigation2: [
         {

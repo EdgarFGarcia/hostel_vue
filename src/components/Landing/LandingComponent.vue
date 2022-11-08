@@ -2,7 +2,7 @@
     <div fluid>
         <v-tabs
             v-model="tab"
-            background-color="#A69C88"
+            background-color="#6757F7"
             dark
             grow
         >
@@ -17,13 +17,6 @@
 
             <v-tab
                 ripple
-                href="#tab-2"
-            >
-                <h2>Special Offers</h2>
-            </v-tab>
-
-            <v-tab
-                ripple
                 href="#tab-3"
                 v-if="get_user_data == null"
             >
@@ -33,7 +26,7 @@
             <v-tab
                 ripple
                 href="#tab-4"
-                v-if="get_user_data != null && get_user_data.role_id == 1"
+                v-if="get_user_data != null && get_user_data.role_id != 3"
             >
                 <h2>Rooms</h2>
             </v-tab>

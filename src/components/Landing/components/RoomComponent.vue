@@ -37,7 +37,9 @@
                   class="mt-5 mx-5"
                 >
                   <label>
-                    <v-icon>
+                    <v-icon
+                      color="#6757F7"
+                    >
                       mdi-check-circle
                     </v-icon>
                     {{facilities}}
@@ -47,7 +49,7 @@
             </v-card-text>
             <v-card-actions>
               <v-btn
-                color="#596377"
+                color="#6757F7"
                 style="textTransform: none !important;width:50%"
                 dark
                 @click="select_room(room)"

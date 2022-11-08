@@ -1,5 +1,5 @@
 <template>
-    <v-container fluid class="pa-0 ma-0">
+    <v-container fluid class="pa-0 ma-0" fill-height>
       <v-row
         v-if="get_selected_room.actual_rooms.length === 0"
         class="mt-15"
@@ -52,15 +52,17 @@
                             <div
                                 style="display: block;"
                             >
-                                <v-icon>mdi-account</v-icon>
+                                <v-icon color="#958de3">mdi-account</v-icon>
                                 <small>Sleeps {{get_selected_room.capacity}}</small>
 
                                 <v-icon
+                                    color="#958de3"
                                     class="ml-2"
                                 >mdi-bed-king</v-icon>
                                 <small>1 King-size Bed</small>
 
                                 <v-icon
+                                    color="#958de3"
                                     class="ml-2"
                                 >mdi-bathtub</v-icon>
                                 <small>1 Bathroom</small>
@@ -74,7 +76,7 @@
                                 :key="facility_id"
                                 class="mt-5 mx-5"
                             >
-                                <v-icon>
+                                <v-icon color="#958de3">
                                     mdi-check-circle
                                 </v-icon>
                                 {{facilities}}
@@ -136,7 +138,7 @@
                     <v-btn
                         block
                         dark
-                        color="#596377"
+                        color="#6757F7"
                         @click="select_room_for_reservation(room, get_selected_room)"
                     >
                         Select room
@@ -356,7 +358,7 @@
                     <v-btn
                         v-if="!booked"
                         block
-                        color="#596377"
+                        color="#6757F7"
                         dark
                         @click="book_now"
                     >
@@ -365,7 +367,7 @@
                     <v-btn
                         v-else
                         block
-                        color="#596377"
+                        color="#6757F7"
                         disabled
                     >
                         Please Wait
@@ -430,7 +432,7 @@ export default {
         this.$store.commit('room/clear_reserve_this_room')
     },
     back_to_rooms(){
-        this.$router.push({name: '/room-component'})
+        this.$router.push({name: '/'})
         this.$store.commit('room/clear_reserve_this_room')
     },
     dates_fn(){

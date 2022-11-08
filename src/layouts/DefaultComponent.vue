@@ -1,53 +1,62 @@
 <template>
     <div>
         <v-app-bar
-            color="#A69C88"
-            class="white--text"
-            height="120"
+            color="white"
+            height="auto"
         >
-            <v-toolbar-title
-                style="cursor: pointer;"
-                @click="go_to_home()"
-            >Connector Hostel</v-toolbar-title>
-            <v-spacer></v-spacer>
-            <v-btn
-                icon
-                style="color: white;"
-            >
-                <v-icon
-                    small
-                >mdi-facebook</v-icon>
-            </v-btn>
-            <v-btn
-                icon
-                style="color: white;"
-            >
-                <v-icon
-                    small
-                >mdi-instagram</v-icon>
-            </v-btn>
-            <v-btn
-                v-if="Object.keys(get_user).length === 0"
-                dark
-                outlined
-                class="pl-10 pr-10"
-                @click="show_login_dialog_fn"
-            >
-                Login
-            </v-btn>
-            <v-btn
-                v-else
-                dark
-                outlined
-                class="pl-10 pr-10"
-                @click="go_to_board"
-            >
-                Dashboard
-            </v-btn>
-            <LoginDialog
-                :value="show_login_dialog"
-                @close_dialog="close_dialog"
-            />
+            <v-row>
+                <v-col cols="12" align="right" class="mt-5 mr-5" style="margin-bottom:-50px">
+                    <v-btn
+                        v-if="Object.keys(get_user).length === 0"
+                        class="pl-10 pr-10"
+                        color="#6757F7"
+                        dark
+                        @click="show_login_dialog_fn"
+                    >
+                        Login
+                    </v-btn>
+                    <v-btn
+                        v-else
+                        outlined
+                        class="pl-10 pr-10"
+                        @click="go_to_board"
+                    >
+                        Dashboard
+                    </v-btn>
+                    <v-btn
+                        class="ml-5"
+                        icon
+                        color="#6757F7"
+                        href="https://web.facebook.com/whitebananamnl"
+                        target='#'
+                    >
+                        <v-icon
+                            small
+                        >mdi-facebook</v-icon>
+                    </v-btn>
+                    <v-btn
+                        icon
+                        color="#6757F7"
+                        href="https://www.instagram.com/connectorhostel/"
+                        target='#'
+                    >
+                        <v-icon
+                            small
+                        >mdi-instagram</v-icon>
+                    </v-btn>
+                    <LoginDialog
+                        :value="show_login_dialog"
+                        @close_dialog="close_dialog"
+                    />
+                </v-col>
+                <v-col cols="12">
+                    <img
+                        :src="require('../assets/logo.png')"
+                        class="mb-5"
+                        style="max-width:150px;display:block;margin:0 auto;"
+                    />
+                </v-col>
+            </v-row>
         </v-app-bar>
         <slot/>
     </div>

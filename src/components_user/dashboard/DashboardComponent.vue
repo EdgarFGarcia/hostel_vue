@@ -6,7 +6,7 @@
           v-for="(room, roomindex) in orderBy(get_my_rooms, 'created_at', -1)"
           :key="roomindex"
         >
-          <v-card style="height:250px">
+          <v-card style="height:auto">
             <v-card-title class="text-small">
               <small>{{room.get_room_info.room_name}}</small>
               <v-spacer/>
@@ -64,7 +64,7 @@
                 v-if="room.is_paid && !room.reviewed_status"
                 @click="review(room)"
               >
-                Leave a review
+                Review
               </v-btn>
               <v-btn
                 color="#596377"
@@ -81,11 +81,60 @@
                 @click="pay_additional(room)"
                 v-if="room.get_additional != null && room.get_additional.amount_paid < room.get_additional.amount_due && room.is_paid"
               >
-                Pay Charge
+                Pay
+              </v-btn>
+            </v-card-actions>
+            <v-card-actions>
+              <v-spacer/>
+              <v-btn
+                v-if="room.is_done < 2"
+                color="#596377"
+                dark
+                class="mt-3 mb-3"
+                @click="housekeeping_model = true; chosen_room = room.id"
+              >
+                Request Housekeeping
               </v-btn>
             </v-card-actions>
           </v-card>
         </v-col>
+      </v-row>
+        
+      <v-row justify="center">
+          <v-dialog
+              v-model="housekeeping_model"
+              persistent
+              max-width="560"
+          >
+          <v-card>
+              <v-card-title class="text-h5">
+              </v-card-title>
+              <v-card-text>
+                  <v-text-field
+                      placeholder="Request"
+                      v-model="request"
+                  >
+                  </v-text-field>
+              </v-card-text>
+              <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn
+                  color="green darken-1"
+                  text
+                  @click="housekeeping_model = false"
+              >
+                  Cancel
+              </v-btn>
+              <v-btn
+                  color="green darken-1"
+                  text
+                  @click="send_housekeeping()"
+              >
+                  Send request
+              </v-btn>
+              </v-card-actions>
+          </v-card>
+          </v-dialog>
       </v-row>
       
       <v-row justify="center">
@@ -389,6 +438,9 @@ export default {
     review_model: false,
     review_text: null,
     rating: 0,
+    housekeeping_model: false,
+    chosen_room: null,
+    request: null,
     qr_code: false,
     details: {
       card_number: null,
@@ -423,6 +475,18 @@ export default {
       this.$store.dispatch('user/set_payable_data', data)
       console.log(this.get_payable_data.get_additional.id)
       this.additional_model = true
+    },
+    async send_housekeeping(){
+      console.log(this.chosen_room)
+      await this.$axios.post('/user/auth_user/housekeeping', {
+        message: this.request,
+        room_id: this.chosen_room
+      })
+        .then(({data}) => {
+            console.log(data)
+            this.housekeeping_model = false
+            alert('Sent request!')
+        })
     },
     paymongo(data){
       this.$store.dispatch('user/set_payable_data', data)

@@ -1,33 +1,20 @@
 <template>
     <v-container fluid style="background-color: #F4F4F5 !important; height: 100%;" class="pa-0 ma-0">
         <!-- <Navigation/> -->
+        <v-app-bar app clipped-left dark color="#447fa6">
+            <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+            <v-toolbar-title>Connector Hostel</v-toolbar-title>
+        </v-app-bar>
         <v-card
             elevation="12"
-            width="256"
         >
             <v-navigation-drawer
-                floating
+                v-model="drawer"
                 app
+                clipped
                 color="#588BAD"
                 class="no-border shadow"
             >
-                <v-card-title
-                    style="color: white;"
-                >
-                    Connector Hostel
-                </v-card-title>
-                <v-card-subtitle
-                    style="color: white;"
-                    v-if="get_user.udata.role_id == 2"
-                >
-                    Admin Connector Hostel
-                </v-card-subtitle>
-                <v-card-subtitle
-                    style="color: white;"
-                    v-else-if="get_user.udata.role_id == 3"
-                >
-                    Housekeeping Connector Hostel
-                </v-card-subtitle>
                 <v-card-text
                     style="color: white !important;"
                 >
@@ -78,6 +65,40 @@
                     </v-list-item>
                     <v-list-item
                         link
+                        v-if="get_user.udata.role_id == 3"
+                        @click="$router.push('/housekeeping_request')"
+                    >
+                        <v-list-item-icon>
+                            <v-icon
+                                style="color: white"
+                            >mdi-account-group-outline</v-icon>
+                        </v-list-item-icon>
+
+                        <v-list-item-content>
+                            <v-list-item-title
+                                style="color: white"
+                            >Housekeeping Requests</v-list-item-title>
+                        </v-list-item-content>
+                    </v-list-item>
+                    <v-list-item
+                        link
+                        v-if="get_user.udata.role_id == 3"
+                        @click="$router.push('/housekeeping')"
+                    >
+                        <v-list-item-icon>
+                            <v-icon
+                                style="color: white"
+                            >mdi-account-group-outline</v-icon>
+                        </v-list-item-icon>
+
+                        <v-list-item-content>
+                            <v-list-item-title
+                                style="color: white"
+                            >Rooms to check</v-list-item-title>
+                        </v-list-item-content>
+                    </v-list-item>
+                    <v-list-item
+                        link
                         v-if="get_user.udata.role_id == 2"
                         @click="$router.push('/admin_rooms')"
                     >
@@ -112,6 +133,7 @@
                     </v-list-item>
                     <v-list-item
                         link
+                        v-if="get_user.udata.role_id == 2"
                         @click="$router.push('/admin_reservations')"
                     >
                         <v-list-item-icon>
@@ -176,6 +198,7 @@ export default {
   props: [
   ],
   data: () => ({
+    drawer: false,
     navigation: [
         {
             icon:       'mdi-chevron-left',

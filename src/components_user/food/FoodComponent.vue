@@ -44,10 +44,10 @@
                             <v-card-title>
                                 <strong>{{food.name}}</strong>
                                 <v-spacer/>
-                                <small>{{food.price | currency('₱')}}</small>
                             </v-card-title>
                             <v-card-subtitle>
-                                <label>{{food.desc}}</label>
+                                {{food.price | currency('₱')}}
+                                <div><label>{{food.desc}}</label></div>
                             </v-card-subtitle>
                             <v-card-text>
                                 <img
@@ -85,10 +85,10 @@
                             <v-card-title>
                                 <strong>{{food.name}}</strong>
                                 <v-spacer/>
-                                <small>{{food.price | currency('₱')}}</small>
                             </v-card-title>
                             <v-card-subtitle>
-                                <label>{{food.desc}}</label>
+                                {{food.price | currency('₱')}}
+                                <div><label>{{food.desc}}</label></div>
                             </v-card-subtitle>
                             <v-card-text>
                                 <img
@@ -126,9 +126,50 @@
                             <v-card-title>
                                 <strong>{{food.name}}</strong>
                                 <v-spacer/>
-                                <small>{{food.price | currency('₱')}}</small>
                             </v-card-title>
                             <v-card-subtitle>
+                                {{food.price | currency('₱')}}
+                                <div style="height:50px"><label>{{food.desc}}</label></div>
+                            </v-card-subtitle>
+                            <v-card-text>
+                                <img
+                                    :src="food.image"
+                                    contain
+                                    style="width: 250px; height: 250px;"
+                                />
+                            </v-card-text>
+                            <v-card-actions>
+                                <v-spacer/>
+                                <v-btn
+                                    text
+                                    outlined
+                                    style="textTransform: none !important;"
+                                    @click="order(food)"
+                                >
+                                    Order
+                                </v-btn>
+                            </v-card-actions>
+                        </v-card>
+                    </v-col>
+                </v-row>
+                <h1 class="ml-5">Buccaneers</h1>
+                <v-row>
+                    <v-col
+                        cols="3"
+                        v-for="(food, foodindex) in buccaneers"
+                        :key="foodindex"
+                    >
+                        <v-card
+                            width="300"
+                            elevation="0"
+                            class="ma-5"
+                        >
+                            <v-card-title>
+                                <strong>{{food.name}}</strong>
+                                <v-spacer/>
+                            </v-card-title>
+                            <v-card-subtitle>
+                                {{food.price | currency('₱')}}
                                 <div style="height:50px"><label>{{food.desc}}</label></div>
                             </v-card-subtitle>
                             <v-card-text>
@@ -548,6 +589,106 @@ export default {
             image:  require('../../assets/sedan.jpg')
         }
     ],
+    buccaneers: [
+        {
+            id:     40,
+            name:   'Pina Colada Tiger Prawns',
+            price:  '500',
+            desc:   'Tiger prawns tempura, pineapple salsa, pina colada sauce',
+            image:  require('../../assets/b1.jpg')
+        },
+        {
+            id:     41,
+            name:   'Pineapple Rice',
+            price:  '450',
+            desc:   'Chicken or shrimps',
+            image:  require('../../assets/b2.jpg')
+        },
+        {
+            id:     42,
+            name:   'West Indies Fish & Chips',
+            price:  '450',
+            desc:   'Fishermans white fish, black bean salsa, sweet potato wedges',
+            image:  require('../../assets/b3.jpg')
+        },
+        {
+            id:     43,
+            name:   'Caribbean Curry',
+            price:  '450',
+            desc:   'Braised chicken, caribbean curry, coconut milk',
+            image:  require('../../assets/b4.jpg')
+        },
+        {
+            id:     44,
+            name:   'Jamaican Jerk',
+            price:  '350',
+            desc:   'Chicken or pork, marinated for 24 hours in Jamaican spices and slow-cooked on BBQ for 3 hours, served wiht plain rice, johnny cake and jerk ketchup',
+            image:  require('../../assets/b5.jpg')
+        },
+        {
+            id:     44,
+            name:   'Jamaican Jerk',
+            price:  '500',
+            desc:   'Gambas, marinated for 24 hours in Jamaican spices and slow-cooked on BBQ for 3 hours, served wiht plain rice, johnny cake and jerk ketchup',
+            image:  require('../../assets/b5.jpg')
+        },
+        {
+            id:     45,
+            name:   'Bacon Plantains',
+            price:  '300',
+            desc:   ' ',
+            image:  require('../../assets/b6.jpg')
+        },
+        {
+            id:     46,
+            name:   'Vegetarian Samosas',
+            price:  '300',
+            desc:   ' ',
+            image:  require('../../assets/b7.jpg')
+        },
+        {
+            id:     47,
+            name:   'Jerk Chicken Rolls',
+            price:  '300',
+            desc:   ' ',
+            image:  require('../../assets/b8.jpg')
+        },
+        {
+            id:     48,
+            name:   'Coffee Bean Tacos',
+            price:  '300',
+            desc:   ' ',
+            image:  require('../../assets/9.jpg')
+        },
+        {
+            id:     49,
+            name:   'Haittian Fish Cakes',
+            price:  '300',
+            desc:   ' ',
+            image:  require('../../assets/b10.jpg')
+        },
+        {
+            id:     50,
+            name:   'Coconut Shrimps',
+            price:  '300',
+            desc:   ' ',
+            image:  require('../../assets/b11.jpg')
+        },
+        {
+            id:     51,
+            name:   'Kapitan Chicken Burger',
+            price:  '400',
+            desc:   ' ',
+            image:  require('../../assets/b12.jpg')
+        },
+        {
+            id:     52,
+            name:   'Jamaican Poke Bowl',
+            price:  '350',
+            desc:   ' ',
+            image:  require('../../assets/b13.jpg')
+        },
+    ]
   }),
   mounted () {
   },

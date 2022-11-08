@@ -7,7 +7,10 @@ import RoomAdmin from '../component_admin/rooms/router/index.js'
 import ProfileComponent from '../components_user/profile/router/index.js'
 import AdminReservation from '../component_admin/reservations/router/index.js'
 import ReportComponent from '../component_admin/reports/router/index.js'
+import HousekeepingComponent from '../component_admin/reservations/router/index.js'
+import RequestComponent from '../component_admin/reservations/router/index.js'
 import OrderComponent from '../component_admin/orders/router/index.js'
+import OrderUserComponent from '../component_admin/orders/router/index.js'
 
 /**
  * user routes
@@ -30,8 +33,11 @@ export default new VueRouter({
         ...RoomAdmin,
         ...ProfileComponent,
         ...AdminReservation,
+        ...HousekeepingComponent,
+        ...RequestComponent,
         ...FoodRoutes,
         ...ReportComponent,
-        ...OrderComponent
+        ...OrderComponent,
+        ...OrderUserComponent
     ]
 });
