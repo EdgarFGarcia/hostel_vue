@@ -13,7 +13,7 @@
                     v-if="get_user_data.image == null"
                 >
                     <v-img
-                        src="https://images.unsplash.com/photo-1529665253569-6d01c0eaf7b6?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=785&q=80"
+                        src="../../assets/avatar.png"
                         :aspect-ratio="1"
                     />
                 </v-avatar>
@@ -81,7 +81,7 @@
                                         class="mx-auto"
                                         max-width="344"
                                     >
-                                        <v-img height="220" v-if="get_user_data.image == null" src="https://pic.onlinewebfonts.com/svg/img_546302.png"></v-img>
+                                        <v-img height="220" v-if="get_user_data.image == null" contain src="../../assets/avatar.png"></v-img>
                                         <v-img height="220" v-else :src="`${img_src}/${get_user_data.image}`"></v-img>
                                         <v-fade-transition>
                                         <v-overlay
@@ -99,6 +99,7 @@
                                     </v-card>
                                 </template>
                             </v-hover>
+                            {{e.image}}
                             <v-text-field
                                 outlined
                                 dense
@@ -203,12 +204,31 @@ export default {
     async edit_profile_fn(){
         const formData = new FormData()
         formData.append('id',       this.get_user_data.id)
-        formData.append('name',     this.e.name)
-        formData.append('email',    this.e.email)
-        formData.append('mobile',   this.e.mobile)
-        formData.append('file',     this.e.image)
+        if(this.e.name == null){
+            formData.append('name',     this.get_user_data.name)
+        }
+        else{
+            formData.append('name',     this.e.name)
+        }
+        if(this.e.email == null){
+            formData.append('email',     this.get_user_data.email)
+        }
+        else{
+            formData.append('email',     this.e.email)
+        }
+        if(this.e.mobile == null){
+            formData.append('mobile',     this.get_user_data.mobile)
+        }
+        else{
+            formData.append('mobile',     this.e.mobile)
+        }
+        if(this.e.image != null){
+            formData.append('image',     this.e.image)
+            console.log(this.e.image)
+        }
         await this.$axios.post('user/auth_user/edit_profile', formData)
         .then(({data}) => {
+            console.log(data)
             this.$store.dispatch('auth/update_user_information', data.data)
             this.close_profile_edit()
         })

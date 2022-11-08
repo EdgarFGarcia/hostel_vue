@@ -10,6 +10,7 @@ import moment from 'moment'
 import Default from './layouts/DefaultComponent.vue'
 import UserDashboard from './layouts/UserDashboard.vue'
 import AdminDashboard from './layouts/AdminLayout.vue'
+import VuetifyTimeSelect from 'vuetify-time-select'
 import VueFbCustomerChat from 'vue-fb-customer-chat'
 
 Vue.component('default-layout', Default)
@@ -21,6 +22,7 @@ Vue.config.productionTip = false
 Vue.use(axios)
 Vue.use(Vue2Filters)
 Vue.use(require('moment'))
+Vue.component('vuetify-time-select', VuetifyTimeSelect)
 Vue.use(VueFbCustomerChat, {
   page_id: '107778234085800', //  change 'null' to your Facebook Page ID,
   theme_color: '#333333', // theme color in HEX

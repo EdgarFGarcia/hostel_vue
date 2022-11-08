@@ -232,7 +232,8 @@
                         <v-col
                             cols="6"
                         >
-                            <v-menu
+                            <vuetify-time-select v-model="check_in"></vuetify-time-select>
+                            <!--<v-menu
                                 ref="menu2"
                                 v-model="menuin"
                                 :close-on-content-click="false"
@@ -262,12 +263,13 @@
                                     @click:minute="$refs.menu2.save(check_in)"
                                     ampm-in-title
                                 ></v-time-picker>
-                            </v-menu>
+                            </v-menu>-->
                         </v-col>
                         <v-col
                             cols="6"
                         >
-                            <v-menu
+                            <vuetify-time-select v-model="check_out"></vuetify-time-select>
+                            <!--<v-menu
                                 ref="menu"
                                 v-model="menuout"
                                 :close-on-content-click="false"
@@ -297,7 +299,7 @@
                                     @click:minute="$refs.menu.save(check_out)"
                                     ampm-in-title
                                 ></v-time-picker>
-                            </v-menu>
+                            </v-menu>-->
                         </v-col>
                         <v-col
                             cols="6"

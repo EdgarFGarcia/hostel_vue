@@ -5,8 +5,13 @@
             elevation="12"
             width="256"
         >
+        <v-app-bar app clipped-left dark color="#447fa6">
+            <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+            <v-toolbar-title>Connector Hostel</v-toolbar-title>
+        </v-app-bar>
             <v-navigation-drawer
-                floating
+                v-model="drawer"
+                clipped
                 app
                 color="#588BAD"
                 class="no-border shadow"
@@ -41,8 +46,8 @@
                             size="30"
                             class="mr-2"
                         >
-                            <v-img height="220" v-if="get_user.udata.image == null" src="https://pic.onlinewebfonts.com/svg/img_546302.png"></v-img>
-                            <v-img height="220" v-else :src="`${img_src}/${get_user.udata.image}`"></v-img>
+                            <v-img height="220" v-if="get_user.udata.image == null" contain src="../assets/avatar.png"></v-img>
+                            <v-img height="220" v-else contain :src="`${img_src}/${get_user.udata.image}`"></v-img>
                         </v-avatar>
                         <v-list-item-content>
                         <v-list-item-title
@@ -126,6 +131,7 @@ export default {
   props: [
   ],
   data: () => ({
+    drawer: false,
     navigation: [
         {
             icon:       'mdi-chevron-left',
