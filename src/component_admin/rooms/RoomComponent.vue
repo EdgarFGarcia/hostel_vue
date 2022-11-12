@@ -90,6 +90,7 @@
                                             block
                                             text
                                             outlined
+                                            @click="delete_room(rooms)"
                                         >
                                             Delete
                                         </v-btn>
@@ -99,29 +100,6 @@
                         </v-row>
                     </v-card-text>
                 </v-card>
-                <v-text-field
-                    v-model="description"
-                    placeholder="Description"
-                >
-                </v-text-field>
-                <v-text-field
-                    v-model="full_details"
-                    placeholder="Full details"
-                >
-                </v-text-field>
-                <v-text-field
-                    v-model="capacity"
-                    placeholder="Capacity"
-                >
-                </v-text-field>
-                <v-text-field
-                    v-model="room_count"
-                    placeholder="Room count"
-                >
-                </v-text-field>
-                <v-btn @click="update()">
-                    Update
-                </v-btn>
             </v-tab-item>
         </v-tabs-items>
         <AddRoomDialog
@@ -151,6 +129,7 @@ export default {
   }),
   async mounted () {
     await this.$store.dispatch('admin_room/set_room_categories')
+    this.select_room(this.get_room_categories[0])
   },
   created () {
   },
@@ -167,6 +146,13 @@ export default {
         .then(({data}) => {
             this.$store.dispatch('admin_room/set_rooms', data.data)
         })
+    },
+      async delete_room(room) {
+          await this.$axios.post('admin/rooms/delete_room', { room_id: room.id })
+              .then(({ data }) => {
+                console.log(data)
+                this.$router.go(0)
+              })
     },
     add_room(){
         this.add_room_state = true

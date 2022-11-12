@@ -24,7 +24,7 @@ import FoodRoutes from '../components_user/food/router/index.js'
 
 Vue.use(VueRouter);
 
-export default new VueRouter({
+const router = new VueRouter({
     mode: 'history',
     routes: [
         ...Landing,
@@ -41,3 +41,21 @@ export default new VueRouter({
         ...OrderUserComponent
     ]
 });
+
+router.beforeEach((to, from, next) => {
+    //list of blocked routes
+    const protectedRoutes = ['/user_dashboard', '/admin_dashboard', '/admin_rooms', '/profile', '/admin_reservations', '/housekeeping',
+        '/housekeeping_request', 'orders', 'orders_user' ];
+    //the route user is trying to access is in blocked routes list
+    let token = JSON.parse(localStorage.getItem('vuex'))
+    if (protectedRoutes.includes(to.path) && token.auth.user.token == null) {
+        //redirect to route having unauhorised message page
+        return next('/');
+    }
+    else {
+        // otherwise allow user to access route
+        return next();
+    }
+})
+
+export default router
