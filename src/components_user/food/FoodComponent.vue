@@ -313,7 +313,6 @@ export default {
         {
             id:     1,
             name:   'Sinigang',
-            type:   'Food',
             price:  '250',
             desc:   'Aromatic, Delicate, Drizzled, Encrusted.',
             image:  require('../../assets/sinigang.png')
@@ -321,7 +320,6 @@ export default {
         {
             id:     2,
             name:   'Sizzling Sisig',
-            type:   'Food',
             price:  '250',
             desc:   'Aromatic, Delicate, Drizzled, Encrusted.',
             image:  require('../../assets/sisig.jpg')
@@ -329,7 +327,6 @@ export default {
         {
             id:     3,
             name:   'Sizzling Hotdog',
-            type:   'Food',
             price:  '250',
             desc:   'Aromatic, Delicate, Drizzled, Encrusted.',
             image:  require('../../assets/hotdog.jpg')
@@ -337,7 +334,6 @@ export default {
         {
             id:     4,
             name:   '1 Cup of Ice Tea',
-            type:   'Food',
             price:  '85',
             desc:   'Sweet.',
             image:  require('../../assets/iced tea.jpg')
@@ -345,7 +341,6 @@ export default {
         {
             id:     5,
             name:   '1 Cup of Coffee',
-            type:   'Food',
             price:  '85',
             desc:   'Freshly Brewed Coffee.',
             image:  require('../../assets/coffee.jpg')
@@ -353,7 +348,6 @@ export default {
         {
             id:     6,
             name:   'Coke in Can',
-            type:   'Food',
             price:  '85',
             desc:   'Sweet.',
             image:  require('../../assets/coke.jpg')
@@ -361,7 +355,6 @@ export default {
         {
             id:     7,
             name:   'Sprite in Can',
-            type:   'Food',
             price:  '85',
             desc:   'Sweet.',
             image:  require('../../assets/sprite.jpg')
@@ -369,7 +362,6 @@ export default {
         {
             id:     8,
             name:   'Root Beer in Can',
-            type:   'Food',
             price:  '85',
             desc:   'Sweet.',
             image:  require('../../assets/root beer.jpg')
@@ -379,7 +371,6 @@ export default {
         {
             id:     9,
             name:   'Croissant Beurre',
-            type:   'Dr. Bread',
             price:  '85',
             desc:   '',
             image:  require('../../assets/bread1.jpg')
@@ -387,7 +378,6 @@ export default {
         {
             id:     10,
             name:   'Pain Aux Raisins',
-            type:   'Dr. Bread',
             price:  '105',
             desc:   '',
             image:  require('../../assets/bread2.jpg')
@@ -395,7 +385,6 @@ export default {
         {
             id:     11,
             name:   'Pain Au Chocolat',
-            type:   'Dr. Bread',
             price:  '95',
             desc:   '',
             image:  require('../../assets/bread3.jpg')
@@ -403,7 +392,6 @@ export default {
         {
             id:     12,
             name:   'Torsade',
-            type:   'Dr. Bread',
             price:  '105',
             desc:   '',
             image:  require('../../assets/bread4.jpg')
@@ -411,7 +399,6 @@ export default {
         {
             id:     12,
             name:   'Small Baguette',
-            type:   'Dr. Bread',
             price:  '40',
             desc:   '',
             image:  require('../../assets/bread5.jpg')
@@ -419,7 +406,6 @@ export default {
         {
             id:     14,
             name:   'Regular Baguette',
-            type:   'Dr. Bread',
             price:  '80',
             desc:   '',
             image:  require('../../assets/bread5.jpg')
@@ -427,7 +413,6 @@ export default {
         {
             id:     15,
             name:   'Rye Bread',
-            type:   'Dr. Bread',
             price:  '100',
             desc:   '',
             image:  require('../../assets/bread7.jpg')
@@ -435,7 +420,6 @@ export default {
         {
             id:     16,
             name:   'Multigrain Bread',
-            type:   'Dr. Bread',
             price:  '100',
             desc:   '',
             image:  require('../../assets/bread8.jpg')
@@ -443,7 +427,6 @@ export default {
         {
             id:     17,
             name:   'Sourdough Bread',
-            type:   'Dr. Bread',
             price:  '100',
             desc:   '',
             image:  require('../../assets/bread9.jpg')
@@ -451,7 +434,6 @@ export default {
         {
             id:     18,
             name:   'Payes Bread',
-            type:   'Dr. Bread',
             price:  '500',
             desc:   '',
             image:  require('../../assets/bread10.jpg')
@@ -459,7 +441,6 @@ export default {
         {
             id:     19,
             name:   'Whole Wheat Bread',
-            type:   'Dr. Bread',
             price:  '100',
             desc:   '',
             image:  require('../../assets/bread11.jpg')
@@ -469,7 +450,6 @@ export default {
         {
             id:     20,
             name:   'Salmon Rillettes',
-            type:   'Dr. Wine',
             price:  '475',
             desc:   'Salmon confit with lemon and olive oil, topped with fresh herbs bavarois',
             image:  require('../../assets/Salmon Rilettes.jpg')
@@ -477,7 +457,6 @@ export default {
         {
             id:     21,
             name:   'Cold Cuts Board',
-            type:   'Dr. Wine',
             price:  '890',
             desc:   'Chefs selection of 4 Europeean cured meats served with pickles',
             image:  require('../../assets/Coldcuts on board.jpg')
@@ -485,7 +464,6 @@ export default {
         {
             id:     22,
             name:   'Cheese Board',
-            type:   'Dr. Wine',
             price:  '990',
             desc:   'Assortment of 4 cheeses served with pineapple mostarda',
             image:  require('../../assets/Cheeseboard.jpg')
@@ -493,7 +471,6 @@ export default {
         {
             id:     23,
             name:   'Escargots (6 pcs)',
-            type:   'Dr. Wine',
             price:  '590',
             desc:   'Traditional burgundy snails in shell, white wine almond powder & parsley garlic butter',
             image:  require('../../assets/Escargot.jpg')
@@ -501,7 +478,6 @@ export default {
         {
             id:     24,
             name:   'French Oyster Fine De Claire',
-            type:   'Dr. Wine',
             price:  '770',
             desc:   '3 oysters',
             image:  require('../../assets/French Oyster Fine De Claire.jpg')
@@ -509,7 +485,6 @@ export default {
         {
             id:     25,
             name:   'French Oyster Fine De Claire',
-            type:   'Dr. Wine',
             price:  '1400',
             desc:   '6 oysters',
             image:  require('../../assets/French Oyster Fine De Claire.jpg')
@@ -517,7 +492,6 @@ export default {
         {
             id:     26,
             name:   'French Oyster Fine De Claire',
-            type:   'Dr. Wine',
             price:  '2700',
             desc:   '12 oysters',
             image:  require('../../assets/French Oyster Fine De Claire.jpg')
@@ -525,7 +499,6 @@ export default {
         {
             id:     27,
             name:   'La Soupe A Loignon Gratinee',
-            type:   'Dr. Wine',
             price:  '550',
             desc:   '3 different kinds of onions, countryside bread crouton, gratinated with emmental cheese',
             image:  require('../../assets/La Soupe A Loignon Gratinee.jpg')
@@ -533,7 +506,6 @@ export default {
         {
             id:     28,
             name:   'Osso Buco',
-            type:   'Dr. Wine',
             price:  '1190',
             desc:   'Slow cooked beef shank (500 gr.) served with basil & garlic pasta',
             image:  require('../../assets/Osso Buco.jpg')
@@ -541,7 +513,6 @@ export default {
         {
             id:     29,
             name:   'Penne Pasta',
-            type:   'Dr. Wine',
             price:  '720',
             desc:   'Oyster and gemini mushrooms with penne in a truffle paste cream sauce, pecorino and parmigiano reggiano cheese',
             image:  require('../../assets/Pasta.jpg')
@@ -549,7 +520,6 @@ export default {
         {
             id:     30,
             name:   'Poulet grand mere',
-            type:   'Dr. Wine',
             price:  '880',
             desc:   'Yellow chicken breast on a rich tomato, mushrooms, potatoes and lardon sauce',
             image:  require('../../assets/Poulet grand mere.jpg')
@@ -557,7 +527,6 @@ export default {
         {
             id:     31,
             name:   'Sausage platter',
-            type:   'Dr. Wine',
             price:  '990',
             desc:   'A mix of 4 flavorful sausages',
             image:  require('../../assets/Sausage platter.jpg')
@@ -565,7 +534,6 @@ export default {
         {
             id:     32,
             name:   'Seafood platter',
-            type:   'Dr. Wine',
             price:  '1180',
             desc:   'Fresh tasmanian salmon fillet served with a rich seafood and vermouth sauce as basmati rice',
             image:  require('../../assets/Seafood platter.jpg')
@@ -575,7 +543,6 @@ export default {
         {
             id:     33,
             name:   'Swedish Massage',
-            type:   'Massage and Spa',
             price:  '250',
             desc:   'It can help release muscle knots, and its also a good choice for when you want to fully relax during a massage.',
             image:  require('../../assets/massage1.jpg')
@@ -583,7 +550,6 @@ export default {
         {
             id:     34,
             name:   'Hot stone massage',
-            type:   'Massage and Spa',
             price:  '250',
             desc:   'This type of therapeutic massage is similar to a Swedish massage, only the massage therapist uses heated stones in lieu of or in addition to their hands.',
             image:  require('../../assets/massage2.jpg')
@@ -591,7 +557,6 @@ export default {
         {
             id:     35,
             name:   'Aromatherapy massage',
-            type:   'Massage and Spa',
             price:  '250',
             desc:   'Aromatherapy massages are best for people who enjoy scent and want to have an emotional healing component to their massage.',
             image:  require('../../assets/massage3.jpg')
@@ -599,7 +564,6 @@ export default {
         {
             id:     36,
             name:   'Deep tissue massage',
-            type:   'Massage and Spa',
             price:  '250',
             desc:   'Deep tissue massage uses more pressure than a Swedish massage. It’s a good option if you have muscle problems',
             image:  require('../../assets/massage4.jpg')
@@ -609,21 +573,18 @@ export default {
         {
             id:     37,
             name:   'Car',
-            type:   'Transportation',
             price:  'Price varies',
             image:  require('../../assets/car.jpg')
         },
         {
             id:     38,
             name:   'Sedan',
-            type:   'Transportation',
             price:  'Price varies',
             image:  require('../../assets/suv.jpg')
         },
         {
             id:     39,
             name:   'SUV',
-            type:   'Transportation',
             price:  'Price varies',
             image:  require('../../assets/sedan.jpg')
         }
@@ -632,7 +593,6 @@ export default {
         {
             id:     40,
             name:   'Pina Colada Tiger Prawns',
-            type:   'Buccaneers',
             price:  '500',
             desc:   'Tiger prawns tempura, pineapple salsa, pina colada sauce',
             image:  require('../../assets/b1.jpg')
@@ -640,7 +600,6 @@ export default {
         {
             id:     41,
             name:   'Pineapple Rice',
-            type:   'Buccaneers',
             price:  '450',
             desc:   'Chicken or shrimps',
             image:  require('../../assets/b2.jpg')
@@ -648,7 +607,6 @@ export default {
         {
             id:     42,
             name:   'West Indies Fish & Chips',
-            type:   'Buccaneers',
             price:  '450',
             desc:   'Fishermans white fish, black bean salsa, sweet potato wedges',
             image:  require('../../assets/b3.jpg')
@@ -656,7 +614,6 @@ export default {
         {
             id:     43,
             name:   'Caribbean Curry',
-            type:   'Buccaneers',
             price:  '450',
             desc:   'Braised chicken, caribbean curry, coconut milk',
             image:  require('../../assets/b4.jpg')
@@ -664,7 +621,6 @@ export default {
         {
             id:     44,
             name:   'Jamaican Jerk',
-            type:   'Buccaneers',
             price:  '350',
             desc:   'Chicken or pork, marinated for 24 hours in Jamaican spices and slow-cooked on BBQ for 3 hours, served wiht plain rice, johnny cake and jerk ketchup',
             image:  require('../../assets/b5.jpg')
@@ -672,7 +628,6 @@ export default {
         {
             id:     44,
             name:   'Jamaican Jerk',
-            type:   'Buccaneers',
             price:  '500',
             desc:   'Gambas, marinated for 24 hours in Jamaican spices and slow-cooked on BBQ for 3 hours, served wiht plain rice, johnny cake and jerk ketchup',
             image:  require('../../assets/b5.jpg')
@@ -680,7 +635,6 @@ export default {
         {
             id:     45,
             name:   'Bacon Plantains',
-            type:   'Buccaneers',
             price:  '300',
             desc:   ' ',
             image:  require('../../assets/b6.jpg')
@@ -688,7 +642,6 @@ export default {
         {
             id:     46,
             name:   'Vegetarian Samosas',
-            type:   'Buccaneers',
             price:  '300',
             desc:   ' ',
             image:  require('../../assets/b7.jpg')
@@ -696,7 +649,6 @@ export default {
         {
             id:     47,
             name:   'Jerk Chicken Rolls',
-            type:   'Buccaneers',
             price:  '300',
             desc:   ' ',
             image:  require('../../assets/b8.jpg')
@@ -704,7 +656,6 @@ export default {
         {
             id:     48,
             name:   'Coffee Bean Tacos',
-            type:   'Buccaneers',
             price:  '300',
             desc:   ' ',
             image:  require('../../assets/9.jpg')
@@ -712,7 +663,6 @@ export default {
         {
             id:     49,
             name:   'Haittian Fish Cakes',
-            type:   'Buccaneers',
             price:  '300',
             desc:   ' ',
             image:  require('../../assets/b10.jpg')
@@ -720,7 +670,6 @@ export default {
         {
             id:     50,
             name:   'Coconut Shrimps',
-            type:   'Buccaneers',
             price:  '300',
             desc:   ' ',
             image:  require('../../assets/b11.jpg')
@@ -728,7 +677,6 @@ export default {
         {
             id:     51,
             name:   'Kapitan Chicken Burger',
-            type:   'Buccaneers',
             price:  '400',
             desc:   ' ',
             image:  require('../../assets/b12.jpg')
@@ -736,7 +684,6 @@ export default {
         {
             id:     52,
             name:   'Jamaican Poke Bowl',
-            type:   'Buccaneers',
             price:  '350',
             desc:   ' ',
             image:  require('../../assets/b13.jpg')

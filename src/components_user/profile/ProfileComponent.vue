@@ -99,6 +99,7 @@
                                     </v-card>
                                 </template>
                             </v-hover>
+                            {{e.image}}
                             <v-text-field
                                 outlined
                                 dense
@@ -135,28 +136,6 @@
                                     <v-icon small style="position: relative; top:4px;"> mdi-phone </v-icon> 
                                 </template>
                             </v-text-field>
-                            <v-text-field
-                                dense
-                                outlined
-                                label="New Password"
-                                v-model="r.password"
-                                :type="show_r_password ? 'text' : 'password'"
-                                prepend-inner-icon="mdi-lock-outline"
-                                :append-icon="show_r_password ? 'mdi-eye-off' : 'mdi-eye'"
-                                @click:append="show_r_password = ! show_r_password"
-                            >
-                            </v-text-field>
-                            <v-text-field
-                                dense
-                                outlined
-                                label="Retype New Password"
-                                v-model="r.r_password"
-                                :type="show_r_password2 ? 'text' : 'password'"
-                                prepend-inner-icon="mdi-lock-outline"
-                                :append-icon="show_r_password2 ? 'mdi-eye-off' : 'mdi-eye'"
-                                @click:append="show_r_password2 = ! show_r_password2"
-                            >
-                            </v-text-field>
                         </v-col>
                     </v-row>
                 </v-card-text>
@@ -192,15 +171,7 @@ export default {
         image: []
     },
     overlay: false,
-    img_src: null,
-    show_r_password: false,
-    show_r_password2: false,
-    r: {
-        email: null,
-        name: null,
-        password: null,
-        r_password: null
-    },
+    img_src: null
   }),
   mounted () {
 
@@ -255,28 +226,11 @@ export default {
             formData.append('image',     this.e.image)
             console.log(this.e.image)
         }
-        if(this.e.image != null){
-            formData.append('image',     this.e.image)
-            console.log(this.e.image)
-        }
-        if(this.r.password != null){
-            formData.append('password',     this.r.password)
-            console.log(this.r.password)
-        }
-        if(this.r.r_password != null){
-            formData.append('repeat_password',     this.r.r_password)
-            console.log(this.r.r_password)
-        }
         await this.$axios.post('user/auth_user/edit_profile', formData)
         .then(({data}) => {
             console.log(data)
-            if (!data.response) {
-                alert(data.message)
-            }
-            else {
-                this.$store.dispatch('auth/update_user_information', data.data)
-                this.close_profile_edit()
-            }
+            this.$store.dispatch('auth/update_user_information', data.data)
+            this.close_profile_edit()
         })
     }
   },

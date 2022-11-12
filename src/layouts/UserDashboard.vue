@@ -21,7 +21,7 @@
                 >
                     Connector Hostel
                 </v-card-title>
-                <!--<v-card-subtitle
+                <v-card-subtitle
                     style="color: white;"
                 >
                     <v-btn
@@ -33,7 +33,7 @@
                         >mdi-account-alert-outline</v-icon>
                         Verify Account
                     </v-btn>
-                </v-card-subtitle>-->
+                </v-card-subtitle>
                 <v-card-text
                     style="color: white !important;"
                 >

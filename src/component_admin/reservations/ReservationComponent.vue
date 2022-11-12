@@ -1,132 +1,137 @@
 <template>
     <v-container fluid class="pa-0 ma-0">
-        <v-alert color="deep-purple accent-4" dark>
+        <v-alert
+            color="deep-purple accent-4"
+            dark
+        >
             Reservation Details
         </v-alert>
-        <v-data-table :headers="reservation_header" :items="get_reservation_list" class="elevation-1">
+        <v-data-table
+            :headers="reservation_header"
+            :items="get_reservation_list"
+            class="elevation-1"
+        >
             <template v-slot:item="{ item, expand, isExpanded }">
-                <tr style="cursor: pointer;" class="mx-5" @click="expand(!isExpanded)">
+                <tr
+                    style="cursor: pointer;"
+                    class="mx-5"
+                    @click="expand(!isExpanded)"
+                >
                     <td>
-                        {{ item.name }}
+                        {{item.name}}
                     </td>
                     <td>
-                        {{ item.email }}
+                        {{item.email}}
                     </td>
                     <td>
-                        {{ item.created_at }}
+                        {{item.created_at}}
                     </td>
                 </tr>
             </template>
             <template v-slot:expanded-item="{ headers, item }">
                 <td :colspan="headers.length">
-                    <v-data-table :items="item.get_reservations" class="elevation-1" :headers="inner_table_headers">
-                        <template v-slot:item="{ item }">
+                    <v-data-table
+                        :items="item.get_reservations"
+                        class="elevation-1"
+                        :headers="inner_table_headers"
+                    >
+                        <template v-slot:item="{item}">
                             <tr>
                                 <td>
-                                    {{ item.check_in_date_time }}
+                                    {{item.check_in_date_time}}
                                 </td>
                                 <td>
-                                    {{ item.will_be_available_at }}
+                                    {{item.will_be_available_at}}
                                 </td>
                                 <td>
-                                    {{ item.duration }} Day(s)
+                                    {{item.duration}} Day(s)
                                 </td>
                                 <td>
-                                    {{ item.total_checked_in }}
+                                    {{item.total_checked_in}}
                                 </td>
                                 <td>
-                                    {{ item.adult_count }}
+                                    {{item.adult_count}}
                                 </td>
                                 <td>
-                                    {{ item.child_count }}
+                                    {{item.child_count}}
                                 </td>
                                 <td>
-                                    {{ item.payable | currency('₱') }}
+                                    {{item.payable | currency('₱')}}
                                 </td>
                                 <td>
-                                    <label v-if="item.is_paid">
+                                    <label
+                                        v-if="item.is_paid"
+                                    >
                                         Paid
                                     </label>
                                     <label v-else></label>
                                 </td>
                                 <td>
-                                    <label v-if="item.checked">
+                                    <label
+                                        v-if="item.checked"
+                                    >
                                         Checked
                                     </label>
                                     <label v-else></label>
                                 </td>
-                                <td>
-                                    <label v-if="item.get_additional != null && item.get_additional.amount_due == 0">
-                                        {{ item.get_additional.reason }}
-                                    </label>
-                                    <label v-else></label>
-                                </td>
                                 <td v-if="item.get_additional != null">
-                                    {{ item.get_additional.amount_due | currency('₱') }}
+                                    {{item.get_additional.amount_due | currency('₱')}}
                                 </td>
                                 <td v-else>
-
+                                    
                                 </td>
                                 <td>
                                     <label
-                                        v-if="item.get_additional != null && item.get_additional.amount_due > 0 && item.get_additional.amount_paid >= item.get_additional.amount_due">
+                                        v-if="item.get_additional != null && item.get_additional.amount_paid >= item.get_additional.amount_due"
+                                    >
                                         Paid
                                     </label>
                                     <label v-else></label>
                                 </td>
                                 <td>
-                                    <label v-if="item.is_verified">
+                                    <label
+                                        v-if="item.is_verified"
+                                    >
                                         Verified
                                     </label>
                                     <label v-else></label>
                                 </td>
                                 <td>
-                                    <v-btn dark @click="check_details(item)">
+                                    <v-btn
+                                        dark
+                                        @click="check_details(item)"
+                                    >
                                         Details
                                     </v-btn>
                                 </td>
                                 <td>
-                                    <v-btn v-if="!item.is_paid" dark @click="mark_as_paid(item)">
+                                    <v-btn
+                                        v-if="!item.is_paid"
+                                        dark
+                                        @click="mark_as_paid(item)"
+                                    >
                                         Paid room
                                     </v-btn>
-                                    <v-btn v-else disabled>
+                                    <v-btn
+                                        v-else
+                                        disabled
+                                    >
                                         Room paid
                                     </v-btn>
                                 </td>
                                 <td>
-                                    <v-btn v-if="item.checked" disabled>
-                                        Checked
-                                    </v-btn>
-                                    <v-btn v-else-if="item.to_check == 0" dark @click="check(item)">
+                                    <v-btn
+                                        v-if="item.to_check == 0"
+                                        dark
+                                        @click="check(item)"
+                                    >
                                         Mark to check
                                     </v-btn>
-                                    <v-btn v-else-if="!item.checked" disabled>
-                                        To check
-                                    </v-btn>
-                                </td>
-                                <td>
-                                    <v-btn v-if="item.get_additional != null && item.get_additional.amount_due == 0"
-                                        dark @click="charge(item)">
-                                        Charge
-                                    </v-btn>
-                                    <v-btn v-else-if="item.get_additional != null" disabled>
-                                        Charged
-                                    </v-btn>
-                                    <v-btn v-else-if="item.get_additional == null" disabled>
-                                        N/A
-                                    </v-btn>
-                                </td>
-                                <td>
                                     <v-btn
-                                        v-if="item.get_additional != null && item.get_additional.amount_paid < item.get_additional.amount_due"
-                                        dark @click="extra_paid(item)">
-                                        Paid fee
-                                    </v-btn>
-                                    <v-btn v-else-if="item.get_additional != null && item.get_additional.amount_due > 0" disabled>
-                                        Fee paid
-                                    </v-btn>
-                                    <v-btn v-else disabled>
-                                        N/A
+                                        v-else
+                                        disabled
+                                    >
+                                        To check
                                     </v-btn>
                                 </td>
                             </tr>
@@ -136,57 +141,91 @@
             </template>
         </v-data-table>
         <v-row justify="center">
-            <v-dialog v-model="dialog_room_information" persistent max-width="560">
-                <v-card v-if="Object.keys(get_room_information).length > 0">
-                    <v-card-title class="text-h5">
-                        Room Information of: {{ get_room_information.room_name }}
-                    </v-card-title>
-                    <v-card-subtitle>
-                        {{ get_room_information.get_room_parent_information.description }}
-                    </v-card-subtitle>
-                    <v-card-text>
-                        <v-img :src="`${img_src}/images/${get_room_information.get_room_parent_information.image}`" />
-                    </v-card-text>
-                    <v-card-text>
-                        <v-row>
-                            <v-col cols="4"
-                                v-for="(item, itemindex) in get_room_information.get_room_parent_information.facilities"
-                                :key="itemindex">
-                                <v-icon>mdi-check</v-icon>
-                                {{ item }}
-                            </v-col>
-                        </v-row>
-                    </v-card-text>
-                    <v-card-actions>
-                        <v-spacer></v-spacer>
-                        <v-btn color="green darken-1" text @click="dialog_room_information = false">
-                            Done
-                        </v-btn>
-                    </v-card-actions>
-                </v-card>
+            <v-dialog
+                v-model="dialog_room_information"
+                persistent
+                max-width="560"
+            >
+            <v-card
+                v-if="Object.keys(get_room_information).length > 0"
+            >
+                <v-card-title class="text-h5">
+                    Room Information of: {{get_room_information.room_name}}
+                </v-card-title>
+                <v-card-subtitle>
+                    {{get_room_information.get_room_parent_information.description}}
+                </v-card-subtitle>
+                <v-card-text>
+                    <v-img
+                        :src="`${img_src}/images/${get_room_information.get_room_parent_information.image}`"
+                    />
+                </v-card-text>
+                <v-card-text>
+                    <v-row>
+                        <v-col
+                            cols="4"
+                            v-for="(item, itemindex) in get_room_information.get_room_parent_information.facilities"
+                            :key="itemindex"
+                        >
+                            <v-icon>mdi-check</v-icon>
+                            {{item}}
+                        </v-col>
+                    </v-row>
+                </v-card-text>
+                <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn
+                    color="green darken-1"
+                    text
+                    @click="dialog_room_information = false"
+                >
+                    Done
+                </v-btn>
+                </v-card-actions>
+            </v-card>
             </v-dialog>
         </v-row>
-
+        
         <v-row justify="center">
-            <v-dialog v-model="dialog_additional" persistent max-width="560">
-                <v-card>
-                    <v-card-title class="text-h5">
-                        Charge additional for damages, penalties etc.
-                    </v-card-title>
-                    <v-card-text>
-                        <v-text-field placeholder="Amount" v-model="amount_due">
-                        </v-text-field>
-                    </v-card-text>
-                    <v-card-actions>
-                        <v-spacer></v-spacer>
-                        <v-btn color="green darken-1" text @click="dialog_additional = false">
-                            Cancel
-                        </v-btn>
-                        <v-btn color="green darken-1" text @click="confirm_additional_payment()">
-                            Confirm additional
-                        </v-btn>
-                    </v-card-actions>
-                </v-card>
+            <v-dialog
+                v-model="dialog_additional"
+                persistent
+                max-width="560"
+            >
+            <v-card>
+                <v-card-title class="text-h5">
+                    Charge additional for damages, penalties etc.
+                </v-card-title>
+                <v-card-text>
+                    <v-text-field
+                        placeholder="Reason"
+                        v-model="reason"
+                    >
+                    </v-text-field>
+                    <v-text-field
+                        placeholder="Amount"
+                        v-model="amount_due"
+                    >
+                    </v-text-field>
+                </v-card-text>
+                <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn
+                    color="green darken-1"
+                    text
+                    @click="dialog_additional = false"
+                >
+                    Cancel
+                </v-btn>
+                <v-btn
+                    color="green darken-1"
+                    text
+                    @click="confirm_additional_payment()"
+                >
+                    Confirm additional
+                </v-btn>
+                </v-card-actions>
+            </v-card>
             </v-dialog>
         </v-row>
     </v-container>
@@ -195,163 +234,161 @@
 <script>
 import { mapGetters } from 'vuex'
 export default {
-    components: {
-    },
-    props: [
+  components: {
+  },
+  props: [
+  ],
+  data: () => ({
+    reservation_header: [
+        {
+            text: 'Name'
+        },
+        {
+            text: 'Email'
+        },
+        {
+            text: 'Registered at'
+        }
     ],
-    data: () => ({
-        reservation_header: [
-            {
-                text: 'Name'
-            },
-            {
-                text: 'Email'
-            },
-            {
-                text: 'Registered at'
+    inner_table_headers:[
+        {
+            text: 'Check-in Date'
+        },
+        {
+            text: 'Check-out Date'
+        },
+        {
+            text: 'Duration'
+        },
+        {
+            text: 'Total check-ins'
+        },
+        {
+            text: 'Adult Count'
+        },
+        {
+            text: 'Child Count'
+        },
+        {
+            text: 'Room Price'
+        },
+        {
+            text: 'Paid'
+        },
+        {
+            text: 'Checked'
+        },
+        {
+            text: 'Additional'
+        },
+        {
+            text: 'Additional Paid'
+        },
+        {
+            text: 'Verified'
+        },
+        {
+            text: ''
+        },
+        {
+            text: ''
+        },
+        {
+            text: ''
+        }
+    ],
+    dialog_room_information: false,
+    dialog_additional: false,
+    reason: null,
+    amount_due: null,
+    additional_check_in_id: null,
+    img_src: null
+  }),
+  async mounted () {
+    await this.$store.dispatch('admin_reservation/fetch_reservations')
+  },
+  created () {
+    this.img_src = process.env.VUE_APP_URL
+  },
+  computed: {
+    ...mapGetters({
+        get_reservation_list:           'admin_reservation/get_reservation_list',
+        get_room_information:           'admin_reservation/get_room_information'
+    })
+  },
+  methods: {
+    async check_details(data){
+        await this.$axios.get('/admin/reservation/g_reservation_details', {
+            room_id:            data.actual_room_id
+        })
+        .then(({data}) => {
+            if(data.response){
+                this.dialog_room_information = true
             }
-        ],
-        inner_table_headers: [
-            {
-                text: 'Check-in Date'
-            },
-            {
-                text: 'Check-out Date'
-            },
-            {
-                text: 'Duration'
-            },
-            {
-                text: 'Total check-ins'
-            },
-            {
-                text: 'Adult Count'
-            },
-            {
-                text: 'Child Count'
-            },
-            {
-                text: 'Room Price'
-            },
-            {
-                text: 'Paid'
-            },
-            {
-                text: 'Checked'
-            },
-            {
-                text: 'Report'
-            },
-            {
-                text: 'Additional'
-            },
-            {
-                text: 'Additional Paid'
-            },
-            {
-                text: 'Verified'
-            },
-            {
-                text: ''
-            },
-            {
-                text: ''
-            },
-            {
-                text: ''
-            }
-        ],
-        dialog_room_information: false,
-        dialog_additional: false,
-        reason: null,
-        amount_due: null,
-        additional_check_in_id: null,
-        img_src: null
-    }),
-    async mounted() {
-        await this.$store.dispatch('admin_reservation/fetch_reservations')
-    },
-    created() {
-        this.img_src = process.env.VUE_APP_URL
-    },
-    computed: {
-        ...mapGetters({
-            get_reservation_list: 'admin_reservation/get_reservation_list',
-            get_room_information: 'admin_reservation/get_room_information'
+            this.$store.dispatch('admin_reservation/set_room_information', data.data)
         })
     },
-    methods: {
-        async check_details(data) {
-            await this.$axios.get('/admin/reservation/g_reservation_details', {
-                room_id: data.actual_room_id
-            })
-                .then(({ data }) => {
-                    if (data.response) {
-                        this.dialog_room_information = true
-                    }
-                    this.$store.dispatch('admin_reservation/set_room_information', data.data)
-                })
-        },
-        charge(data) {
-            this.additional_check_in_id = data.id
-            console.log(data.id)
-            this.dialog_additional = true
-        },
-        mark_as_paid(data) {
-            this.$axios.post('/admin/reservation/mark_as_paid', {
-                check_in_id: data.id
-            })
-                .then(({ data }) => {
-                    this.$store.dispatch('admin_reservation/set_reservations', data.data)
-                })
-        },
-        extra_paid(data) {
-            console.log(data)
-            this.$axios.post('/admin/reservation/extra_paid', {
-                check_in_id: data.id,
-                amount_due: data.get_additional.amount_due
-            })
-                .then(({ data }) => {
-                    this.$store.dispatch('admin_reservation/set_reservations', data.data)
-                })
-        },
-        async check(data) {
-            console.log(data)
-            await this.$axios.post('/admin/reservation/to_check', {
-                check_in_id: data.id
-            })
-                .then(({ data }) => {
-                    this.$store.dispatch('admin_reservation/set_reservations', data.data)
-                })
-        },
-        async confirm_additional_payment() {
-            await this.$axios.post('/admin/reservation/charge_additional_admin', {
-                check_in_id: this.additional_check_in_id,
-                amount_due: this.amount_due
-            })
-                .then(({ data }) => {
-                    if (!data.response) {
-                        alert(data.message)
-                    }
-                    else {
-                        this.dialog_additional = false
-                        this.$store.dispatch('admin_reservation/set_reservations', data.data)
-                    }
-                })
-        }
+    charge(data){
+        this.additional_check_in_id = data.id
+        console.log(data.id)
+        this.dialog_additional = true
     },
-    watch: {
+    mark_as_paid(data){
+        this.$axios.post('/admin/reservation/mark_as_paid', {
+            check_in_id: data.id
+        })
+        .then(({data}) => {
+            this.$store.dispatch('admin_reservation/set_reservations', data.data)
+        })
+    },
+    extra_paid(data){
+        console.log(data)
+        this.$axios.post('/admin/reservation/extra_paid', {
+            check_in_id: data.id,
+            amount_due: data.get_additional.amount_due
+        })
+        .then(() => {
+            this.$router.go(0)
+        })
+    },
+    async check(data){
+        console.log(data)
+        await this.$axios.post('/admin/reservation/to_check', {
+            check_in_id: data.id
+        })
+        .then(({data}) => {
+            this.$store.dispatch('admin_reservation/set_reservations', data.data)
+        })
+    },
+    async confirm_additional_payment(){
+        await this.$axios.post('/admin/reservation/charge_additional', {
+            check_in_id: this.additional_check_in_id,
+            reason: this.reason,
+            amount_due: this.amount_due
+        })
+        .then(({data}) => {
+            if(!data.response){
+                alert(data.message)
+            }
+            else{
+                this.dialog_additional = false
+                alert('Charged successfully')
+                this.$router.go(0)
+            }
+        })
     }
+  },
+  watch: {
+  }
 }
 </script>
 
 <style scoped lang="scss">
-.v-data-table.row-height-50 td {
-    height: 76px !important;
+.v-data-table.row-height-50 td{
+  height: 76px !important;
 }
-
 .v-data-table::v-deep th {
-    font-size: 16px !important;
-    font-weight: bold;
+  font-size: 16px !important;
+  font-weight: bold;
 }
 </style>
