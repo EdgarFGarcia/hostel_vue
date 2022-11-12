@@ -9,7 +9,7 @@
             <template v-slot:item="{item}">
                 <tr>
                     <td>
-                        {{item.get_user.name}}
+                        {{item.order_type}}
                     </td>
                     <td>
                         {{item.name}}
@@ -212,7 +212,7 @@ export default {
     },
     orders_header: [
         {
-            text: 'User',
+            text: 'Type',
             sortable: false
         },
         {

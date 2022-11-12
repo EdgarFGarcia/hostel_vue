@@ -232,6 +232,7 @@
                         <v-col
                             cols="6"
                         >
+                            <h5>Check in</h5>
                             <vuetify-time-select v-model="check_in"></vuetify-time-select>
                             <!--<v-menu
                                 ref="menu2"
@@ -268,6 +269,7 @@
                         <v-col
                             cols="6"
                         >
+                            <h5>Check out</h5>
                             <vuetify-time-select v-model="check_out"></vuetify-time-select>
                             <!--<v-menu
                                 ref="menu"
@@ -418,7 +420,8 @@ export default {
     ...mapGetters({
         get_selected_room:              'room/get_selected_room',
         get_reserve_this_room:          'room/get_reserve_this_room',
-        get_reserve_this_room_selected: 'room/get_reserve_this_room_selected'
+        get_reserve_this_room_selected: 'room/get_reserve_this_room_selected',
+        get_user:                       'auth/get_user'
     })
   },
   methods: {
@@ -494,27 +497,53 @@ export default {
         //     alert('This room only has 4 max capacity / head count')
         //     return
         // }
-        await this.$axios.post('/r/rooms/book_room_now', {
-            actual_room_data:           this.get_reserve_this_room,
-            capacity:                   parseInt(adult) + parseInt(child),
-            date:                       this.dates,
-            payable:                    this.get_reserve_this_room_selected.price * this.total + this.additional_price,
-            check_in:                   this.check_in,
-            check_out:                  this.check_out,
-            adult_count:                this.b.adult,
-            child_count:                this.b.child
-        })
-        .then(({data}) => {
-            console.log(data)
-            if(data.response){
-                alert('booking successful')
-                this.$router.push({name: '/'})
-                return
-            }
-            this.booked = false
-            alert(data.message)
-            return
-        })
+        if (Object.keys(this.get_user).length === 0) {
+            await this.$axios.post('/r/rooms/guest_book_room_now', {
+                actual_room_data: this.get_reserve_this_room,
+                capacity: parseInt(adult) + parseInt(child),
+                date: this.dates,
+                payable: this.get_reserve_this_room_selected.price * this.total + this.additional_price,
+                check_in: this.check_in,
+                check_out: this.check_out,
+                adult_count: this.b.adult,
+                child_count: this.b.child
+            })
+                .then(({ data }) => {
+                    console.log(data)
+                    if (data.response) {
+                        this.$store.dispatch('auth/set_user', data)
+                        alert('Booking successful! Your guest password is: ' + data.udata.name + ', you can change this later.')
+                        this.$router.push({ name: '/user_dashboard' })
+                        return
+                    }
+                    this.booked = false
+                    alert(data.message)
+                    return
+                })
+        }
+        else {
+            await this.$axios.post('/r/rooms/book_room_now', {
+                actual_room_data: this.get_reserve_this_room,
+                capacity: parseInt(adult) + parseInt(child),
+                date: this.dates,
+                payable: this.get_reserve_this_room_selected.price * this.total + this.additional_price,
+                check_in: this.check_in,
+                check_out: this.check_out,
+                adult_count: this.b.adult,
+                child_count: this.b.child
+            })
+                .then(({ data }) => {
+                    console.log(data)
+                    if (data.response) {
+                        alert('Booking successful!')
+                        this.$router.push({ name: '/user_dashboard' })
+                        return
+                    }
+                    this.booked = false
+                    alert(data.message)
+                    return
+                })
+        }
     }
   },
   watch: {
