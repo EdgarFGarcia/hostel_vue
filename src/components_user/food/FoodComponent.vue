@@ -198,44 +198,47 @@
                 value="tab-2"
             >
                 <h1 class="ml-5">Request a Car Service</h1>
-                <v-row>
+                <v-row
+                    style="padding:50px;"
+                >
                     <v-col
-                        cols="3"
-                        v-for="(food, foodindex) in transportation"
-                        :key="foodindex"
+                        cols="6"
                     >
-                        <v-card
-                            width="300"
-                            elevation="0"
-                            class="ma-5"
-                        >
-                            <v-card-title>
-                                <strong>{{food.name}}</strong>
-                                <v-spacer/>
-                                <small>{{food.price}}</small>
-                            </v-card-title>
-                            <v-card-subtitle>
-                                <label>{{food.desc}}</label>
-                            </v-card-subtitle>
-                            <v-card-text>
-                                <img
-                                    :src="food.image"
-                                    contain
-                                    style="max-width: 250px; max-height: 250px;"
-                                />
-                            </v-card-text>
-                            <v-card-actions>
-                                <v-spacer/>
-                                <v-btn
-                                    text
-                                    outlined
-                                    style="textTransform: none !important;"
-                                    @click="order(food)"
-                                >
-                                    Request
-                                </v-btn>
-                            </v-card-actions>
-                        </v-card>
+                        <v-text-field style="width:48%;display:inline-block;margin-right:5px;" v-model="transpo_pick_up" label="Pick up location"></v-text-field>
+                        <v-text-field style="width:48%;display:inline-block;" v-model="transpo_drop_off" label="Drop off location"></v-text-field>
+                        <v-textarea v-model="transpo_message" label="Message"></v-textarea>
+                        <h2 style="margin-bottom:20px;margin-top:70px;">Transportation Type</h2>
+                        <div style="width:300px;">
+                            <h3 style="width:100px;display:inline-block;margin-right:20px;">Car</h3>
+                            <h3 style="width:100px;display:inline-block;">Van</h3>
+                        </div>
+                        <div style="width:300px;">
+                            <v-btn @click="transpo_car = true; transpo_van = false;" style="width:100px;height:100px;margin-right:20px;" :disabled="(transpo_car)?true:false">
+                                <v-img style="width:100px;height:100px;" src="../../assets/car.png"></v-img>
+                            </v-btn>
+                            <v-btn @click="transpo_van = true; transpo_car = false;" style="width:100px;height:100px;" :disabled="(transpo_van)?true:false">
+                                <v-img style="width:100px;height:100px;" src="../../assets/van.png" ></v-img>
+                            </v-btn>
+                        </div>
+                    </v-col>
+                    <v-col
+                        cols="4"
+                    >
+                        <h2 style="margin-bottom:20px;">Pick up date</h2>
+                        <v-date-picker
+                            v-model="transpo_pick_up_date"
+                            color="#596377"
+                            width="inherit"
+                            style="max-width:300px;"
+                            :min="new Date().toISOString().substr(0, 10)"
+                        ></v-date-picker>
+                        <h2 style="margin-bottom:20px;">Pick up time</h2>
+                        <vuetify-time-select style="max-width:300px;" v-model="transpo_pick_up_time"></vuetify-time-select>
+                        <br>
+                    </v-col>
+                    <v-col cols="2"></v-col>
+                    <v-col cols="12">
+                        <v-btn color="primary" @click="book_transpo">Submit</v-btn>
                     </v-col>
                 </v-row>
             </v-tab-item>
@@ -274,7 +277,7 @@
                                     text
                                     outlined
                                     style="textTransform: none !important;"
-                                    @click="order(food)"
+                                    @click="open_massage_model(food)"
                                 >
                                     Request
                                 </v-btn>
@@ -284,6 +287,30 @@
                 </v-row>
             </v-tab-item>
         </v-tabs-items>
+
+        <v-row justify="center">
+        <v-dialog v-model="massage_model" persistent max-width="400">
+            <v-card>
+            <v-card-title class="mb-5">
+                <small>Please select your schedule</small>
+            </v-card-title>
+            <v-card-text>
+                <v-date-picker
+                    v-model="massage_date"
+                    color="#596377"
+                    width="inherit"
+                    style="max-width:300px;"
+                    :min="new Date().toISOString().substr(0, 10)"
+                ></v-date-picker>
+                <vuetify-time-select style="max-width:300px;" v-model="massage_time"></vuetify-time-select>
+            </v-card-text>
+            <v-card-actions>
+                <v-btn dark @click="submit_massage">Submit</v-btn>
+                <v-btn dark @click="massage_model = false">Cancel</v-btn>
+            </v-card-actions>
+            </v-card>
+        </v-dialog>
+        </v-row>
     </v-container>
 </template>
 
@@ -295,6 +322,17 @@ export default {
   ],
   data: () => ({
     tab: null,
+    transpo_pick_up: "Connector Hostel",
+    transpo_drop_off: null,
+    transpo_pick_up_date: null,
+    transpo_pick_up_time: null,
+    transpo_message: null,
+    transpo_car: false,
+    transpo_van: false,
+    massage_model: false,
+    massage_order: null,
+    massage_date: null,
+    massage_time: null,
     services: [
         {
             id:     1,
@@ -590,7 +628,7 @@ export default {
         },
         {
             id:     35,
-            name:   'Aromatherapy massage',
+            name:   'Aromatherapy',
             type:   'Massage and Spa',
             price:  '250',
             desc:   'Aromatherapy massages are best for people who enjoy scent and want to have an emotional healing component to their massage.',
@@ -601,7 +639,7 @@ export default {
             name:   'Deep tissue massage',
             type:   'Massage and Spa',
             price:  '250',
-            desc:   'Deep tissue massage uses more pressure than a Swedish massage. It’s a good option if you have muscle problems',
+            desc:   'Deep tissue massage uses more pressure than a Swedish massage. Its a good option if you have muscle problems',
             image:  require('../../assets/massage4.jpg')
         }
     ],
@@ -756,6 +794,67 @@ export default {
         .then(({data}) => {
             console.log(data)
             alert('Sent!')
+        })
+    },
+    open_massage_model(order){
+        this.massage_order = order
+        console.log(this.massage_order)
+        this.massage_model = true
+    },
+    async submit_massage(){
+        let payload = {
+            order: this.massage_order,
+            date: this.massage_date,
+            datetime: this.massage_date + ' ' + this.massage_time,
+            time: this.massage_time
+        }
+        console.log(payload)
+        await this.$axios.post('/user/auth_user/book_massage', payload)
+        .then(({data}) => {
+            console.log(data)
+            if (data.response == false) {
+                alert(data.message)
+            }
+            else{
+                alert('Request sent!')
+                this.massage_model = false
+            }
+        })
+    },
+    async book_transpo(){
+        let ttype = null
+        if (this.transpo_car || this.transpo_van){
+            if (this.transpo_car) {
+                ttype = "Car"
+            }
+            else {
+                ttype = "Van"
+            }
+        }
+        let payload = {
+            transpo_pick_up: this.transpo_pick_up,
+            transpo_drop_off: this.transpo_drop_off,
+            transpo_pick_up_date: this.transpo_pick_up_date + ' ' + this.transpo_pick_up_time,
+            transpo_pick_up_time: this.transpo_pick_up_time,
+            transpo_message: this.transpo_message,
+            transpo_type: ttype,
+        }
+        console.log(payload)
+        await this.$axios.post('/user/auth_user/book_transpo', payload)
+        .then(({data}) => {
+            if(data.response == false){
+                alert(data.message)
+                return
+            }
+            console.log(data)
+            alert('Sent!')
+            this.transpo_pick_up = null
+            this.transpo_drop_off = null
+            this.transpo_pick_up_date = null
+            this.transpo_pick_up_time = null
+            this.transpo_message = null
+            this.transpo_car = false
+            this.transpo_van = false
         })
     }
   },

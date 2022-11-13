@@ -23,6 +23,7 @@ export default{
             // commit('set_room_categories', payload)
             await Vue.axios.get('admin/rooms/room_categories')
             .then(({data}) => {
+                console.log(data)
                 commit('set_room_categories', data.data)
             })
         },

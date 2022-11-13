@@ -1,6 +1,7 @@
 <template>
   <v-container fill-height fluid>
     <v-row>
+      <p v-if="get_my_rooms.length == 0" class="ml-10 mt-10">No bookings yet</p>
       <v-col cols="4" v-for="(room, roomindex) in orderBy(get_my_rooms, 'created_at', -1)" :key="roomindex">
         <v-card style="height:auto">
           <v-card-title class="text-small">
@@ -32,7 +33,7 @@
           </v-card-text>
           <v-card-actions>
             <v-spacer />
-            <v-btn text outlined v-if="!room.is_paid" @click="room_to_cancel = room; cancel_model = true">
+            <v-btn text outlined @click="room_to_cancel = room; cancel_model = true">
               cancel
             </v-btn>
             <v-btn color="#596377" dark class="pl-10 pr-10" v-if="!room.is_paid" @click="paymongo(room)">
@@ -62,12 +63,14 @@
     </v-row>
 
     <v-row justify="center">
-      <v-dialog v-model="cancel_model" persistent max-width="400">
+      <v-dialog v-model="cancel_model" persistent max-width="250">
         <v-card>
           <v-card-title class="mb-5">
             Are you sure?
           </v-card-title>
+          <v-card-subtitle>Any payments made are non-refundable</v-card-subtitle>
           <v-card-actions>
+            <v-spacer></v-spacer>
             <v-btn color="#596377" dark @click="cancel_booking">
               Yes
             </v-btn>
@@ -324,6 +327,7 @@ export default {
           if (data.response) {
             alert(data.message)
             this.room_to_cancel = []
+            this.cancel_model = false
             this.$store.dispatch('user/set_my_rooms')
           }
         })

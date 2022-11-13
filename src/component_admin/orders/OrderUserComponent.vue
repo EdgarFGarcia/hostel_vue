@@ -232,7 +232,7 @@ export default {
             sortable: false
         },
         {
-            text: 'Mark as paid',
+            text: 'Pay',
             sortable: false
         }
     ],

@@ -134,16 +134,16 @@ export default {
     drawer: false,
     navigation: [
         {
-            icon:       'mdi-chevron-left',
-            label:      'Back',
+            icon:       'mdi-home-outline',
+            label:      'Home',
             style:      'color: white',
             url:        {
                 name:   '/'
             }
         },
         {
-            icon:       'mdi-home-outline',
-            label:      'Home',
+            icon:       'mdi-bed-double-outline',
+            label:      'My Bookings',
             style:      'color: white',
             url:        {
                 name:   '/user_dashboard'
@@ -159,7 +159,7 @@ export default {
         },
         {
             icon:       'mdi-food',
-            label:      'Orders',
+            label:      'My Orders',
             style:      'color: white',
             url:        {
                 name:   '/orders_user'
