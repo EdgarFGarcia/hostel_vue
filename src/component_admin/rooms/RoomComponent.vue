@@ -12,6 +12,7 @@
             v-for="room in get_room_categories"
             :key="room.id"
             :href="`#tab-${room.id}`"
+            @click="select_room(room)"
           >
             <label
                 style="color: white;"
@@ -59,9 +60,40 @@
                         <div>Additional Price: {{room.additional_price}}</div>
                         <br>
                         <div>Total number of rooms: {{room.room_count}}</div>
-                        <br>
-                        <div>Booked rooms: {{room.rooms_booked}}</div>
                     </v-card-subtitle>
+                </v-card>
+                <v-card>
+                    <v-btn
+                        class="ml-10 mt-5"
+                        dark
+                        @click="add_room_state = true"
+                    >
+                        <v-icon
+                            class="mr-3"
+                        >mdi-plus</v-icon>
+                        Add Room
+                    </v-btn>
+                    <v-card-text>
+                        <v-row>
+                            <v-col cols="3" v-for="(rooms, roomsindex) in get_rooms[0].actual_rooms" :key="roomsindex">
+                                <v-card elevation="2">
+                                    <v-card-title class="text-small">
+                                        <small>{{rooms.room_name}}</small>
+                                        <v-spacer />
+                                        <small>ID: {{rooms.id}}</small>
+                                    </v-card-title>
+                                    <v-card-actions>
+                                        Available: {{ rooms.is_available }}
+                                    </v-card-actions>
+                                    <v-card-actions>
+                                        <v-btn block text outlined @click="delete_room(rooms)">
+                                            Delete
+                                        </v-btn>
+                                    </v-card-actions>
+                                </v-card>
+                            </v-col>
+                        </v-row>
+                    </v-card-text>
                 </v-card>
             </v-tab-item>
         </v-tabs-items>
@@ -119,6 +151,8 @@
                         <v-text-field v-model="room_to_add.name"></v-text-field>
                         Total number of rooms
                         <v-text-field type="number" v-model="room_to_add.room_count"></v-text-field>
+                        Image
+                        <v-file-input v-model="room_to_add.image" label="Update Image" chips></v-file-input>
                         Short Description
                         <v-textarea v-model="room_to_add.description"></v-textarea>
                         Full Description
@@ -159,19 +193,26 @@
             </v-card-title>
             <v-card-actions>
                 <v-spacer>
-                </v-spacer><v-btn dark @click="delete_room(room_to_delete)" class="ml-2">Confirm</v-btn>
+                </v-spacer><v-btn dark @click="delete_room_type(room_to_delete)" class="ml-2">Confirm</v-btn>
                 <v-btn dark @click="delete_model = false">Cancel</v-btn>
             </v-card-actions>
             </v-card>
         </v-dialog>
         </v-row>
+        <AddRoomDialog
+            :value="this.add_room_state"
+            @close_add_dialog="close_add_dialog"
+            @add_room_from_dialog="add_room_from_dialog"
+        />
     </v-container>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
+import AddRoomDialog from './components/DialogAddRoom.vue'
 export default {
   components: {
+    AddRoomDialog
   },
   props: [
   ],
@@ -186,6 +227,7 @@ export default {
     room_to_add: {
         name: null,
         room_count: null,
+        image: null,
         description: null,
         full_details: null,
         facilities: [],
@@ -199,18 +241,45 @@ export default {
   }),
   async mounted () {
     await this.$store.dispatch('admin_room/set_room_categories')
+    this.select_room(this.get_room_categories[0])
   },
   created () {
   },
   computed: {
     ...mapGetters({
-        get_room_categories:        'admin_room/get_room_categories'
+        get_room_categories: 'admin_room/get_room_categories',
+        get_rooms: 'admin_room/get_rooms'
     })
   },
   methods: {
     edit_room(room){
         this.edit_room_model = true
         this.room_to_edit = room
+    },
+    close_add_dialog(){
+        this.add_room_state = false
+    },
+    async select_room(data){
+        await this.$axios.get(`admin/rooms/actual_rooms/${data.id}`)
+        .then(({data}) => {
+            this.$store.dispatch('admin_room/set_rooms', data.data)
+        })
+    },
+    async add_room_from_dialog(data){
+        console.log(data)
+        await this.$axios.post('admin/rooms/add_room', {
+            room_name:          data,
+            room_id:            this.get_rooms[0].id
+        })
+        .then(({data}) => {
+            if(data.response){
+                alert(data.message)
+                this.close_add_dialog()
+                this.select_room(this.get_rooms[0])
+                return
+            }
+            alert(data.message)
+        })
     },
     async submit_edit_room(){
         console.log(this.room_to_edit)
@@ -221,11 +290,19 @@ export default {
         })
     },
     async submit_new_room(){
-        console.log(this.room_to_add)
-        await this.$axios.post('admin/rooms/add_room', this.room_to_add)
+        const formData = new FormData()
+        if (this.room_to_add.image != null) {
+            formData.append('image', this.room_to_add.image)
+            console.log(this.room_to_add.image)
+        }
+        let payload = {
+            data: this.room_to_add,
+            formdata: formData
+        }
+        await this.$axios.post('admin/rooms/add_room_type', payload)
         .then(({data}) => {
             console.log(data)
-            this.$router.go(0)
+            //this.$router.go(0)
         })
     },
     async delete_room_open(room) {
@@ -234,6 +311,13 @@ export default {
     },
     async delete_room(room) {
           await this.$axios.post('admin/rooms/delete_room', { room_id: room.id })
+              .then(({ data }) => {
+                console.log(data)
+                this.$router.go(0)
+              })
+    },
+    async delete_room_type(room) {
+          await this.$axios.post('admin/rooms/delete_room_type', { room_id: room.id })
               .then(({ data }) => {
                 console.log(data)
                 this.$router.go(0)

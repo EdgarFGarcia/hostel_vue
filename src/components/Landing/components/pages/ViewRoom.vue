@@ -13,7 +13,7 @@
                 <v-icon>mdi-chevron-left</v-icon>
                 back
             </v-btn>
-        Page Under Construction</strong>
+        No rooms available</strong>
       </v-row>
       <v-row
         v-else

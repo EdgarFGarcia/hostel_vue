@@ -291,6 +291,7 @@ export default {
     paymongo_model: false,
     additional_model: false,
     redirect_model: false,
+    check_in_id: false,
     card_details_model: false,
     review_model: false,
     review_text: null,
@@ -322,8 +323,13 @@ export default {
   },
   methods: {
     async cancel_booking() {
-      await this.$axios.delete(`r/rooms/cancel_reservation/${this.room_to_cancel.id}`)
+      let payload = {
+        check_in_id: this.room_to_cancel.id,
+        room_id: this.room_to_cancel.actual_room_id
+      }
+      await this.$axios.post('r/rooms/cancel_reservation', payload)
         .then(({ data }) => {
+          console.log(data)
           if (data.response) {
             alert(data.message)
             this.room_to_cancel = []
@@ -395,7 +401,8 @@ export default {
         client_key: this.get_payment_details.intent_id,
         check_in_id: this.get_payable_data.id,
         user_id: this.get_payable_data.user_id,
-        amount: this.get_payment_details.amount
+        amount: this.get_payment_details.amount,
+        room_id: this.get_payable_data.actual_room_id
       }
       await this.$axios.post('r/payment/paymongo_card_create_method', payload)
         .then(({ data }) => {
