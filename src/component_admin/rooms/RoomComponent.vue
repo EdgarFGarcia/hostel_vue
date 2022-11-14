@@ -58,8 +58,6 @@
                         <div>Max Capacity: {{room.max_capacity}}</div>
                         <br>
                         <div>Additional Price: {{room.additional_price}}</div>
-                        <br>
-                        <div>Total number of rooms: {{room.room_count}}</div>
                     </v-card-subtitle>
                 </v-card>
                 <v-card>
