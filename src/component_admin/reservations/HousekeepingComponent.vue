@@ -5,7 +5,7 @@
         </v-alert>
         <v-data-table :headers="reservation_header" :items="get_check_list" class="elevation-1">
             <template v-slot:item="{ item }">
-                <tr class="mx-5">
+                <tr class="mx-5" v-if="item.get_room_info != null">
                     <td>
                         {{ item.get_user.name }}
                     </td>
@@ -13,10 +13,10 @@
                         {{ item.total_checked_in }}
                     </td>
                     <td>
-                        {{ item.get_room_info.get_room_parent_information.name }}
+                        <div v-if="item.get_room_info != null">{{ item.get_room_info.get_room_parent_information.name }}</div>
                     </td>
                     <td>
-                        {{ item.get_room_info.room_name }}
+                        <div v-if="item.get_room_info != null">{{ item.get_room_info.room_name }}</div>
                     </td>
                     <td>
                         {{ item.check_in_date_time }}

@@ -11,6 +11,7 @@
             <v-tab
                 ripple
                 href="#tab-1"
+                @click="change_tab('tab-1')"
             >
                 <h2>Home</h2>
             </v-tab>
@@ -18,6 +19,7 @@
             <v-tab
                 ripple
                 href="#tab-3"
+                @click="change_tab('tab-3')"
                 v-if="get_user_data == null"
             >
                 <h2>Book Direct</h2>
@@ -26,6 +28,7 @@
             <v-tab
                 ripple
                 href="#tab-4"
+                @click="change_tab('tab-4')"
                 v-if="get_user_data != null && get_user_data.role_id != 3"
             >
                 <h2>Rooms</h2>
@@ -84,15 +87,24 @@ export default {
     tab: null
   }),
   mounted () {
+    this.set_tab()
   },
   created () {
   },
   computed: {
     ...mapGetters({
-        get_user_data:              'auth/get_user_data'
+        get_user_data:              'auth/get_user_data',
+        get_tab:                    'home_tab/get_tab'
     })
   },
   methods: {
+    change_tab(tab){
+        console.log(tab)
+        this.$store.dispatch('home_tab/set_tab', tab)
+    },
+    set_tab(){
+        this.tab = this.get_tab
+    }
   },
   watch: {
   }

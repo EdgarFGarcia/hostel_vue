@@ -19,7 +19,7 @@
           <v-btn
               icon
               color="#6757F7"
-              href="https://www.instagram.com/connectorhostel/"
+              href="https://www.instagram.com/whitebanana.mnl/"
               target='#'
           >
               <v-icon

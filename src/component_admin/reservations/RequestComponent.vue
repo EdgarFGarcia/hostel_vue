@@ -14,6 +14,7 @@
             <template v-slot:item="{ item }">
                 <tr
                     class="mx-5"
+                    v-if="item.get_room != null"
                 >
                     <td>
                         {{moment(item.created_at).format('MMMM Do YYYY, h:mm:ss a')}}
