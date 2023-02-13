@@ -59,6 +59,15 @@
                 <h3 class="pa-3">{{room.room_name}}</h3>
                 <v-card-actions>
                     <v-btn
+                        v-if="get_user.udata.role_id == 2"
+                        disabled
+                        block
+                        color="#6757F7"
+                    >
+                        Select room
+                    </v-btn>
+                    <v-btn
+                        v-else
                         block
                         dark
                         color="#6757F7"
@@ -282,7 +291,12 @@
                     </v-row>
                 </v-card-text>
                 <v-card-text v-else>
-                    Please select a room...
+                    <div v-if="get_user.udata.role_id == 2">
+                        Admins may only view rooms
+                    </div>
+                    <div v-else>
+                        Please select a room...
+                    </div>
                 </v-card-text>
                 <v-card-actions v-if="get_reserve_this_room.room_name != null">
                     <v-btn

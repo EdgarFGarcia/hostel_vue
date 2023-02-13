@@ -54,7 +54,8 @@
                 dark
                 @click="select_room(room)"
               >
-                Book now
+                <div v-if="get_user.udata.role_id == 2">View room</div>
+                <div v-else>Book now</div>
               </v-btn>              
             </v-card-actions>
           </v-card>
@@ -82,7 +83,8 @@ export default {
   },
   computed: {
     ...mapGetters({
-      get_rooms_list:       'room/get_rooms_list'
+      get_rooms_list: 'room/get_rooms_list',
+        get_user: 'auth/get_user'
     })
   },
   methods: {
