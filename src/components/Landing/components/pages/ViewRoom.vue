@@ -152,28 +152,30 @@
                     <small>Reservation Details</small>
                 </v-card-title>
                 <v-card-subtitle
-                    v-if="Object.keys(get_reserve_this_room_selected).length > 0"
+                    v-if="Object.keys(get_reserve_this_room_selected).length > 0 && disabled_days.length > 0"
                 >
                     <h3>{{ get_reserve_this_room.room_name }}</h3>
                 </v-card-subtitle>
-                <v-card-text v-if="get_reserve_this_room.room_name != null">
+                <v-card-text v-if="get_reserve_this_room.room_name != null && disabled_days.length > 0">
                     <v-row>
                         <v-col
                             cols="12"
                         >
                             <label>Reservation Date</label>
-                            <v-date-picker
+                            <DatePicker
                                 v-model="dates"
-                                range
-                                color="#596377"
+                                is-range
                                 width="inherit"
-                                :min="new Date().toISOString().substr(0, 10)"
-                            ></v-date-picker>
-                            <label v-if="dates.length == 2">{{ format(dates) }}</label>
-                            <label
-                                style="display: block;"
-                                v-if="total != null && dates.length == 2"
-                            >total days of stay: {{ total }}</label>
+                                :disabled-dates="disabled_days"
+                                :min-date="new Date().toISOString().substr(0, 10)"
+                            />
+                            <div v-if="dates">
+                                <label v-if="dates.length == 2">{{ format(dates) }}</label>
+                                <label
+                                    style="display: block;"
+                                    v-if="total != null && dates.length == 2"
+                                >total days of stay: {{ total }}</label>
+                            </div>
                         </v-col>
                         <v-col
                             cols="6"
@@ -311,7 +313,7 @@
                         Please select a room...
                     </div>
                 </v-card-text>
-                <v-card-actions v-if="get_reserve_this_room.room_name != null">
+                <v-card-actions v-if="get_reserve_this_room.room_name != null && disabled_days.length > 0">
                     <v-btn
                         v-if="!booked"
                         block
@@ -341,10 +343,11 @@ import { mapGetters } from 'vuex'
 import moment from 'moment'
 import StarRating from 'vue-star-rating'
 import Vue2Filters from 'vue2-filters'
+import { DatePicker } from 'v-calendar';
 export default {
   mixins: [Vue2Filters.mixin],
   components: {
-    StarRating
+      StarRating, DatePicker
   },
   props: [
   ],
@@ -353,6 +356,7 @@ export default {
     dates: [],
     result: null,
     total: null,
+    disabled_days: [],
     additional_price: 0,
     b: {
         adult: 0,
@@ -382,8 +386,26 @@ export default {
         return moment(time);
     },
     select_room_for_reservation(room_data, selected_room_data){
+        this.dates = []
         this.$store.dispatch('room/set_reserve_this_room', room_data)
         this.$store.dispatch('room/set_selected_room_for_reservation', selected_room_data)
+        this.$axios.post('/r/rooms/checked_in_dates', this.get_reserve_this_room.id)
+            .then(({ data }) => {
+                this.disabled_days = []
+                data.data.forEach((check_in) => {
+
+                    let dates = check_in.check_in_date_time.split(' ')
+                    let newdate = parseInt(dates[1].slice(0, -1)) + check_in.duration
+                    //let finaldate = dates[0] + ' ' + newdate.toString() + ', ' + dates[2]
+                    //let finaldate = new Date(dates[2], '2', newdate.toString())
+                    let finaldate = {
+                        start: new Date(dates[2], moment().month(dates[0]).format("M") - 1, dates[1].slice(0, -1).toString()),
+                        end: new Date(dates[2], moment().month(dates[0]).format("M") - 1, newdate.toString())
+                    }
+                    this.disabled_days.push(finaldate)
+                })
+                console.log(this.disabled_days)
+            })
     },
     back_home(){
         this.$router.push({name: '/'})
@@ -450,11 +472,15 @@ export default {
         //     alert('This room only has 4 max capacity / head count')
         //     return
         // }
+        let newdates = []
+        newdates.push(moment(this.dates.start).format('YYYY-MM-DD'))
+        newdates.push(moment(this.dates.end).format('YYYY-MM-DD'))
+        console.log(newdates)
         if (Object.keys(this.get_user).length === 0) {
             await this.$axios.post('/r/rooms/guest_book_room_now', {
                 actual_room_data: this.get_reserve_this_room,
                 capacity: parseInt(adult) + parseInt(child),
-                date: this.dates,
+                date: newdates,
                 payable: this.get_reserve_this_room_selected.price * this.total + this.additional_price,
                 check_in: this.check_in,
                 check_out: this.check_out,
@@ -478,7 +504,7 @@ export default {
             await this.$axios.post('/r/rooms/book_room_now', {
                 actual_room_data: this.get_reserve_this_room,
                 capacity: parseInt(adult) + parseInt(child),
-                date: this.dates,
+                date: newdates,
                 payable: this.get_reserve_this_room_selected.price * this.total + this.additional_price,
                 check_in: this.check_in,
                 check_out: this.check_out,

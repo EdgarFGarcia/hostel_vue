@@ -12,6 +12,7 @@ import UserDashboard from './layouts/UserDashboard.vue'
 import AdminDashboard from './layouts/AdminLayout.vue'
 import VuetifyTimeSelect from 'vuetify-time-select'
 import VueFbCustomerChat from 'vue-fb-customer-chat'
+import VCalendar from 'v-calendar';
 
 Vue.component('default-layout', Default)
 Vue.component('user_dashboard-layout', UserDashboard)
@@ -28,6 +29,10 @@ Vue.use(VueFbCustomerChat, {
   theme_color: '#333333', // theme color in HEX
   locale: 'en_US', // default 'en_US'
 })
+Vue.use(VCalendar, {
+  componentPrefix: 'vc',  // Use <vc-calendar /> instead of <v-calendar />
+});
+
 
 new Vue({
   router,
