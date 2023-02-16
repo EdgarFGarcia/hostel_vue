@@ -249,7 +249,7 @@ export default {
                 switch(data.udata.role_id){
                     case 1:
                         this.close_dialog()
-                        this.$router.push({name: '/user_dashboard'})
+                        this.$router.push({name: '/'})
                         return
                     case 2:
                         this.close_dialog()
