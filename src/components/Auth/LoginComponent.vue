@@ -232,6 +232,11 @@ export default {
   computed: {
   },
   methods: {
+    showSnackBar(message){
+      this.$store.commit("auth/setMessage", 
+      {show: true, message: message}, 
+      {root: 1})
+    },
     close_dialog(){
         this.$emit('close_dialog')
         this.v = {}
@@ -244,6 +249,7 @@ export default {
             password:           this.v.password
         })
         .then(({data}) => {
+            this.showSnackBar(data.message)
             if(data.response){
                 this.$store.dispatch('auth/set_user', data)
                 switch(data.udata.role_id){

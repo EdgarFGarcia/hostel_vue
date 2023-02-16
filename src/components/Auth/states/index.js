@@ -1,7 +1,12 @@
 export default{
     namespaced: true,
     state: {
-        user: {}
+        user: {},
+        snackbar: {
+            show: false,
+            message: "",
+            button: false,
+        },
     },
     mutations: {
         set_user(state, payload){
@@ -12,11 +17,19 @@ export default{
         },
         update_user_information(state, payload){
             state.user.udata = payload
-        }
+        },
+        setMessage(state, v) {
+            state.snackbar.show = v.show
+            state.snackbar.message = v.message
+            state.snackbar.button = v.button
+        },
     },
     getters: {
         get_user : state => state.user,
-        get_user_data: state => state.user.udata
+        get_user_data: state => state.user.udata,
+        mSnackbar(state) {
+            return state.snackbar
+        },
     },
     actions: {
         set_user({commit}, payload){

@@ -39,6 +39,14 @@
         </v-btn>-->
       </component>
     </v-main>
+    <v-snackbar 
+      v-model="mSnackbar.show" 
+      bottom="bottom" 
+      multi-line="multi-line" 
+      :timeout="4000" 
+      :vertical="true">
+      {{ mSnackbar.message }}<br/>
+    </v-snackbar>
     <!--<v-dialog
       v-model="chat_bot_model"
       persistent
@@ -118,7 +126,7 @@
 </template>
 
 <script>
-
+import { mapGetters } from 'vuex'
 export default {
   name: 'App',
 
@@ -129,6 +137,9 @@ export default {
     layout(){
       return this.$route.meta.layout + '-layout';
     },
+    ...mapGetters({
+      mSnackbar: 'auth/mSnackbar'
+    })
   },
 
   data: () => ({
