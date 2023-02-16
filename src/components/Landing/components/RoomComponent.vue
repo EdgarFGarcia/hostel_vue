@@ -54,7 +54,7 @@
                 dark
                 @click="select_room(room)"
               >
-                <div v-if="get_user.udata != null"><div v-if="get_user.udata.role_id == 2">View room</div></div>
+                <div v-if="get_user.udata != null"><div v-if="get_user.udata.role_id == 2">View room</div><div v-else>Book now</div></div>
                 <div v-else>Book now</div>
               </v-btn>              
             </v-card-actions>

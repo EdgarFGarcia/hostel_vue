@@ -259,11 +259,11 @@ export default {
                         return
                     case 2:
                         this.close_dialog()
-                        this.$router.push({name: '/admin_rooms'})
+                        this.$router.push({name: '/'})
                         return
                     case 3:
                         this.close_dialog()
-                        this.$router.push({name: '/housekeeping_request'})
+                        this.$router.push({name: '/'})
                         return
                 }
             }
