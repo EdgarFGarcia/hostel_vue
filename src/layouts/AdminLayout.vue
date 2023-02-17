@@ -167,6 +167,23 @@
                     </v-list-item>
                     <v-list-item
                         link
+                        v-if="get_user.udata.role_id > 1"
+                        @click="$router.push('/report_component')"
+                    >
+                        <v-list-item-icon>
+                            <v-icon
+                                style="color: white"
+                            >mdi-chat</v-icon>
+                        </v-list-item-icon>
+
+                        <v-list-item-content>
+                            <v-list-item-title
+                                style="color: white"
+                            >Messages</v-list-item-title>
+                        </v-list-item-content>
+                    </v-list-item>
+                    <v-list-item
+                        link
                         @click="logout"
                     >
                         <v-list-item-icon>

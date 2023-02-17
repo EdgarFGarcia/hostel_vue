@@ -5,7 +5,8 @@
       <v-col cols="4" v-for="(room, roomindex) in orderBy(get_my_rooms, 'created_at', -1)" :key="roomindex">
         <v-card style="height:auto">
           <v-card-title class="text-small">
-            <small>{{ room.get_room_info.room_name }}</small>
+            <small v-if="room.get_room_info">{{ room.get_room_info.room_name }}</small>
+            <small v-else>deleted room</small>
             <v-spacer />
 
             <small v-if="!room.is_paid">
