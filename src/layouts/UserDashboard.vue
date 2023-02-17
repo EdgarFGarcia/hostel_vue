@@ -69,21 +69,70 @@
                     rounded
                 >
                     <v-list-item
-                        v-for="(item, itemindex) in navigation"
-                        :key="itemindex"
                         link
-                        @click="item.url == '' ? logout() : $router.push(item.url)"
+                        @click="$router.push('/')"
                     >
                         <v-list-item-icon>
                             <v-icon
-                                :style="item.style"
-                            >{{ item.icon }}</v-icon>
+                                style="color: white"
+                            >mdi-home-outline</v-icon>
                         </v-list-item-icon>
 
                         <v-list-item-content>
                             <v-list-item-title
-                                :style="item.style"
-                            >{{ item.label }}</v-list-item-title>
+                                style="color: white"
+                            >Home</v-list-item-title>
+                        </v-list-item-content>
+                    </v-list-item>
+                    <v-list-item
+                        link
+                        @click="$router.push('/user_dashboard')"
+                    >
+                        <v-list-item-icon>
+                            <v-icon
+                                style="color: white"
+                            >mdi-bed-double-outline</v-icon>
+                        </v-list-item-icon>
+
+                        <v-list-item-content>
+                            <v-list-item-title
+                                style="color: white"
+                            >My Bookings</v-list-item-title>
+                        </v-list-item-content>
+                    </v-list-item>
+                    <v-list-item
+                        v-if="!get_user.udata.is_guest"
+                        link
+                        @click="$router.push('/user_fnb_order')"
+                    >
+                        <v-list-item-icon>
+                            <v-icon
+                                style="color: white"
+                            >mdi-face-agent</v-icon>
+                        </v-list-item-icon>
+
+                        <v-list-item-content>
+                            <v-list-item-title
+                                style="color: white"
+                            >Request for services</v-list-item-title>
+                        </v-list-item-content>
+                    </v-list-item>
+                    <small style="color:white;" v-if="get_user.udata.is_guest">Please go to your profile and enter your email to access services</small>
+                    <v-list-item
+                        v-if="!get_user.udata.is_guest"
+                        link
+                        @click="$router.push('/orders_user')"
+                    >
+                        <v-list-item-icon>
+                            <v-icon
+                                style="color: white"
+                            >mdi-food</v-icon>
+                        </v-list-item-icon>
+
+                        <v-list-item-content>
+                            <v-list-item-title
+                                style="color: white"
+                            >My Orders</v-list-item-title>
                         </v-list-item-content>
                     </v-list-item>
                 </v-list>

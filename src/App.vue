@@ -27,16 +27,6 @@
               >mdi-instagram</v-icon>
           </v-btn>
         </div>
-        <!--<v-btn
-          elevation="2"
-          fab
-          icon
-          style="position: fixed; bottom: 30px; right: 30px; background-color:white;"
-          color="primary"
-          @click="open_chat_bot"
-        >
-          <v-icon>mdi-chat</v-icon>
-        </v-btn>-->
       </component>
     </v-main>
     <v-snackbar 
@@ -47,81 +37,6 @@
       :vertical="true">
       {{ mSnackbar.message }}<br/>
     </v-snackbar>
-    <!--<v-dialog
-      v-model="chat_bot_model"
-      persistent
-      width="720"
-    >
-      <v-card>
-        <v-card-title>
-          <small>What's your question?</small>
-        </v-card-title>
-        <v-card-text>
-          <v-row
-            class="mt-5"
-          >
-            <v-btn
-              color="primary"
-              rounded
-              class="mr-5 mb-3"
-              @click="location"
-            >
-              Where are you located?
-            </v-btn>
-            <v-btn
-              color="primary"
-              rounded
-              class="mr-5 mb-3"
-              @click="rooms"
-            >
-              Can I see available rooms?
-            </v-btn>
-            <v-btn
-              color="primary"
-              rounded
-              class="mr-5 mb-3"
-              @click="rates"
-            >
-              Rates?
-            </v-btn>
-            <v-btn
-              color="primary"
-              rounded
-              class="mr-5 mb-3"
-              @click="reservation"
-            >
-              Can I make a reservation?
-            </v-btn>
-            <v-btn
-              color="primary"
-              rounded
-              class="mr-5 mb-3"
-              @click="requirement"
-            >
-              What are your requirements for check-in?
-            </v-btn>
-          </v-row>
-        </v-card-text>
-        <v-card-text>
-          <v-textarea
-            v-html="label"
-            disabled
-            filled
-          >
-          </v-textarea>
-        </v-card-text>
-        <v-card-actions>
-          <v-btn
-            block
-            text
-            outline
-            @click="chat_bot_model = false"
-          >
-            Close
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>-->
   </v-app>
 </template>
 

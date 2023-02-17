@@ -168,7 +168,7 @@
                     <v-list-item
                         link
                         v-if="get_user.udata.role_id > 1"
-                        @click="$router.push('/report_component')"
+                        @click="$router.push('/messages')"
                     >
                         <v-list-item-icon>
                             <v-icon
