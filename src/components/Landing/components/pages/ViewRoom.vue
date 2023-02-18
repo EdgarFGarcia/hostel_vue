@@ -170,10 +170,10 @@
                                 :min-date="new Date().toISOString().substr(0, 10)"
                             />
                             <div v-if="dates">
-                                <label v-if="dates.length == 2">{{ format(dates) }}</label>
+                                <label>{{ format(dates) }}</label>
                                 <label
                                     style="display: block;"
-                                    v-if="total != null && dates.length == 2"
+                                    v-if="total != null"
                                 >total days of stay: {{ total }}</label>
                             </div>
                         </v-col>
@@ -366,7 +366,8 @@ export default {
     check_out: null,
     menuin: false,
     menuout: false,
-    booked: false
+    booked: false,
+    disable_booking: false,
   }),
   mounted () {
     this.img_url = process.env.VUE_APP_URL
@@ -382,6 +383,11 @@ export default {
     })
   },
   methods: {
+    showSnackBar(message){
+      this.$store.commit("auth/setMessage", 
+      {show: true, message: message}, 
+      {root: 1})
+    },
     moment: function (time) {
         return moment(time);
     },
@@ -422,42 +428,41 @@ export default {
     format(data){
         let first;
         let last;
-        if(data.length > 0){
-            first = new Date(data[0]).toLocaleDateString(
-                'en-us',
-                {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric'
-                }
-            )
-            last = new Date(data[1]).toLocaleDateString(
-                'en-us',
-                {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric'
-                }
-            )
-            const ff = Number(new Date(first))
-            const ll = Number(new Date(last))
-            const difference_in_time = parseInt(ll) - parseInt(ff)
-            this.total = difference_in_time / (1000 * 3600 * 24) + 1
-        }
+        first = new Date(data.start).toLocaleDateString(
+            'en-us',
+            {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            }
+        )
+        last = new Date(data.end).toLocaleDateString(
+            'en-us',
+            {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            }
+        )
+        const ff = Number(new Date(first))
+        const ll = Number(new Date(last))
+        const difference_in_time = parseInt(ll) - parseInt(ff)
+        this.total = difference_in_time / (1000 * 3600 * 24) + 1
         return first + ' to ' + last;
     },
     check_head_count(){
+        console.log(this.get_reserve_this_room_selected)
         const adult = this.b.adult
         const child = this.b.child
-        const capacity = this.get_reserve_this_room_selected.capacity + 4
+        const capacity = this.get_reserve_this_room_selected.max_capacity
         if(parseInt(adult) + parseInt(child) > capacity){
-            alert('This room only has ' + capacity + ' max capacity / head count.')
+            this.showSnackBar('This room only has ' + capacity + ' max capacity / head count.')
             return
         }
         if(parseInt(adult) + parseInt(child) > this.get_reserve_this_room_selected.capacity){
             const additional_capacity = parseInt(adult) + parseInt(child) - this.get_reserve_this_room_selected.capacity
             this.additional_price = 200 * additional_capacity
-            alert('This room charges an additional 200 per head above ' + this.get_reserve_this_room_selected.capacity + ' guests.')
+            this.showSnackBar('This room charges an additional 200 per head above ' + this.get_reserve_this_room_selected.capacity + ' guests.')
             return
         }
         else{
@@ -469,13 +474,12 @@ export default {
         const adult = this.b.adult
         const child = this.b.child
         // if(parseInt(adult) + parseInt(child) > this.get_reserve_this_room_selected.capacity){
-        //     alert('This room only has 4 max capacity / head count')
+        //     this.showSnackBar('This room only has 4 max capacity / head count')
         //     return
         // }
         let newdates = []
         newdates.push(moment(this.dates.start).format('YYYY-MM-DD'))
         newdates.push(moment(this.dates.end).format('YYYY-MM-DD'))
-        console.log(newdates)
         if (Object.keys(this.get_user).length === 0) {
             await this.$axios.post('/r/rooms/guest_book_room_now', {
                 actual_room_data: this.get_reserve_this_room,
@@ -491,12 +495,12 @@ export default {
                     console.log(data)
                     if (data.response) {
                         this.$store.dispatch('auth/set_user', data)
-                        alert('Booking successful! Your guest password is: ' + data.udata.name + ', you can change this later.')
+                        this.showSnackBar('Booking successful! Your guest password is: ' + data.udata.name + ', you can change this later.')
                         this.$router.push({ name: '/user_dashboard' })
                         return
                     }
                     this.booked = false
-                    alert(data.message)
+                    this.showSnackBar(data.message)
                     return
                 })
         }
@@ -514,12 +518,12 @@ export default {
                 .then(({ data }) => {
                     console.log(data)
                     if (data.response) {
-                        alert('Booking successful!')
+                        this.showSnackBar('Booking successful!')
                         this.$router.push({ name: '/user_dashboard' })
                         return
                     }
                     this.booked = false
-                    alert(data.message)
+                    this.showSnackBar(data.message)
                     return
                 })
         }
