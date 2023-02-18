@@ -4,135 +4,105 @@
             Reservation Details
         </v-alert>
         <v-data-table :headers="reservation_header" :items="get_reservation_list" class="elevation-1">
-            <template v-slot:item="{ item, expand, isExpanded }">
-                <tr style="cursor: pointer;" class="mx-5" @click="expand(!isExpanded)">
+            <template v-slot:item="{ item }">
+                <tr v-if="item.get_room_info">
                     <td>
-                        {{ item.name }}
+                        {{ item.get_user.name }}
+                        <br>
+                        {{ item.get_user.email }}
                     </td>
                     <td>
-                        {{ item.email }}
+                        <v-btn dark @click="check_details(item)">
+                            {{item.get_room_info.room_name}}
+                        </v-btn>
                     </td>
                     <td>
-                        {{ item.created_at }}
+                        {{ item.check_in_date_time }}
+                    </td>
+                    <td>
+                        {{ item.will_be_available_at }}
+                    </td>
+                    <td>
+                        {{ item.duration }} Day(s)
+                    </td>
+                    <td>
+                        {{ item.total_checked_in }}
+                    </td>
+                    <td>
+                        {{ item.adult_count }}
+                    </td>
+                    <td>
+                        {{ item.child_count }}
+                    </td>
+                    <td>
+                        {{ item.payable | currency('₱') }}
+                    </td>
+                    <td>
+                        <v-btn v-if="!item.is_paid" dark @click="mark_as_paid(item)">
+                            Mark as paid
+                        </v-btn>
+                        <v-btn v-else disabled>
+                            Room paid
+                        </v-btn>
+                    </td>
+                    <td>
+                        <v-btn v-if="item.checked" disabled>
+                            Checked
+                        </v-btn>
+                        <v-btn v-else-if="item.to_check == 0" dark @click="check(item)">
+                            Mark to check
+                        </v-btn>
+                        <v-btn v-else-if="!item.checked" disabled>
+                            To check
+                        </v-btn>
+                    </td>
+                    <td>
+                        <label v-if="item.get_additional != null && item.get_additional.amount_due == 0">
+                            {{ item.get_additional.reason }}
+                        </label>
+                        <label v-else>No report</label>
+                    </td>
+                    <td v-if="item.get_additional != null">
+                        {{ item.get_additional.amount_due | currency('₱') }}
+                    </td>
+                    <td v-else>
+                        No additional
+                    </td>
+                    <td>
+                        <label
+                            v-if="item.get_additional != null && item.get_additional.amount_due > 0 && item.get_additional.amount_paid >= item.get_additional.amount_due">
+                            Paid
+                        </label>
+                        <label v-else>No additional</label>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                        <v-btn v-if="item.get_additional != null && item.get_additional.amount_due == 0"
+                            dark @click="charge(item)">
+                            Charge
+                        </v-btn>
+                        <v-btn v-else-if="item.get_additional != null" disabled>
+                            Charged
+                        </v-btn>
+                        <v-btn v-else-if="item.get_additional == null" disabled>
+                            N/A
+                        </v-btn>
+                    </td>
+                    <td>
+                        <v-btn
+                            v-if="item.get_additional != null && item.get_additional.amount_paid < item.get_additional.amount_due"
+                            dark @click="extra_paid(item)">
+                            Paid fee
+                        </v-btn>
+                        <v-btn v-else-if="item.get_additional != null && item.get_additional.amount_due > 0" disabled>
+                            Fee paid
+                        </v-btn>
+                        <v-btn v-else disabled>
+                            N/A
+                        </v-btn>
                     </td>
                 </tr>
-            </template>
-            <template v-slot:expanded-item="{ headers, item }">
-                <td :colspan="headers.length">
-                    <v-data-table :items="item.get_reservations" class="elevation-1" :headers="inner_table_headers">
-                        <template v-slot:item="{ item }">
-                            <tr>
-                                <td>
-                                    {{ item.check_in_date_time }}
-                                </td>
-                                <td>
-                                    {{ item.will_be_available_at }}
-                                </td>
-                                <td>
-                                    {{ item.duration }} Day(s)
-                                </td>
-                                <td>
-                                    {{ item.total_checked_in }}
-                                </td>
-                                <td>
-                                    {{ item.adult_count }}
-                                </td>
-                                <td>
-                                    {{ item.child_count }}
-                                </td>
-                                <td>
-                                    {{ item.payable | currency('₱') }}
-                                </td>
-                                <td>
-                                    <label v-if="item.is_paid">
-                                        Paid
-                                    </label>
-                                    <label v-else></label>
-                                </td>
-                                <td>
-                                    <label v-if="item.checked">
-                                        Checked
-                                    </label>
-                                    <label v-else></label>
-                                </td>
-                                <td>
-                                    <label v-if="item.get_additional != null && item.get_additional.amount_due == 0">
-                                        {{ item.get_additional.reason }}
-                                    </label>
-                                    <label v-else></label>
-                                </td>
-                                <td v-if="item.get_additional != null">
-                                    {{ item.get_additional.amount_due | currency('₱') }}
-                                </td>
-                                <td v-else>
-
-                                </td>
-                                <td>
-                                    <label
-                                        v-if="item.get_additional != null && item.get_additional.amount_due > 0 && item.get_additional.amount_paid >= item.get_additional.amount_due">
-                                        Paid
-                                    </label>
-                                    <label v-else></label>
-                                </td>
-                                <td>
-                                    <label v-if="item.is_verified">
-                                        Verified
-                                    </label>
-                                    <label v-else></label>
-                                </td>
-                                <td>
-                                    <v-btn dark @click="check_details(item)">
-                                        Details
-                                    </v-btn>
-                                </td>
-                                <td>
-                                    <v-btn v-if="!item.is_paid" dark @click="mark_as_paid(item)">
-                                        Paid room
-                                    </v-btn>
-                                    <v-btn v-else disabled>
-                                        Room paid
-                                    </v-btn>
-                                </td>
-                                <td>
-                                    <v-btn v-if="item.checked" disabled>
-                                        Checked
-                                    </v-btn>
-                                    <v-btn v-else-if="item.to_check == 0" dark @click="check(item)">
-                                        Mark to check
-                                    </v-btn>
-                                    <v-btn v-else-if="!item.checked" disabled>
-                                        To check
-                                    </v-btn>
-                                </td>
-                                <td>
-                                    <v-btn v-if="item.get_additional != null && item.get_additional.amount_due == 0"
-                                        dark @click="charge(item)">
-                                        Charge
-                                    </v-btn>
-                                    <v-btn v-else-if="item.get_additional != null" disabled>
-                                        Charged
-                                    </v-btn>
-                                    <v-btn v-else-if="item.get_additional == null" disabled>
-                                        N/A
-                                    </v-btn>
-                                </td>
-                                <td>
-                                    <v-btn
-                                        v-if="item.get_additional != null && item.get_additional.amount_paid < item.get_additional.amount_due"
-                                        dark @click="extra_paid(item)">
-                                        Paid fee
-                                    </v-btn>
-                                    <v-btn v-else-if="item.get_additional != null && item.get_additional.amount_due > 0" disabled>
-                                        Fee paid
-                                    </v-btn>
-                                    <v-btn v-else disabled>
-                                        N/A
-                                    </v-btn>
-                                </td>
-                            </tr>
-                        </template>
-                    </v-data-table>
-                </td>
             </template>
         </v-data-table>
         <v-row justify="center">
@@ -202,16 +172,11 @@ export default {
     data: () => ({
         reservation_header: [
             {
-                text: 'Name'
+                text: 'User'
             },
             {
-                text: 'Email'
+                text: 'Room'
             },
-            {
-                text: 'Registered at'
-            }
-        ],
-        inner_table_headers: [
             {
                 text: 'Check-in Date'
             },
@@ -249,9 +214,6 @@ export default {
                 text: 'Additional Paid'
             },
             {
-                text: 'Verified'
-            },
-            {
                 text: ''
             },
             {
@@ -259,7 +221,7 @@ export default {
             },
             {
                 text: ''
-            }
+            },
         ],
         dialog_room_information: false,
         dialog_additional: false,
@@ -281,6 +243,11 @@ export default {
         })
     },
     methods: {
+        showSnackBar(message) {
+            this.$store.commit("auth/setMessage",
+                { show: true, message: message },
+                { root: 1 })
+        },
         async check_details(data) {
             await this.$axios.get('/admin/reservation/g_reservation_details', {
                 room_id: data.actual_room_id
@@ -331,7 +298,7 @@ export default {
             })
                 .then(({ data }) => {
                     if (!data.response) {
-                        alert(data.message)
+                        this.showSnackBar(data.message)
                     }
                     else {
                         this.dialog_additional = false

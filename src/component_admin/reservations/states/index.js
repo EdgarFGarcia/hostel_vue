@@ -13,6 +13,7 @@ export default{
             await Vue.axios.get('admin/reservation/g_reservation')
             .then(({data}) => {
                 commit('set_reservation_list', data.data)
+                console.log(data)
             })
         },
         async fetch_check_list({commit}){

@@ -91,6 +91,14 @@
                             <td>
                                 <v-btn dark @click="add_transpo_price(item.id)">Add</v-btn>
                             </td>
+                            <td>
+                                <v-btn dark v-if="!item.is_paid" @click="mark_as_paid_transpo(item.id)">
+                                    Paid
+                                </v-btn>
+                                <v-btn disabled v-else>
+                                    Paid
+                                </v-btn>
+                            </td>
                         </tr>
                     </template>
                 </v-data-table>
@@ -116,6 +124,14 @@
                             </td>
                             <td v-else>
                                 No
+                            </td>
+                            <td>
+                                <v-btn dark v-if="!item.paid" @click="mark_as_paid_massage(item.id)">
+                                    Paid
+                                </v-btn>
+                                <v-btn disabled v-else>
+                                    Paid
+                                </v-btn>
                             </td>
                         </tr>
                     </template>
@@ -220,6 +236,10 @@ export default {
             {
                 text: 'Add Price',
                 sortable: false
+            },
+            {
+                text: 'Mark as paid',
+                sortable: false
             }
         ],
         orders_header_massage: [
@@ -241,6 +261,10 @@ export default {
             },
             {
                 text: 'Paid',
+                sortable: false
+            },
+            {
+                text: 'Mark as paid',
                 sortable: false
             }
         ],
@@ -294,6 +318,18 @@ export default {
                 this.orders_transpo = data
             })
         },
+        async mark_as_paid_transpo(id) {
+            await this.$axios.post('/user/auth_user/mark_as_paid_transpo', id)
+                .then(({ data }) => {
+                    this.orders_transpo = data
+                })
+        },
+        async mark_as_paid_massage(id) {
+            await this.$axios.post('/user/auth_user/mark_as_paid_massage', id)
+                .then(({ data }) => {
+                    this.orders_massage = data
+                })
+        },
         async get_transpo() {
             await this.$axios.get('/user/auth_user/get_booked_transpo')
                 .then(({ data }) => {
@@ -309,12 +345,13 @@ export default {
                 })
         },
         async order_paid(order) {
+            console.log(order)
             await this.$axios.post('/user/auth_user/pay_order', order)
                 .then(({ data }) => {
+                    console.log(this.orders)
                     let arr = []
                     arr.push(...data["Food"], ...data["Dr. Bread"], ...data['Dr. Wine'], ...data['Buccaneers'])
                     this.orders_food = arr
-                    console.log(this.orders)
                 })
         }
     },

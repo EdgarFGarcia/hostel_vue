@@ -21,19 +21,6 @@
                 >
                     Connector Hostel
                 </v-card-title>
-                <!--<v-card-subtitle
-                    style="color: white;"
-                >
-                    <v-btn
-                        v-if="get_user.udata.email_verified_at == null"
-                        block
-                    >
-                        <v-icon
-                            class="mr-3"
-                        >mdi-account-alert-outline</v-icon>
-                        Verify Account
-                    </v-btn>
-                </v-card-subtitle>-->
                 <v-card-text
                     style="color: white !important;"
                 >

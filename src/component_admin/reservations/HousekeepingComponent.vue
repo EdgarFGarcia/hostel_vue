@@ -159,6 +159,11 @@ export default {
         })
     },
     methods: {
+        showSnackBar(message) {
+            this.$store.commit("auth/setMessage",
+                { show: true, message: message },
+                { root: 1 })
+        },
         async check_details(data) {
             await this.$axios.get('/admin/reservation/g_reservation_details', {
                 room_id: data.actual_room_id
@@ -207,13 +212,13 @@ export default {
             })
                 .then(({ data }) => {
                     if (!data.response) {
-                        alert(data.message)
+                        this.showSnackBar(data.message)
                     }
                     else {
                         this.dialog_additional = false
                         this.reason = null
                         this.amount_due = null
-                        alert('Charged successfully')
+                        this.showSnackBar('Charged successfully')
                         this.$store.dispatch('admin_reservation/set_check_list', data.data)
                     }
                 })
