@@ -927,7 +927,6 @@ export default {
 	display: flex;
 }
 .quantity {
-  -webkit-appearance: none;
   border: none;
   text-align: center;
     width: 30px;

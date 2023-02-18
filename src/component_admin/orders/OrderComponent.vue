@@ -34,6 +34,9 @@
                                 {{item.name}}
                             </td>
                             <td>
+                                {{item.quantity}}
+                            </td>
+                            <td>
                                 {{moment(item.created_at).format("h:mm:ss a, MMM DD, YYYY")}}
                             </td>
                             <td>
@@ -177,6 +180,10 @@ export default {
             },
             {
                 text: 'Type',
+                sortable: false
+            },
+            {
+                text: 'Quantity',
                 sortable: false
             },
             {
