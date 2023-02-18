@@ -62,7 +62,7 @@
                                     text
                                     outlined
                                     style="textTransform: none !important;"
-                                    @click="order(food)"
+                                    @click="open_order(food)"
                                 >
                                     Order
                                 </v-btn>
@@ -103,7 +103,7 @@
                                     text
                                     outlined
                                     style="textTransform: none !important;"
-                                    @click="order(food)"
+                                    @click="open_order(food)"
                                 >
                                     Order
                                 </v-btn>
@@ -144,7 +144,7 @@
                                     text
                                     outlined
                                     style="textTransform: none !important;"
-                                    @click="order(food)"
+                                    @click="open_order(food)"
                                 >
                                     Order
                                 </v-btn>
@@ -185,7 +185,7 @@
                                     text
                                     outlined
                                     style="textTransform: none !important;"
-                                    @click="order(food)"
+                                    @click="open_order(food)"
                                 >
                                     Order
                                 </v-btn>
@@ -311,6 +311,38 @@
             </v-card>
         </v-dialog>
         </v-row>
+
+        <v-row justify="center">
+        <v-dialog v-model="order_quantity" persistent max-width="400">
+            <v-card>
+            <v-card-title class="mb-5">
+                <small>Please select your quantity</small>
+            </v-card-title>
+            <v-card-text>
+                <div class="wrapper">
+                    <button class="btn btn--minus" @click="changeQuantity('-1')" type="button" name="button">
+                    -
+                    </button>
+                    <input class="quantity" type="text" name="name" :value="quantity">
+                    <button class="btn btn--plus" @click="changeQuantity('1')" type="button" name="button">
+                        +
+                    </button>
+                </div>
+            </v-card-text>
+            <v-card-actions>
+                <v-btn
+                    text
+                    outlined
+                    style="textTransform: none !important;"
+                    @click="order()"
+                >
+                    Order
+                </v-btn>
+                <v-btn dark @click="close_order">Cancel</v-btn>
+            </v-card-actions>
+            </v-card>
+        </v-dialog>
+        </v-row>
     </v-container>
 </template>
 
@@ -322,12 +354,14 @@ export default {
   ],
   data: () => ({
     tab: null,
+    quantity: 1,
     transpo_pick_up: "Connector Hostel",
     transpo_drop_off: null,
     transpo_pick_up_date: null,
     transpo_pick_up_time: null,
     transpo_message: null,
     transpo_car: false,
+    order_quantity: false,
     transpo_van: false,
     massage_model: false,
     massage_order: null,
@@ -779,7 +813,8 @@ export default {
             desc:   ' ',
             image:  require('../../assets/b13.jpg')
         },
-    ]
+    ],
+    selected_food: null
   }),
   mounted () {
   },
@@ -787,15 +822,37 @@ export default {
   },
   computed: {
   },
-  methods: {
-    async order(food){
-        console.log(food)
-        await this.$axios.post('/user/auth_user/order_food', food)
+    methods: {
+    
+    showSnackBar(message) {
+        this.$store.commit("auth/setMessage",
+            { show: true, message: message },
+            { root: 1 })
+    },
+    open_order(food){
+        this.selected_food = food
+        this.order_quantity = true
+    },
+    close_order(){
+        this.selected_food = null
+        this.order_quantity = false
+        this.quantity = 1
+    },
+    async order(){
+        console.log(this.selected_food, this.quantity)
+        await this.$axios.post('/user/auth_user/order_food', { food: this.selected_food, quantity: this.quantity })
         .then(({data}) => {
             console.log(data)
-            alert('Sent!')
+            this.close_order()
+            this.showSnackBar('Sent!')
         })
-    },
+      },
+    changeQuantity: function (num) {
+            this.quantity += +num
+            console.log(this.quantity)
+            !isNaN(this.quantity) && this.quantity > 0 ? this.quantity : this.quantity = 0;
+
+        },
     open_massage_model(order){
         this.massage_order = order
         console.log(this.massage_order)
@@ -813,10 +870,10 @@ export default {
         .then(({data}) => {
             console.log(data)
             if (data.response == false) {
-                alert(data.message)
+                this.showSnackBar(data.message)
             }
             else{
-                alert('Request sent!')
+                this.showSnackBar('Request sent!')
                 this.massage_model = false
             }
         })
@@ -843,11 +900,11 @@ export default {
         await this.$axios.post('/user/auth_user/book_transpo', payload)
         .then(({data}) => {
             if(data.response == false){
-                alert(data.message)
+                this.showSnackBar(data.message)
                 return
             }
             console.log(data)
-            alert('Sent!')
+            this.showSnackBar('Sent!')
             this.transpo_pick_up = null
             this.transpo_drop_off = null
             this.transpo_pick_up_date = null
@@ -864,4 +921,32 @@ export default {
 </script>
 
 <style scoped lang="scss">
+/* Product Quantity */
+.wrapper {
+	height: 30px;
+	display: flex;
+}
+.quantity {
+  -webkit-appearance: none;
+  border: none;
+  text-align: center;
+    width: 30px;
+ 
+  font-size: 16px;
+  color: #43484D;
+  font-weight: 300;
+	border: 1px solid #E1E8EE;
+}
+
+.btn {
+	border: 1px solid #E1E8EE;
+  width: 30px;
+  background-color: #E1E8EE;
+/*   border-radius: 6px; */
+  cursor: pointer;
+}
+button:focus,
+input:focus {
+  outline:0;
+}
 </style>

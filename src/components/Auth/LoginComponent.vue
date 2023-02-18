@@ -279,10 +279,10 @@ export default {
         .then(({data}) => {
             if(data.response){
                 this.close_dialog()
-                alert(data.message)
+                this.showSnackBar(data.message)
                 return
             }
-            alert(data.message)
+            this.showSnackBar(data.message)
         })
     },
     reset_password_fn(){
@@ -300,11 +300,11 @@ export default {
         await this.$axios.post('user/forgot_password', tp)
         .then(({data}) => {
             if(data.response){
-                alert(data.message)
+                this.showSnackBar(data.message)
                 this.cancel_forgot_password()
                 return
             }else{
-                alert(data.message)
+                this.showSnackBar(data.message)
                 return
             }
         })

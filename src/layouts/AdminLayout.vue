@@ -65,6 +65,23 @@
                     </v-list-item>
                     <v-list-item
                         link
+                        v-if="get_user.udata.role_id == 2"
+                        @click="$router.push('/create_account')"
+                    >
+                        <v-list-item-icon>
+                            <v-icon
+                                style="color: white"
+                            >mdi-account-group-outline</v-icon>
+                        </v-list-item-icon>
+
+                        <v-list-item-content>
+                            <v-list-item-title
+                                style="color: white"
+                            >Create Account</v-list-item-title>
+                        </v-list-item-content>
+                    </v-list-item>
+                    <v-list-item
+                        link
                         v-if="get_user.udata.role_id == 3"
                         @click="$router.push('/housekeeping_request')"
                     >
