@@ -122,6 +122,23 @@
                             >My Orders</v-list-item-title>
                         </v-list-item-content>
                     </v-list-item>
+                    <v-list-item
+                        v-if="!get_user.udata.is_guest"
+                        link
+                        @click="$router.push('/checkout')"
+                    >
+                        <v-list-item-icon>
+                            <v-icon
+                                style="color: white"
+                            >mdi-cart</v-icon>
+                        </v-list-item-icon>
+
+                        <v-list-item-content>
+                            <v-list-item-title
+                                style="color: white"
+                            >Checkout</v-list-item-title>
+                        </v-list-item-content>
+                    </v-list-item>
                 </v-list>
                 <v-divider></v-divider>
                 <template v-slot:append>

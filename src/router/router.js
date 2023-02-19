@@ -5,6 +5,7 @@ import Landing from '../components/Landing/router/index.js'
 import AdminDashboard from '../component_admin/dashboard/router/index.js'
 import RoomAdmin from '../component_admin/rooms/router/index.js'
 import ProfileComponent from '../components_user/profile/router/index.js'
+import Checkout from '../components_user/checkout/router/index.js'
 import AdminReservation from '../component_admin/reservations/router/index.js'
 import ReportComponent from '../component_admin/reports/router/index.js'
 import HousekeepingComponent from '../component_admin/reservations/router/index.js'
@@ -42,14 +43,15 @@ const router = new VueRouter({
         ...OrderComponent,
         ...OrderUserComponent,
         ...MessagesComponent,
-        ...CreateAccount
+        ...CreateAccount,
+        ...Checkout
     ]
 });
 
 router.beforeEach((to, from, next) => {
     //list of blocked routes
     const protectedRoutes = ['/user_dashboard', '/admin_dashboard', '/admin_rooms', '/profile', '/admin_reservations', '/housekeeping',
-        '/housekeeping_request', 'orders', 'orders_user', '/messages', '/create_account' ];
+        '/housekeeping_request', 'orders', 'orders_user', '/messages', '/create_account', '/checkout' ];
     //the route user is trying to access is in blocked routes list
     let token = JSON.parse(localStorage.getItem('vuex'))
     if (protectedRoutes.includes(to.path) && token.auth.user.token == null) {

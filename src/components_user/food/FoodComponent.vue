@@ -823,7 +823,6 @@ export default {
   computed: {
   },
     methods: {
-    
     showSnackBar(message) {
         this.$store.commit("auth/setMessage",
             { show: true, message: message },

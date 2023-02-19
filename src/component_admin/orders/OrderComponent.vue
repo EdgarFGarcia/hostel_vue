@@ -183,11 +183,11 @@ export default {
                 sortable: false
             },
             {
-                text: 'Quantity',
+                text: 'Order',
                 sortable: false
             },
             {
-                text: 'Order',
+                text: 'Quantity',
                 sortable: false
             },
             {
