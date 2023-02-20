@@ -1,24 +1,5 @@
 <template>
     <v-container fill-height fluid class="pa-0 ma-0">
-        <h3>Rooms</h3>
-        <v-data-table
-            :headers="orders_header"
-            :items="orders['rooms']"
-            style="width:100%"
-            disable-pagination
-            hide-default-footer
-            class="elevation-1">
-            <template v-slot:item="{ item }">
-                <tr>
-                    <td>
-                        <div v-if="item.get_room_info">{{ item.get_room_info.room_name }}</div>
-                    </td>
-                    <td>
-                        {{ item.payable }}
-                    </td>
-                </tr>
-            </template>
-        </v-data-table>
         <h3>Food</h3>
         <v-data-table
             :headers="orders_header"
@@ -232,9 +213,6 @@ export default {
                 .then(({ data }) => {
                     this.orders = data
                     this.total[0].payable = 0
-                    this.orders.rooms.forEach((item) => {
-                        this.total[0].payable += item.payable
-                    })
                     this.orders.food.forEach((item) => {
                         this.total[0].payable += parseInt(item.price)
                     })
