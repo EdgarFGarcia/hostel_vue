@@ -90,6 +90,7 @@ export default {
   methods: {
     select_room(data){
       this.$store.dispatch('room/set_selected_room', data)
+      console.log(data)
       this.$router.push({name: '/view-room'})
     }
   },

@@ -152,11 +152,10 @@
                     <small>Reservation Details</small>
                 </v-card-title>
                 <v-card-subtitle
-                    v-if="Object.keys(get_reserve_this_room_selected).length > 0 && disabled_days.length > 0"
-                >
+                    v-if="Object.keys(get_reserve_this_room_selected).length > 0">
                     <h3>{{ get_reserve_this_room.room_name }}</h3>
                 </v-card-subtitle>
-                <v-card-text v-if="get_reserve_this_room.room_name != null && disabled_days.length > 0">
+                <v-card-text v-if="get_reserve_this_room.room_name != null">
                     <v-row>
                         <v-col
                             cols="12"
@@ -313,7 +312,7 @@
                         Please select a room...
                     </div>
                 </v-card-text>
-                <v-card-actions v-if="get_reserve_this_room.room_name != null && disabled_days.length > 0">
+                <v-card-actions v-if="get_reserve_this_room.room_name != null">
                     <v-btn
                         v-if="!booked"
                         block
@@ -392,6 +391,7 @@ export default {
         return moment(time);
     },
     select_room_for_reservation(room_data, selected_room_data){
+        console.log(selected_room_data)
         this.dates = []
         this.$store.dispatch('room/set_reserve_this_room', room_data)
         this.$store.dispatch('room/set_selected_room_for_reservation', selected_room_data)
@@ -410,7 +410,6 @@ export default {
                     }
                     this.disabled_days.push(finaldate)
                 })
-                console.log(this.disabled_days)
             })
     },
     back_home(){
@@ -495,7 +494,7 @@ export default {
                     console.log(data)
                     if (data.response) {
                         this.$store.dispatch('auth/set_user', data)
-                        this.showSnackBar('Booking successful! Your guest password is: ' + data.udata.name + ', you can change this later.')
+                        alert('Booking successful! Your email is: ' + data.udata.email + ', and your password is: ' + data.udata.name + ', you can change this later.')
                         this.$router.push({ name: '/user_dashboard' })
                         return
                     }
