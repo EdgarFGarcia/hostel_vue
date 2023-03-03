@@ -469,63 +469,74 @@ export default {
         }
     },
     async book_now(){
-        this.booked = true
-        const adult = this.b.adult
-        const child = this.b.child
-        // if(parseInt(adult) + parseInt(child) > this.get_reserve_this_room_selected.capacity){
-        //     this.showSnackBar('This room only has 4 max capacity / head count')
-        //     return
-        // }
-        let newdates = []
-        newdates.push(moment(this.dates.start).format('YYYY-MM-DD'))
-        newdates.push(moment(this.dates.end).format('YYYY-MM-DD'))
-        if (Object.keys(this.get_user).length === 0) {
-            await this.$axios.post('/r/rooms/guest_book_room_now', {
-                actual_room_data: this.get_reserve_this_room,
-                capacity: parseInt(adult) + parseInt(child),
-                date: newdates,
-                payable: this.get_reserve_this_room_selected.price * this.total + this.additional_price,
-                check_in: this.check_in,
-                check_out: this.check_out,
-                adult_count: this.b.adult,
-                child_count: this.b.child
-            })
-                .then(({ data }) => {
-                    console.log(data)
-                    if (data.response) {
-                        this.$store.dispatch('auth/set_user', data)
-                        alert('Booking successful! Your email is: ' + data.udata.email + ', and your password is: ' + data.udata.name + ', you can change this later.')
-                        this.$router.push({ name: '/user_dashboard' })
-                        return
-                    }
-                    this.booked = false
-                    this.showSnackBar(data.message)
+        console.log(this.get_user.udata.id)
+        await this.$axios.get('/r/rooms/get_single_room', {user_id: this.get_user.udata.id })
+            .then(({ data }) => {
+                console.log(data.data.length)
+                if (data.data.length >= 1) {
+                    this.showSnackBar('You may only book one room at a time')
                     return
-                })
-        }
-        else {
-            await this.$axios.post('/r/rooms/book_room_now', {
-                actual_room_data: this.get_reserve_this_room,
-                capacity: parseInt(adult) + parseInt(child),
-                date: newdates,
-                payable: this.get_reserve_this_room_selected.price * this.total + this.additional_price,
-                check_in: this.check_in,
-                check_out: this.check_out,
-                adult_count: this.b.adult,
-                child_count: this.b.child
-            })
-                .then(({ data }) => {
-                    console.log(data)
-                    if (data.response) {
-                        this.showSnackBar('Booking successful!')
-                        this.$router.push({ name: '/user_dashboard' })
-                        return
+                }
+                else {
+                    this.booked = true
+                    const adult = this.b.adult
+                    const child = this.b.child
+                    // if(parseInt(adult) + parseInt(child) > this.get_reserve_this_room_selected.capacity){
+                    //     this.showSnackBar('This room only has 4 max capacity / head count')
+                    //     return
+                    // }
+                    let newdates = []
+                    newdates.push(moment(this.dates.start).format('YYYY-MM-DD'))
+                    newdates.push(moment(this.dates.end).format('YYYY-MM-DD'))
+                    if (Object.keys(this.get_user).length === 0) {
+                        this.$axios.post('/r/rooms/guest_book_room_now', {
+                            actual_room_data: this.get_reserve_this_room,
+                            capacity: parseInt(adult) + parseInt(child),
+                            date: newdates,
+                            payable: this.get_reserve_this_room_selected.price * this.total + this.additional_price,
+                            check_in: this.check_in,
+                            check_out: this.check_out,
+                            adult_count: this.b.adult,
+                            child_count: this.b.child
+                        })
+                            .then(({ data }) => {
+                                console.log(data)
+                                if (data.response) {
+                                    this.$store.dispatch('auth/set_user', data)
+                                    alert('Booking successful! Your email is: ' + data.udata.email + ', and your password is: ' + data.udata.name + ', you can change this later.')
+                                    this.$router.push({ name: '/user_dashboard' })
+                                    return
+                                }
+                                this.booked = false
+                                this.showSnackBar(data.message)
+                                return
+                            })
                     }
-                    this.booked = false
-                    this.showSnackBar(data.message)
-                    return
-                })
-        }
+                    else {
+                        this.$axios.post('/r/rooms/book_room_now', {
+                            actual_room_data: this.get_reserve_this_room,
+                            capacity: parseInt(adult) + parseInt(child),
+                            date: newdates,
+                            payable: this.get_reserve_this_room_selected.price * this.total + this.additional_price,
+                            check_in: this.check_in,
+                            check_out: this.check_out,
+                            adult_count: this.b.adult,
+                            child_count: this.b.child
+                        })
+                            .then(({ data }) => {
+                                console.log(data)
+                                if (data.response) {
+                                    this.showSnackBar('Booking successful!')
+                                    this.$router.push({ name: '/user_dashboard' })
+                                    return
+                                }
+                                this.booked = false
+                                this.showSnackBar(data.message)
+                                return
+                            })
+                    }
+                }
+        })
     }
   },
   watch: {

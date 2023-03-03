@@ -225,13 +225,12 @@
                         cols="4"
                     >
                         <h2 style="margin-bottom:20px;">Pick up date</h2>
-                        <v-date-picker
+                        <DatePicker
                             v-model="transpo_pick_up_date"
                             color="#596377"
                             width="inherit"
-                            style="max-width:300px;"
-                            :min="new Date().toISOString().substr(0, 10)"
-                        ></v-date-picker>
+                            :available-dates="available_dates"
+                        />
                         <h2 style="margin-bottom:20px;">Pick up time</h2>
                         <vuetify-time-select style="max-width:300px;" v-model="transpo_pick_up_time"></vuetify-time-select>
                         <br>
@@ -295,13 +294,12 @@
                 <small>Please select your schedule</small>
             </v-card-title>
             <v-card-text>
-                <v-date-picker
+                <DatePicker
                     v-model="massage_date"
                     color="#596377"
                     width="inherit"
-                    style="max-width:300px;"
-                    :min="new Date().toISOString().substr(0, 10)"
-                ></v-date-picker>
+                    :available-dates="available_dates"
+                />
                 <vuetify-time-select style="max-width:300px;" v-model="massage_time"></vuetify-time-select>
             </v-card-text>
             <v-card-actions>
@@ -347,12 +345,17 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+import moment from 'moment'
+import { DatePicker } from 'v-calendar';
 export default {
   components: {
+    DatePicker
   },
   props: [
   ],
   data: () => ({
+    available_dates: [],
     tab: null,
     quantity: 1,
     transpo_pick_up: "Connector Hostel",
@@ -817,16 +820,45 @@ export default {
     selected_food: null
   }),
   mounted () {
+    this.get_available_dates()
   },
   created () {
   },
   computed: {
+    ...mapGetters({
+        get_selected_room:              'room/get_selected_room',
+        get_reserve_this_room:          'room/get_reserve_this_room',
+        get_reserve_this_room_selected: 'room/get_reserve_this_room_selected',
+        get_user:                       'auth/get_user'
+    })
   },
     methods: {
     showSnackBar(message) {
         this.$store.commit("auth/setMessage",
             { show: true, message: message },
             { root: 1 })
+    },
+    moment: function (time) {
+        return moment(time);
+    },
+    async get_available_dates(){
+        await this.$axios.get('/r/rooms/get_single_room_checked_in', { user_id: this.get_user.udata.id })
+            .then(({ data }) => {
+                console.log(data)
+
+                let dates = data.data.check_in_date_time.split(' ')
+                console.log(dates)
+                let newdate = parseInt(dates[1].slice(0, -1)) + data.data.duration
+                console.log(newdate)
+                //let finaldate = dates[0] + ' ' + newdate.toString() + ', ' + dates[2]
+                //let finaldate = new Date(dates[2], '2', newdate.toString())
+                let finaldate = {
+                    start: new Date(dates[2], moment().month(dates[0]).format("M") - 1, dates[1].slice(0, -1).toString()),
+                    end: new Date(dates[2], moment().month(dates[0]).format("M") - 1, newdate.toString())
+                }
+                console.log(finaldate)
+                this.available_dates.push(finaldate)
+            })  
     },
     open_order(food){
         this.selected_food = food
@@ -858,6 +890,8 @@ export default {
         this.massage_model = true
     },
     async submit_massage(){
+        this.massage_date = moment(this.massage_date).format('YYYY-MM-DD')
+        console.log(this.massage_date)
         let payload = {
             order: this.massage_order,
             date: this.massage_date,
@@ -887,6 +921,8 @@ export default {
                 ttype = "Van"
             }
         }
+        this.transpo_pick_up_date = moment(this.transpo_pick_up_date).format('YYYY-MM-DD')
+        console.log(this.transpo_pick_up_date)
         let payload = {
             transpo_pick_up: this.transpo_pick_up,
             transpo_drop_off: this.transpo_drop_off,

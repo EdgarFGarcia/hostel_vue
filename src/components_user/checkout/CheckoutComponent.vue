@@ -11,7 +11,7 @@
             <template v-slot:item="{ item }">
                 <tr>
                     <td>
-                        x{{ item.quantity }} {{ item.name }}
+                        x{{ item.quantity }} {{ item.name }}, placed at {{ moment(item.created_at).format('MMMM Do YYYY, h:mm a') }}
                     </td>
                     <td>
                         {{ item.price }}
