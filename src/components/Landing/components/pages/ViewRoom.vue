@@ -481,7 +481,8 @@ export default {
         let newdates = []
         newdates.push(moment(this.dates.start).format('YYYY-MM-DD'))
         newdates.push(moment(this.dates.end).format('YYYY-MM-DD'))
-        if (Object.keys(this.get_user).length === 0) {
+        if (this.get_user != null) {
+            console.log('guest')
             this.$axios.post('/r/rooms/guest_book_room_now', {
                 actual_room_data: this.get_reserve_this_room,
                 capacity: parseInt(adult) + parseInt(child),
