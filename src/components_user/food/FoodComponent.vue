@@ -845,19 +845,24 @@ export default {
         await this.$axios.get('/r/rooms/get_single_room_checked_in', { user_id: this.get_user.udata.id })
             .then(({ data }) => {
                 console.log(data)
-
-                let dates = data.data.check_in_date_time.split(' ')
-                console.log(dates)
-                let newdate = parseInt(dates[1].slice(0, -1)) + data.data.duration
-                console.log(newdate)
-                //let finaldate = dates[0] + ' ' + newdate.toString() + ', ' + dates[2]
-                //let finaldate = new Date(dates[2], '2', newdate.toString())
-                let finaldate = {
-                    start: new Date(dates[2], moment().month(dates[0]).format("M") - 1, dates[1].slice(0, -1).toString()),
-                    end: new Date(dates[2], moment().month(dates[0]).format("M") - 1, newdate.toString())
+                if (data.data != null) {
+                    
+                    let dates = data.data.check_in_date_time.split(' ')
+                    console.log(dates)
+                    let newdate = parseInt(dates[1].slice(0, -1)) + data.data.duration
+                    console.log(newdate)
+                    //let finaldate = dates[0] + ' ' + newdate.toString() + ', ' + dates[2]
+                    //let finaldate = new Date(dates[2], '2', newdate.toString())
+                    let finaldate = {
+                        start: new Date(dates[2], moment().month(dates[0]).format("M") - 1, dates[1].slice(0, -1).toString()),
+                        end: new Date(dates[2], moment().month(dates[0]).format("M") - 1, newdate.toString())
+                    }
+                    console.log(finaldate)
+                    this.available_dates.push(finaldate)
                 }
-                console.log(finaldate)
-                this.available_dates.push(finaldate)
+                else {
+                    this.available_dates = null
+                }
             })  
     },
     open_order(food){
