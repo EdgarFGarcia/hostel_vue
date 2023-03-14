@@ -57,17 +57,17 @@
                                 />
                             </v-card-text>
                             <v-card-actions>
+                                <div class="pr-5" v-if="food.available">Available</div>
+                                <div class="pr-5" v-else>Not available</div>
                                 <v-spacer/>
                                 <v-btn
-                                    v-if="food.available"
                                     text
                                     outlined
                                     style="textTransform: none !important;"
-                                    @click="open_order(food)"
+                                    @click="toggle_food(food)"
                                 >
-                                    Order
+                                    Toggle
                                 </v-btn>
-                                <v-btn v-else disabled>Not available</v-btn>
                             </v-card-actions>
                         </v-card>
                     </v-col>
@@ -100,17 +100,17 @@
                                 />
                             </v-card-text>
                             <v-card-actions>
+                                <div class="pr-5" v-if="food.available">Available</div>
+                                <div class="pr-5" v-else>Not available</div>
                                 <v-spacer/>
                                 <v-btn
-                                    v-if="food.available"
                                     text
                                     outlined
                                     style="textTransform: none !important;"
-                                    @click="open_order(food)"
+                                    @click="toggle_food(food)"
                                 >
-                                    Order
+                                    Toggle
                                 </v-btn>
-                                <v-btn v-else disabled>Not available</v-btn>
                             </v-card-actions>
                         </v-card>
                     </v-col>
@@ -143,17 +143,17 @@
                                 />
                             </v-card-text>
                             <v-card-actions>
+                                <div class="pr-5" v-if="food.available">Available</div>
+                                <div class="pr-5" v-else>Not available</div>
                                 <v-spacer/>
                                 <v-btn
-                                    v-if="food.available"
                                     text
                                     outlined
                                     style="textTransform: none !important;"
-                                    @click="open_order(food)"
+                                    @click="toggle_food(food)"
                                 >
-                                    Order
+                                    Toggle
                                 </v-btn>
-                                <v-btn v-else disabled>Not available</v-btn>
                             </v-card-actions>
                         </v-card>
                     </v-col>
@@ -186,17 +186,17 @@
                                 />
                             </v-card-text>
                             <v-card-actions>
+                                <div class="pr-5" v-if="food.available">Available</div>
+                                <div class="pr-5" v-else>Not available</div>
                                 <v-spacer/>
                                 <v-btn
-                                    v-if="food.available"
                                     text
                                     outlined
                                     style="textTransform: none !important;"
-                                    @click="open_order(food)"
+                                    @click="toggle_food(food)"
                                 >
-                                    Order
+                                    Toggle
                                 </v-btn>
-                                <v-btn v-else disabled>Not available</v-btn>
                             </v-card-actions>
                         </v-card>
                     </v-col>
@@ -383,14 +383,6 @@ export default {
             id:     1,
             name:   'Food'
         },
-        {
-            id:     2,
-            name:   'Transportation'
-        },
-        {
-            id:     3,
-            name:   'Spa & Massage'
-        }
     ],
     foods: null,
     dr_bread: null,
@@ -512,14 +504,18 @@ export default {
                 }
             })  
     },
-    open_order(food){
-        this.selected_food = food
-        this.order_quantity = true
-    },
     close_order(){
         this.selected_food = null
         this.order_quantity = false
         this.quantity = 1
+    },
+    async toggle_food(selected_food){
+        console.log(selected_food)
+        await this.$axios.post('/user/auth_user/toggle_food', { food: selected_food })
+            .then(({ data }) => {
+                console.log(data)
+                this.get_all_food()
+            })
     },
     async order(){
         console.log(this.selected_food, this.quantity)

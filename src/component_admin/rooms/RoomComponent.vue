@@ -81,9 +81,6 @@
                                         <small>ID: {{rooms.id}}</small>
                                     </v-card-title>
                                     <v-card-actions>
-                                        Available: {{ rooms.is_available }}
-                                    </v-card-actions>
-                                    <v-card-actions>
                                         <v-btn block text outlined @click="delete_room(rooms)">
                                             Delete
                                         </v-btn>

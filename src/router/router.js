@@ -20,6 +20,7 @@ import CreateAccount from '../component_admin/create_account/router/index.js'
  */
 import UserDashboard from '../components_user/dashboard/router/index.js'
 import FoodRoutes from '../components_user/food/router/index.js'
+import FoodRoutesAdmin from '../component_admin/food/router/index.js'
 /**
  * end user routes
  */
@@ -39,6 +40,7 @@ const router = new VueRouter({
         ...HousekeepingComponent,
         ...RequestComponent,
         ...FoodRoutes,
+        ...FoodRoutesAdmin,
         ...ReportComponent,
         ...OrderComponent,
         ...OrderUserComponent,
