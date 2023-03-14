@@ -29,7 +29,7 @@
             <v-tab-item
                 value="tab-1"
             >
-                <h1 class="ml-5">Food and Drinks</h1>
+                <h1 class="ml-5" v-if="foods != null">Food and Drinks</h1>
                 <v-row>
                     <v-col
                         cols="3"
@@ -72,7 +72,7 @@
                         </v-card>
                     </v-col>
                 </v-row>
-                <h1 class="ml-5">Dr. Bread</h1>
+                <h1 class="ml-5" v-if="dr_bread != null">Dr. Bread</h1>
                 <v-row>
                     <v-col
                         cols="3"
@@ -115,7 +115,7 @@
                         </v-card>
                     </v-col>
                 </v-row>
-                <h1 class="ml-5">Dr. Wine</h1>
+                <h1 class="ml-5" v-if="dr_wine != null">Dr. Wine</h1>
                 <v-row>
                     <v-col
                         cols="3"
@@ -158,7 +158,7 @@
                         </v-card>
                     </v-col>
                 </v-row>
-                <h1 class="ml-5">Buccaneers</h1>
+                <h1 class="ml-5" v-if="buccaneers != null">Buccaneers</h1>
                 <v-row>
                     <v-col
                         cols="3"
