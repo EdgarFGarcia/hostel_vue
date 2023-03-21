@@ -89,8 +89,12 @@
           <v-card-title class="text-h5">
           </v-card-title>
           <v-card-text>
-            <v-text-field placeholder="Request" v-model="request">
-            </v-text-field>
+            <v-select
+              placeholder="Request"
+              v-model="request"
+              :items="['Servicing room', 'Repair', 'Lost and found', 'Handling complaints', 'Request service or equipment', 'Other']"
+            >
+            </v-select>
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
@@ -346,6 +350,7 @@ export default {
     },
     async send_housekeeping() {
       console.log(this.chosen_room)
+      console.log(this.request)
       await this.$axios.post('/user/auth_user/housekeeping', {
         message: this.request,
         room_id: this.chosen_room
