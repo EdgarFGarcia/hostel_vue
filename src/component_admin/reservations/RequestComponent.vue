@@ -14,19 +14,12 @@
             <template v-slot:item="{ item }">
                 <tr
                     class="mx-5"
-                    v-if="item.get_room != null"
                 >
                     <td>
                         {{moment(item.created_at).format('MMMM Do YYYY, h:mm:ss a')}}
                     </td>
                     <td>
                         {{item.get_user.name}}
-                    </td>
-                    <td>
-                        {{item.get_room.room_name}}
-                    </td>
-                    <td>
-                        {{item.get_room.get_room_parent_information.name}}
                     </td>
                     <td>
                         {{item.request}}
@@ -67,12 +60,6 @@ export default {
         },
         {
             text: 'Name'
-        },
-        {
-            text: 'Room'
-        },
-        {
-            text: 'Room Type'
         },
         {
             text: 'Request'
