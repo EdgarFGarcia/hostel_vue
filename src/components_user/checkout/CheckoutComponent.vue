@@ -1,12 +1,13 @@
 <template>
-    <v-container fill-height fluid class="pa-0 ma-0">
+    <v-container fill-height fluid class="pa-5 ma-0">
         <h3>Food</h3>
         <v-data-table
             :headers="orders_header"
             :items="orders['food']"
-            style="width:100%"
+            style="width:100%;margin-bottom:30px;"
             disable-pagination
             hide-default-footer
+            group-by="created_at"
             class="elevation-1">
             <template v-slot:item="{ item }">
                 <tr>
@@ -23,7 +24,7 @@
         <v-data-table
             :headers="orders_header"
             :items="orders['transpo']"
-            style="width:100%"
+            style="width:100%;margin-bottom:30px;"
             disable-pagination
             hide-default-footer
             class="elevation-1">
@@ -42,7 +43,7 @@
         <v-data-table
             :headers="orders_header"
             :items="orders['massage']"
-            style="width:100%"
+            style="width:100%;margin-bottom:30px;"
             disable-pagination
             hide-default-footer
             class="elevation-1">
@@ -61,7 +62,7 @@
         <v-data-table
             :headers="orders_header"
             :items="total"
-            style="width:100%"
+            style="width:100%;margin-bottom:30px;"
             disable-pagination
             hide-default-footer
             class="elevation-1">
@@ -76,7 +77,7 @@
                 </tr>
             </template>
         </v-data-table>
-        <v-btn class="mt-5" @click="paymongo()">
+        <v-btn class="mt-5 btn primary" @click="paymongo()">
             Pay now
         </v-btn>
 

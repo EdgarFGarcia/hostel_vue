@@ -6,6 +6,7 @@
         >
             <v-card
                 width="300"
+                class="pt-5 pl-5"
             >
                 <v-avatar
                     color="grey"
@@ -45,6 +46,8 @@
                     <strong><small style="fontSize: 14px;">{{get_user_data.mobile}}</small></strong>
                 </v-card-subtitle>
             </v-card>
+            <br>
+            <v-btn class="primary" @click="new_password = true">Change Password</v-btn>
         </v-col>
         <v-col
             cols="8"
@@ -75,88 +78,111 @@
                         <v-col
                             cols="12"
                         >
-                            <v-hover>
-                                <template v-slot:default="{ hover }">
-                                    <v-card
-                                        class="mx-auto"
-                                        max-width="344"
-                                    >
-                                        <v-img height="220" v-if="get_user_data.image == null" contain src="../../assets/avatar.png"></v-img>
-                                        <v-img height="220" v-else :src="`${img_src}/${get_user_data.image}`"></v-img>
-                                        <v-fade-transition>
-                                        <v-overlay
-                                            v-if="hover"
-                                            absolute
-                                            color="#111"
-                                        >
-                                        <v-file-input
-                                            v-model="e.image"
-                                            label="Update Image"
-                                            chips
-                                        ></v-file-input>
-                                        </v-overlay>
-                                        </v-fade-transition>
-                                    </v-card>
-                                </template>
-                            </v-hover>
+                            <!--<v-img height="220" v-if="get_user_data.image != null" :src="`${img_src}/${get_user_data.image}`"></v-img>-->
+                            <v-file-input
+                                v-model="e.image"
+                                label="Update Image"
+                                chips
+                            ></v-file-input>
+                            Full Name
                             <v-text-field
                                 outlined
                                 dense
-                                label="Full Name"
                                 v-model="e.name"
-                                :hint="get_user_data.name"
+                                :label="get_user_data.name"
                                 class="mt-5"
                             >
                                 <template v-slot:prepend-inner>        
                                     <v-icon small style="position: relative; top:4px;"> mdi-account </v-icon> 
                                 </template>
                             </v-text-field>
+                            Email
                             <v-text-field
                                 type="email"
                                 outlined
                                 dense
-                                label="Email Address"
                                 v-model="e.email"
-                                :hint="get_user_data.email"
+                                :label="get_user_data.email"
                             >
                                 <template v-slot:prepend-inner>        
                                     <v-icon small style="position: relative; top:4px;"> mdi-at </v-icon> 
                                 </template>
                             </v-text-field>
+                            Mobile Number
                             <v-text-field
                                 type="number"
                                 dense
                                 outlined
-                                label="Mobile #"
                                 v-model="e.mobile"
-                                :hint="get_user_data.mobile"
+                                :label="get_user_data.mobile"
                             >
                                 <template v-slot:prepend-inner>        
                                     <v-icon small style="position: relative; top:4px;"> mdi-phone </v-icon> 
                                 </template>
                             </v-text-field>
-                            <v-text-field
-                                dense
-                                outlined
-                                label="New Password"
-                                v-model="r.password"
-                                :type="show_r_password ? 'text' : 'password'"
-                                prepend-inner-icon="mdi-lock-outline"
-                                :append-icon="show_r_password ? 'mdi-eye-off' : 'mdi-eye'"
-                                @click:append="show_r_password = ! show_r_password"
-                            >
-                            </v-text-field>
-                            <v-text-field
-                                dense
-                                outlined
-                                label="Retype New Password"
-                                v-model="r.r_password"
-                                :type="show_r_password2 ? 'text' : 'password'"
-                                prepend-inner-icon="mdi-lock-outline"
-                                :append-icon="show_r_password2 ? 'mdi-eye-off' : 'mdi-eye'"
-                                @click:append="show_r_password2 = ! show_r_password2"
-                            >
-                            </v-text-field>
+                        </v-col>
+                    </v-row>
+                </v-card-text>
+                <v-card-actions>
+                    <v-spacer/>
+                    <v-btn
+                        color="primary"
+                        class="pl-15 pr-15"
+                        dark
+                        @click="edit_profile_fn"
+                    >
+                        Save
+                    </v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+        
+        <v-dialog
+            transition="dialog-top-transition"
+            max-width="720"
+            v-model="new_password"
+            persistent
+        >
+            <v-card>
+                <v-card-title
+                    class="text-small"
+                >
+                    <small>Password Edit</small>
+                    <v-spacer/>
+                    <v-btn
+                        icon
+                        @click="new_password = false"
+                    >
+                        <v-icon>mdi-close</v-icon>
+                    </v-btn>
+                </v-card-title>
+                <v-card-text>
+                    <v-row>
+                        <v-col
+                            cols="12"
+                        >
+                                <v-text-field
+                                    dense
+                                    outlined
+                                    label="New Password"
+                                    v-model="r.password"
+                                    :type="show_r_password ? 'text' : 'password'"
+                                    prepend-inner-icon="mdi-lock-outline"
+                                    :append-icon="show_r_password ? 'mdi-eye-off' : 'mdi-eye'"
+                                    @click:append="show_r_password = !show_r_password"
+                                >
+                                </v-text-field>
+                                <v-text-field
+                                    dense
+                                    outlined
+                                    label="Retype New Password"
+                                    v-model="r.r_password"
+                                    :type="show_r_password2 ? 'text' : 'password'"
+                                    prepend-inner-icon="mdi-lock-outline"
+                                    :append-icon="show_r_password2 ? 'mdi-eye-off' : 'mdi-eye'"
+                                    @click:append="show_r_password2 = !show_r_password2"
+                                >
+                                </v-text-field>
                         </v-col>
                     </v-row>
                 </v-card-text>
@@ -185,6 +211,7 @@ export default {
   ],
   data: () => ({
     profile_edit_state: false,
+    new_password: false,
     e: {
         name: null,
         email: null,
@@ -276,6 +303,7 @@ export default {
             else {
                 this.$store.dispatch('auth/update_user_information', data.data)
                 this.close_profile_edit()
+                this.new_password = false
             }
         })
     }

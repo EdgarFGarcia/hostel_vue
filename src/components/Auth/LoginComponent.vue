@@ -64,7 +64,7 @@
                         style="text-decoration: underline; cursor:pointer;"
                         @click="reset_password_fn"
                     >
-                        Forgot Password
+                        Reset Password
                     </small>
                 </v-card-title>
                 <v-card-actions>
@@ -299,6 +299,7 @@ export default {
         }
         await this.$axios.post('user/forgot_password', tp)
         .then(({data}) => {
+            console.log(data)
             if(data.response){
                 this.showSnackBar(data.message)
                 this.cancel_forgot_password()

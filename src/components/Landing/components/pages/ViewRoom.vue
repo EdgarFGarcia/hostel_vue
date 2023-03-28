@@ -57,6 +57,7 @@
                 style="width:25%;display:inline-block"
             >
                 <h3 class="pa-3">{{room.room_name}}</h3>
+                <p class="pa-3">Floor: {{ room.room_floor }}</p>
                 <v-card-actions>
                     <div v-if="get_user.udata != null">
                         <v-btn

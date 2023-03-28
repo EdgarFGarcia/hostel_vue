@@ -105,7 +105,7 @@
                         </v-list-item-content>
                     </v-list-item>
                     <small style="color:white;" v-if="get_user.udata.is_guest">Please go to your profile and enter your email to access services</small>
-                    <v-list-item
+                    <!--<v-list-item
                         v-if="!get_user.udata.is_guest"
                         link
                         @click="$router.push('/orders_user')"
@@ -121,7 +121,7 @@
                                 style="color: white"
                             >My Orders</v-list-item-title>
                         </v-list-item-content>
-                    </v-list-item>
+                    </v-list-item>-->
                     <v-list-item
                         v-if="!get_user.udata.is_guest"
                         link

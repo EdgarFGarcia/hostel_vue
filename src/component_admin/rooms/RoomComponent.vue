@@ -79,6 +79,10 @@
                                         <small>{{rooms.room_name}}</small>
                                         <v-spacer />
                                         <small>ID: {{rooms.id}}</small>
+                                        <v-text-field v-model="rooms.room_floor"></v-text-field>
+                                        <v-btn block text outlined @click="edit_floor(rooms)">
+                                            Change Room Floor
+                                        </v-btn>
                                     </v-card-title>
                                     <v-card-actions>
                                         <v-btn block text outlined @click="delete_room(rooms)">
@@ -101,6 +105,8 @@
                     <v-card-text v-if="room_to_edit != null">
                         Room Type
                         <v-text-field v-model="room_to_edit.name"></v-text-field>
+                        Room Floor
+                        <v-text-field v-model="room_to_edit.room_floor"></v-text-field>
                         Total number of rooms
                         <v-text-field type="number" v-model="room_to_edit.room_count"></v-text-field>
                         Short Description
@@ -144,6 +150,8 @@
                     <v-card-text>
                         Room Type
                         <v-text-field v-model="room_to_add.name"></v-text-field>
+                        Room Floor
+                        <v-text-field v-model="room_to_add.room_floor"></v-text-field>
                         Total number of rooms
                         <v-text-field type="number" v-model="room_to_add.room_count"></v-text-field>
                         Image
@@ -222,6 +230,7 @@ export default {
     room_to_add: {
         name: null,
         room_count: null,
+        room_floor: null,
         image: null,
         description: null,
         full_details: null,
@@ -253,6 +262,14 @@ export default {
     },
     close_add_dialog(){
         this.add_room_state = false
+    },
+    async edit_floor(rooms){
+        console.log(rooms)
+        await this.$axios.post('admin/rooms/update_floor', rooms)
+        .then(({data}) => {
+            console.log(data)
+            this.$router.go(0)
+        })
     },
     async select_room(data){
         await this.$axios.get(`admin/rooms/actual_rooms/${data.id}`)
