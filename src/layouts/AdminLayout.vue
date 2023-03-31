@@ -60,7 +60,24 @@
                         <v-list-item-content>
                             <v-list-item-title
                                 style="color: white"
-                            >Back</v-list-item-title>
+                            >Homepage</v-list-item-title>
+                        </v-list-item-content>
+                    </v-list-item>
+                    <v-list-item
+                        link
+                        v-if="get_user.udata.role_id == 2"
+                        @click="$router.push('/admin_dashboard')"
+                    >
+                        <v-list-item-icon>
+                            <v-icon
+                                style="color: white"
+                            >mdi-chart-arc</v-icon>
+                        </v-list-item-icon>
+
+                        <v-list-item-content>
+                            <v-list-item-title
+                                style="color: white"
+                            >Dashboard</v-list-item-title>
                         </v-list-item-content>
                     </v-list-item>
                     <v-list-item
@@ -128,7 +145,7 @@
                         <v-list-item-content>
                             <v-list-item-title
                                 style="color: white"
-                            >Room(s)</v-list-item-title>
+                            >Manage Rooms</v-list-item-title>
                         </v-list-item-content>
                     </v-list-item>
                     <v-list-item
@@ -250,46 +267,6 @@ export default {
   ],
   data: () => ({
     drawer: false,
-    navigation: [
-        {
-            icon:       'mdi-chevron-left',
-            label:      'Back',
-            style:      'color: white',
-            url:        {
-                name:   '/'
-            }
-        },
-        {
-            icon:       'mdi-bed-double-outline',
-            label:      'Room(s)',
-            style:      'color: white',
-            url:        {
-                name:   '/admin_rooms'
-            }
-        },
-        {
-            icon:       'mdi-account-group-outline',
-            label:      'Reservations',
-            style:      'color: white',
-            url:        {
-                name:   '/admin_reservations'
-            }
-        },
-        {
-            icon:       'mdi-chart-arc',
-            label:      'Report',
-            style:      'color: white',
-            url:        {
-                name:   '/report_component'
-            }
-        },
-        {
-            icon:       'mdi-logout',
-            label:      'Logout',
-            style:      'color: white',
-            url:        ''
-        }
-    ],
   }),
   mounted () {
   },

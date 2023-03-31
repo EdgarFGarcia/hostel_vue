@@ -89,7 +89,7 @@ export default{
                     this.$router.push({name: '/user_dashboard'})
                     return
                 case 2:
-                    this.$router.push({ name: '/admin_rooms'})
+                    this.$router.push({ name: '/admin_dashboard'})
                     return
                 case 3:
                     this.$router.push({ name: '/housekeeping_request'})
