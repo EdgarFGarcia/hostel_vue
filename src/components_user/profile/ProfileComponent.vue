@@ -1,57 +1,183 @@
 <template>
     <v-container fill-height fluid>
       <v-row>
-        <v-col
-            col="3"
-        >
-            <v-card
-                width="300"
-                class="pt-5 pl-5"
-            >
-                <v-avatar
-                    color="grey"
-                    size="150"
-                    v-if="get_user_data.image == null"
-                >
-                    <v-img
-                        src="../../assets/avatar.png"
-                        :aspect-ratio="1"
-                    />
-                </v-avatar>
-                <v-avatar
-                    v-else
-                    color="grey"
-                    size="150"
-                >
-                    <v-img
-                        :src="`${img_src}/${get_user_data.image}`"
-                        :aspect-ratio="1"
-                    />
-                </v-avatar>
-                <v-card-title class="text-small">
-                    <strong><small>{{get_user_data.name}}</small></strong>
-                    <v-spacer/>
-                    <v-btn
-                        icon
-                        @click="edit_profile"
+        <v-col cols="4">
+            <v-card class="pt-5 pl-5 pr-5">
+                <v-card-title class="justify-center">
+                    <v-avatar
+                        color="grey"
+                        size="150"
+                        v-if="get_user_data.image == null"
                     >
-                        <v-icon>mdi-pen</v-icon>
-                    </v-btn>
+                        <v-img
+                            src="../../assets/avatar.png"
+                            :aspect-ratio="1"
+                        />
+                    </v-avatar>
+                    <v-avatar
+                        v-else
+                        color="grey"
+                        size="150"
+                    >
+                        <v-img
+                            :src="`${img_src}/${get_user_data.image}`"
+                            :aspect-ratio="1"
+                        />
+                    </v-avatar>
                 </v-card-title>
-                <v-card-subtitle>
-                    <small style="fontSize: 14px;">{{get_user_data.created_at}}</small>
+                <v-card-subtitle style="text-align:center;">
+                    <strong><h2 class="mt-3">{{ get_user_data.name }}</h2></strong>
                     <v-spacer/>
-                    {{get_user_data.email}}
+                    <h6 class="mt-2" style="fontSize: 14px;">User since: {{get_user_data.created_at}}</h6>
                     <v-spacer/>
-                    <strong><small style="fontSize: 14px;">{{get_user_data.mobile}}</small></strong>
                 </v-card-subtitle>
             </v-card>
             <br>
-            <v-btn class="primary" @click="new_password = true">Change Password</v-btn>
+            <v-btn class="primary" style="width:100%;" @click="new_password = true">Change Password</v-btn>
+            <v-btn
+                color="primary"
+                class="pl-15 pr-15 mt-5"
+                style="width:100%;"
+                dark
+                @click="edit_profile_fn"
+            >
+                Save changes to profile
+            </v-btn>
         </v-col>
-        <v-col
-            cols="8"
-        >
+        <v-col cols="8">
+            <v-card class="pt-5 pl-5 pr-5">
+                <v-row>
+                    <v-col
+                        cols="6"
+                    >
+                        Status
+                        <v-text-field
+                            outlined
+                            dense
+                            disabled
+                            value="Guest"
+                            v-if="get_user_data.is_guest"
+                        >
+                            <template v-slot:prepend-inner>
+                                <v-icon small style="position: relative; top:4px;"> mdi-account-alert </v-icon> 
+                            </template>
+                        </v-text-field>
+                        <v-text-field
+                            outlined
+                            dense
+                            disabled
+                            value="Verified"
+                            v-else
+                        >
+                            <template v-slot:prepend-inner>
+                                <v-icon small style="position: relative; top:4px;"> mdi-account-alert </v-icon> 
+                            </template>
+                        </v-text-field>
+                        Profile Picture
+                        <v-file-input
+                            v-model="e.image"
+                            label="Browse..."
+                            prepend-icon=""
+                            outlined
+                            dense
+                        >
+                            <template v-slot:prepend-inner>
+                                <v-icon small style="position: relative; top:4px;"> mdi-attachment </v-icon> 
+                            </template>
+                        </v-file-input>
+                        Full Name
+                        <v-text-field
+                            outlined
+                            dense
+                            v-model="e.name"
+                        >
+                            <template v-slot:prepend-inner>
+                                <v-icon small style="position: relative; top:4px;"> mdi-account </v-icon> 
+                            </template>
+                        </v-text-field>
+                        Email
+                        <v-text-field
+                            type="email"
+                            outlined
+                            dense
+                            v-model="e.email"
+                        >
+                            <template v-slot:prepend-inner>
+                                <v-icon small style="position: relative; top:4px;"> mdi-at </v-icon> 
+                            </template>
+                        </v-text-field>
+                        Mobile Number
+                        <v-text-field
+                            type="number"
+                            dense
+                            outlined
+                            v-model="get_user_data.mobile"
+                        >
+                            <template v-slot:prepend-inner>
+                                <v-icon small style="position: relative; top:4px;"> mdi-phone </v-icon> 
+                            </template>
+                        </v-text-field>
+                    </v-col>
+                    <v-col
+                        cols="6"
+                    >
+                        Age
+                        <v-text-field
+                            outlined
+                            dense
+                            v-model="get_user_data.age"
+                        >
+                            <template v-slot:prepend-inner>
+                                <v-icon small style="position: relative; top:4px;"> mdi-calendar-account </v-icon> 
+                            </template>
+                        </v-text-field>
+                        Gender
+                        <v-select
+                            outlined
+                            dense
+                            v-model="get_user_data.gender"
+                            :items="['Male', 'Female', 'Non-binary']"
+                        >
+                            <template v-slot:prepend-inner>
+                                <v-icon small style="position: relative; top:4px;"> mdi-gender-male-female </v-icon> 
+                            </template>
+                        </v-select>
+                        Student
+                        <v-select
+                            outlined
+                            dense
+                            v-model="get_user_data.student"
+                            :items="[{ text: 'Yes', value: 1 }, { text: 'No', value: 0 }]"
+                        >
+                            <template v-slot:prepend-inner>
+                                <v-icon small style="position: relative; top:4px;"> mdi-account-school </v-icon> 
+                            </template>
+                        </v-select>
+                        Vacationer
+                        <v-select
+                            outlined
+                            dense
+                            v-model="get_user_data.vacationer"
+                            :items="[{ text: 'Yes', value: 1 }, { text: 'No', value: 0 }]"
+                        >
+                            <template v-slot:prepend-inner>
+                                <v-icon small style="position: relative; top:4px;"> mdi-palm-tree </v-icon> 
+                            </template>
+                        </v-select>
+                        Foreigner
+                        <v-select
+                            outlined
+                            dense
+                            v-model="get_user_data.foreigner"
+                            :items="[{ text: 'Yes', value: 1 }, { text: 'No', value: 0 }]"
+                        >
+                            <template v-slot:prepend-inner>
+                                <v-icon small style="position: relative; top:4px;"> mdi-passport </v-icon> 
+                            </template>
+                        </v-select>
+                    </v-col>
+                </v-row>
+            </v-card>
         </v-col>
       </v-row>
         <v-dialog
@@ -74,54 +200,6 @@
                     </v-btn>
                 </v-card-title>
                 <v-card-text>
-                    <v-row>
-                        <v-col
-                            cols="12"
-                        >
-                            <!--<v-img height="220" v-if="get_user_data.image != null" :src="`${img_src}/${get_user_data.image}`"></v-img>-->
-                            <v-file-input
-                                v-model="e.image"
-                                label="Update Image"
-                                chips
-                            ></v-file-input>
-                            Full Name
-                            <v-text-field
-                                outlined
-                                dense
-                                v-model="e.name"
-                                :label="get_user_data.name"
-                                class="mt-5"
-                            >
-                                <template v-slot:prepend-inner>        
-                                    <v-icon small style="position: relative; top:4px;"> mdi-account </v-icon> 
-                                </template>
-                            </v-text-field>
-                            Email
-                            <v-text-field
-                                type="email"
-                                outlined
-                                dense
-                                v-model="e.email"
-                                :label="get_user_data.email"
-                            >
-                                <template v-slot:prepend-inner>        
-                                    <v-icon small style="position: relative; top:4px;"> mdi-at </v-icon> 
-                                </template>
-                            </v-text-field>
-                            Mobile Number
-                            <v-text-field
-                                type="number"
-                                dense
-                                outlined
-                                v-model="e.mobile"
-                                :label="get_user_data.mobile"
-                            >
-                                <template v-slot:prepend-inner>        
-                                    <v-icon small style="position: relative; top:4px;"> mdi-phone </v-icon> 
-                                </template>
-                            </v-text-field>
-                        </v-col>
-                    </v-row>
                 </v-card-text>
                 <v-card-actions>
                     <v-spacer/>
@@ -230,7 +308,8 @@ export default {
     },
   }),
   mounted () {
-
+    this.e.name = this.get_user_data.name
+    this.e.email = this.get_user_data.email
   },
   created () {
     this.img_src = process.env.VUE_APP_URL
@@ -241,6 +320,11 @@ export default {
     })
   },
   methods: {
+    showSnackBar(message) {
+        this.$store.commit("auth/setMessage",
+            { show: true, message: message },
+            { root: 1 })
+    },
     async create_bookkeeping(){
         await this.$axios.post('user/create_bookkeeping')
         .then(({data}) => {
@@ -259,29 +343,16 @@ export default {
     },
     async edit_profile_fn(){
         const formData = new FormData()
-        formData.append('id',       this.get_user_data.id)
-        if(this.e.name == null){
-            formData.append('name',     this.get_user_data.name)
-        }
-        else{
-            formData.append('name',     this.e.name)
-        }
-        if(this.e.email == null){
-            formData.append('email',     this.get_user_data.email)
-        }
-        else{
-            formData.append('email',     this.e.email)
-        }
-        if(this.e.mobile == null){
-            formData.append('mobile',     this.get_user_data.mobile)
-        }
-        else{
-            formData.append('mobile',     this.e.mobile)
-        }
-        if(this.e.image != null){
-            formData.append('image',     this.e.image)
-            console.log(this.e.image)
-        }
+        formData.append('id', this.get_user_data.id)
+        formData.append('name', this.e.name)
+        formData.append('email', this.e.email)
+        formData.append('mobile', this.get_user_data.mobile)
+        formData.append('age', this.get_user_data.age)
+        formData.append('gender', this.get_user_data.gender)
+        formData.append('student', this.get_user_data.student)
+        formData.append('vacationer', this.get_user_data.vacationer)
+        formData.append('foreigner', this.get_user_data.foreigner)
+        console.log(this.get_user_data.student)
         if(this.e.image != null){
             formData.append('image',     this.e.image)
             console.log(this.e.image)
@@ -298,12 +369,14 @@ export default {
         .then(({data}) => {
             console.log(data)
             if (!data.response) {
-                alert(data.message)
+                this.showSnackBar(data.message)
             }
             else {
                 this.$store.dispatch('auth/update_user_information', data.data)
-                this.close_profile_edit()
+                this.e.name = data.data.name
+                this.e.email = data.data.email
                 this.new_password = false
+                this.showSnackBar('Profile updated successfully!')
             }
         })
     }
