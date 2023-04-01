@@ -182,74 +182,12 @@
                         >
                             <h5>Check in</h5>
                             <vuetify-time-select v-model="check_in"></vuetify-time-select>
-                            <!--<v-menu
-                                ref="menu2"
-                                v-model="menuin"
-                                :close-on-content-click="false"
-                                :nudge-right="40"
-                                :return-value.sync="check_in"
-                                transition="scale-transition"
-                                offset-y
-                                max-width="290px"
-                                min-width="290px"
-                            >
-                                <template v-slot:activator="{ on, attrs }">
-                                <v-text-field
-                                    v-model="check_in"
-                                    label="Check in"
-                                    prepend-inner-icon="mdi-clock-time-four-outline"
-                                    readonly
-                                    v-bind="attrs"
-                                    v-on="on"
-                                    outlined
-                                    dense
-                                ></v-text-field>
-                                </template>
-                                <v-time-picker
-                                    v-if="menuin"
-                                    v-model="check_in"
-                                    full-width
-                                    @click:minute="$refs.menu2.save(check_in)"
-                                    ampm-in-title
-                                ></v-time-picker>
-                            </v-menu>-->
                         </v-col>
                         <v-col
                             cols="6"
                         >
                             <h5>Check out</h5>
                             <vuetify-time-select v-model="check_out"></vuetify-time-select>
-                            <!--<v-menu
-                                ref="menu"
-                                v-model="menuout"
-                                :close-on-content-click="false"
-                                :nudge-right="40"
-                                :return-value.sync="check_out"
-                                transition="scale-transition"
-                                offset-y
-                                max-width="290px"
-                                min-width="290px"
-                            >
-                                <template v-slot:activator="{ on, attrs }">
-                                <v-text-field
-                                    v-model="check_out"
-                                    label="Check out"
-                                    prepend-inner-icon="mdi-clock-time-four-outline"
-                                    readonly
-                                    v-bind="attrs"
-                                    v-on="on"
-                                    outlined
-                                    dense
-                                ></v-text-field>
-                                </template>
-                                <v-time-picker
-                                    v-if="menuout"
-                                    v-model="check_out"
-                                    full-width
-                                    @click:minute="$refs.menu.save(check_out)"
-                                    ampm-in-title
-                                ></v-time-picker>
-                            </v-menu>-->
                         </v-col>
                         <v-col
                             cols="6"
@@ -447,7 +385,7 @@ export default {
         const ff = Number(new Date(first))
         const ll = Number(new Date(last))
         const difference_in_time = parseInt(ll) - parseInt(ff)
-        this.total = difference_in_time / (1000 * 3600 * 24) + 1
+        this.total = difference_in_time / (1000 * 3600 * 24)
         return first + ' to ' + last;
     },
     check_head_count(){

@@ -75,7 +75,6 @@ export default {
             this.chartData.datasets[0].data = {}
             await this.$axios.get('/admin/report/analytics_age')
                 .then(({ data }) => {
-                    console.log(data)
                     var ages_names = ["18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52", "53", "54", "55", "56", "57", "58", "59", "60", "61", "62", "63", "64", "65", "66", "67", "68", "69", "70", "71", "72", "73", "74", "75", "76", "77", "78", "79", "80"]
                     this.chartData.labels = ages_names
                     for (var i = 18; i < 90; i++){
@@ -91,7 +90,6 @@ export default {
             this.chartData.datasets[0].data = {}
             await this.$axios.get('/admin/report/analytics_gender')
                 .then(({ data }) => {
-                    console.log(data)
                     var genders_name = ['Male', 'Female', 'Non-binary']
                     this.chartData.labels = genders_name
                     
@@ -113,7 +111,6 @@ export default {
             this.chartData.datasets[0].data = {}
             await this.$axios.get('/admin/report/analytics_user_type')
                 .then(({ data }) => {
-                    console.log(data)
                     var type_name = ['Student', 'Vacationer', 'Foreigner']
                     this.chartData.labels = type_name
                     if (data.student) {

@@ -6,7 +6,8 @@ export default{
         reservation_list: [],
         check_list: [],
         room_information: {},
-        requests: []
+        requests: [],
+        selected_room: {}
     },
     actions: {
         async fetch_reservations({commit}){
@@ -42,6 +43,9 @@ export default{
         set_requests({commit}, payload){
             commit('set_requests', payload)
         },
+        set_selected_room({ commit }, payload) {
+            commit('set_selected_room', payload)
+        },
     },
     mutations: {
         set_reservation_list(state, payload){
@@ -55,12 +59,16 @@ export default{
         },
         set_room_information(state, payload){
             state.room_information = payload
+        },
+        set_selected_room(state, payload) {
+            state.selected_room = payload
         }
     },
     getters: {
         get_reservation_list : state => state.reservation_list,
         get_check_list : state => state.check_list,
         get_requests : state => state.requests,
-        get_room_information : state => state.room_information
+        get_room_information: state => state.room_information,
+        get_selected_room: state => state.selected_room
     }
 }

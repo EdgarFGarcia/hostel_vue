@@ -251,7 +251,7 @@ export default {
   },
   methods: {
     async logout_fn(){
-        await this.$axios.post('user/auth_user/logout')
+        await this.$axios.post('user/logout')
         .then(() => {
             this.$store.commit('auth/clear_user_state')
             this.$router.push({name: '/'})

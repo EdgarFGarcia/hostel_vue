@@ -14,6 +14,8 @@ import OrderComponent from '../component_admin/orders/router/index.js'
 import OrderUserComponent from '../component_admin/orders/router/index.js'
 import MessagesComponent from '../component_admin/messages/router/index.js'
 import CreateAccount from '../component_admin/create_account/router/index.js'
+import ManageUsers from '../component_admin/users/router/index.js'
+import CalendarComponent from '../component_admin/calendar/router/index.js'
 
 /**
  * user routes
@@ -46,6 +48,8 @@ const router = new VueRouter({
         ...OrderUserComponent,
         ...MessagesComponent,
         ...CreateAccount,
+        ...ManageUsers,
+        ...CalendarComponent,
         ...Checkout
     ]
 });

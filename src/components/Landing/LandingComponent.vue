@@ -103,7 +103,12 @@ export default {
         this.$store.dispatch('home_tab/set_tab', tab)
     },
     set_tab(){
-        this.tab = this.get_tab
+        if (this.get_tab) {
+            this.tab = this.get_tab
+        }
+        else {
+            this.tab == 'tab-1'
+        }
     }
   },
   watch: {

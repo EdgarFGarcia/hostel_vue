@@ -327,6 +327,11 @@ export default {
     })
   },
   methods: {
+    showSnackBar(message) {
+      this.$store.commit("auth/setMessage",
+        { show: true, message: message },
+        { root: 1 })
+    },
     async cancel_booking() {
       let payload = {
         check_in_id: this.room_to_cancel.id,
@@ -336,7 +341,7 @@ export default {
         .then(({ data }) => {
           console.log(data)
           if (data.response) {
-            alert(data.message)
+            this.showSnackBar(data.message)
             this.room_to_cancel = []
             this.cancel_model = false
             this.$store.dispatch('user/set_my_rooms')
@@ -358,7 +363,7 @@ export default {
         .then(({ data }) => {
           console.log(data)
           this.housekeeping_model = false
-          alert('Sent request!')
+          this.showSnackBar('Sent request!')
         })
     },
     paymongo(data) {
@@ -424,7 +429,7 @@ export default {
             }
           }
           else {
-            alert(data.message)
+            this.showSnackBar(data.message)
           }
         })
     },
@@ -463,7 +468,7 @@ export default {
             this.review_text = null
             this.rating = 0
           }
-          alert(data.message)
+          this.showSnackBar(data.message)
           this.$store.dispatch('user/set_my_rooms')
         })
     }

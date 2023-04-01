@@ -90,10 +90,8 @@ export default {
     async pick_year() {
       this.loaded = false
       this.chartData.datasets[0].data = {}
-      console.log(this.year)
       await this.$axios.get('/admin/report/report_yearly', this.year)
         .then(({ data }) => {
-          console.log(data)
           var months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
           var months_name = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
           this.chartData.labels = months_name
@@ -108,10 +106,8 @@ export default {
     async pick_month() {
       this.loaded = false
       this.chartData.datasets[0].data = {}
-      console.log(this.month.substring(5))
       await this.$axios.get('/admin/report/report_monthly', this.month.substring(5))
         .then(({ data }) => {
-          console.log(data)
           var days = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31]
           var days_name = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31']
           this.chartData.labels = days_name
@@ -126,10 +122,8 @@ export default {
     async pick_week() {
       this.loaded = false
       this.chartData.datasets[0].data = {}
-      console.log(this.week)
       await this.$axios.get('/admin/report/report_weekly', this.week)
         .then(({ data }) => {
-          console.log(data)
           var days = [0, 1, 2, 3, 4, 5, 6]
           var days_name = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
           this.chartData.labels = days_name
@@ -144,10 +138,8 @@ export default {
     async pick_day() {
       this.loaded = false
       this.chartData.datasets[0].data = {}
-      console.log(this.day.substring(8))
       await this.$axios.get('/admin/report/report_daily', this.day.substring(8))
         .then(({ data }) => {
-          console.log(data)
           var days = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]
           var days_name = ['12AM', '1AM', '2AM', '3AM', '4AM', '5AM', '6AM', '7AM', '8AM', '9AM', '10AM', '11AM', '12PM', '1PM', '2PM', '3PM', '4PM', '5PM', '6PM', '7PM', '8PM', '9PM', '10PM', '11PM']
           this.chartData.labels = days_name

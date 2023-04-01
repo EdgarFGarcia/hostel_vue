@@ -49,12 +49,12 @@
                 >
                     <v-list-item
                         link
-                        @click="$router.push('/')"
+                        @click="switch_tabs('/')"
                     >
                         <v-list-item-icon>
                             <v-icon
                                 style="color: white"
-                            >mdi-chevron-left</v-icon>
+                            >mdi-home-outline</v-icon>
                         </v-list-item-icon>
 
                         <v-list-item-content>
@@ -66,12 +66,12 @@
                     <v-list-item
                         link
                         v-if="get_user.udata.role_id == 2"
-                        @click="$router.push('/admin_dashboard')"
+                        @click="switch_tabs('/admin_dashboard')"
                     >
                         <v-list-item-icon>
                             <v-icon
                                 style="color: white"
-                            >mdi-chart-arc</v-icon>
+                            >mdi-view-grid</v-icon>
                         </v-list-item-icon>
 
                         <v-list-item-content>
@@ -83,7 +83,7 @@
                     <v-list-item
                         link
                         v-if="get_user.udata.role_id == 2"
-                        @click="$router.push('/')"
+                        @click="switch_tabs('/calendar')"
                     >
                         <v-list-item-icon>
                             <v-icon
@@ -100,7 +100,7 @@
                     <v-list-item
                         link
                         v-if="get_user.udata.role_id == 2"
-                        @click="$router.push('/admin_reservations')"
+                        @click="switch_tabs('/admin_reservations')"
                     >
                         <v-list-item-icon>
                             <v-icon
@@ -117,7 +117,7 @@
                     <v-list-item
                         link
                         v-if="get_user.udata.role_id == 2"
-                        @click="$router.push('/create_account')"
+                        @click="switch_tabs('/manage_users')"
                     >
                         <v-list-item-icon>
                             <v-icon
@@ -128,47 +128,14 @@
                         <v-list-item-content>
                             <v-list-item-title
                                 style="color: white"
-                            >Create Account</v-list-item-title>
+                            >Users</v-list-item-title>
                         </v-list-item-content>
                     </v-list-item>
-                    <v-list-item
-                        link
-                        v-if="get_user.udata.role_id == 3"
-                        @click="$router.push('/housekeeping_request')"
-                    >
-                        <v-list-item-icon>
-                            <v-icon
-                                style="color: white"
-                            >mdi-account-group-outline</v-icon>
-                        </v-list-item-icon>
-
-                        <v-list-item-content>
-                            <v-list-item-title
-                                style="color: white"
-                            >Housekeeping Requests</v-list-item-title>
-                        </v-list-item-content>
-                    </v-list-item>
-                    <v-list-item
-                        link
-                        v-if="get_user.udata.role_id == 3"
-                        @click="$router.push('/housekeeping')"
-                    >
-                        <v-list-item-icon>
-                            <v-icon
-                                style="color: white"
-                            >mdi-account-group-outline</v-icon>
-                        </v-list-item-icon>
-
-                        <v-list-item-content>
-                            <v-list-item-title
-                                style="color: white"
-                            >Rooms to check</v-list-item-title>
-                        </v-list-item-content>
-                    </v-list-item>
+                    
                     <v-list-item
                         link
                         v-if="get_user.udata.role_id == 2"
-                        @click="$router.push('/admin_rooms')"
+                        @click="switch_tabs('/admin_rooms')"
                     >
                         <v-list-item-icon>
                             <v-icon
@@ -179,13 +146,13 @@
                         <v-list-item-content>
                             <v-list-item-title
                                 style="color: white"
-                            >Manage Rooms</v-list-item-title>
+                            >Rooms</v-list-item-title>
                         </v-list-item-content>
                     </v-list-item>
                     <v-list-item
                         link
                         v-if="get_user.udata.role_id == 2"
-                        @click="$router.push('/manage_food')"
+                        @click="switch_tabs('/manage_food')"
                     >
                         <v-list-item-icon>
                             <v-icon
@@ -202,7 +169,7 @@
                     <v-list-item
                         link
                         v-if="get_user.udata.role_id == 2"
-                        @click="$router.push('/orders')"
+                        @click="switch_tabs('/orders')"
                     >
                         <v-list-item-icon>
                             <v-icon
@@ -219,7 +186,7 @@
                     <v-list-item
                         link
                         v-if="get_user.udata.role_id == 2"
-                        @click="$router.push('/report_component')"
+                        @click="switch_tabs('/report_component')"
                     >
                         <v-list-item-icon>
                             <v-icon
@@ -230,13 +197,51 @@
                         <v-list-item-content>
                             <v-list-item-title
                                 style="color: white"
-                            >Report</v-list-item-title>
+                            >Reports</v-list-item-title>
+                        </v-list-item-content>
+                    </v-list-item>
+                    
+                    <v-list-item
+                        link
+                        v-if="get_user.udata.role_id == 3"
+                        @click="switch_tabs('/housekeeping_request')"
+                    >
+                        <v-list-item-icon>
+                            <v-icon
+                                style="color: white"
+                            >mdi-account-group-outline</v-icon>
+                        </v-list-item-icon>
+
+                        <v-list-item-content>
+                            <v-list-item-title
+                                style="color: white"
+                            >Housekeeping Requests</v-list-item-title>
                         </v-list-item-content>
                     </v-list-item>
                     <v-list-item
                         link
+                        v-if="get_user.udata.role_id == 3"
+                        @click="switch_tabs('/housekeeping')"
+                    >
+                        <v-list-item-icon>
+                            <v-icon
+                                style="color: white"
+                            >mdi-account-group-outline</v-icon>
+                        </v-list-item-icon>
+
+                        <v-list-item-content>
+                            <v-list-item-title
+                                style="color: white"
+                            >Rooms to check</v-list-item-title>
+                        </v-list-item-content>
+                    </v-list-item>
+                    
+                    <!-- Messages -->
+                    
+                    <v-list-item
+                        link
                         v-if="get_user.udata.role_id > 1"
-                        @click="$router.push('/messages')"
+                        @click="switch_tabs('/messages')"
                     >
                         <v-list-item-icon>
                             <v-icon
@@ -301,7 +306,11 @@ export default {
             this.$store.commit('auth/clear_user_state')
             this.$router.push({name: '/'})
         })
-    }
+      },
+      switch_tabs(route) {
+        window.scrollTo({ top: 0, left: 0 })
+        this.$router.push(route)
+      }
   },
   watch: {
   }

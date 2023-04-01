@@ -16,6 +16,7 @@ import UserProfileState from '../components_user/profile/states/index.js'
 import AdminRoomState from '../component_admin/rooms/states/index.js'
 import AdminReservation from '../component_admin/reservations/states/index.js'
 import AdminReports from '../component_admin/reports/state/index.js'
+import AdminUsers from '../component_admin/users/states/index.js'
 
 import HomeTab from './states/index.js'
 
@@ -34,7 +35,8 @@ export default new Vuex.Store({
         admin_reservation:  AdminReservation,
         admin_room:         AdminRoomState,
         admin_report:       AdminReports,
-        home_tab:           HomeTab
+        home_tab:           HomeTab,
+        admin_users:        AdminUsers
     },
     plugins: [createPersistedState()]
 });
