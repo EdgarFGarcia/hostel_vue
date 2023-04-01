@@ -10,7 +10,7 @@ export default{
     },
     actions: {
         async fetch_reservations({commit}){
-            await Vue.axios.get('admin/reservation/g_reservation')
+            await Vue.axios.get('admin/reservation/bookings')
             .then(({data}) => {
                 commit('set_reservation_list', data.data)
                 console.log(data)

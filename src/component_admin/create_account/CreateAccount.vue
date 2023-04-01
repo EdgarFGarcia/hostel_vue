@@ -32,7 +32,7 @@
                 </v-btn>
             </v-col>
         </v-row>
-        <v-row>
+        <v-row class="mb-10">
             <v-col>
                 <v-data-table
                     :headers="headers"
@@ -58,13 +58,38 @@
                 </v-data-table>
             </v-col>
         </v-row>
+        ADD FAKE DATA
+        <v-row
+            no-gutters
+            class="mt-3"
+        >
+            <v-col>
+                <date-picker v-model="selected_day" valueType="format" type="datetime"></date-picker>
+                <v-select
+                    v-model="selected_user"
+                    :items="[{ text: 'Male, 25, student', value: 91 }, { text: 'Female, 29, vacationer', value: 92 }, { text: 'Female, 21, foreigner', value: 93 }]"
+                >
+                    <template v-slot:prepend-inner>
+                        <v-icon small style="position: relative; top:4px;"> mdi-account-school </v-icon> 
+                    </template>
+                </v-select>
+                <v-btn
+                    @click="add_data"
+                >
+                    Add Data
+                </v-btn>
+            </v-col>
+        </v-row>
     </v-container>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
+import DatePicker from 'vue2-datepicker';
+import 'vue2-datepicker/index.css';
 export default {
     components: {
+        DatePicker
     },
     computed: {
         ...mapGetters({
@@ -79,6 +104,8 @@ export default {
     data() {
         return {
             accounts: [],
+            selected_day: null,
+            selected_user: null,
             headers: [
                 {
                     text: 'Name',
@@ -112,6 +139,14 @@ export default {
             this.$store.commit("auth/setMessage",
                 { show: true, message: message },
                 { root: 1 })
+        },
+        async add_data() {
+            console.log(this.selected_day)
+            console.log(this.selected_user)
+            await this.$axios.post('/admin/accounts/add_data', { day: this.selected_day, user: this.selected_user })
+                .then(() => {
+                this.showSnackBar("Successfully added")
+            })
         },
         async get_accounts() {
             await this.$axios.get('/admin/accounts/get_accounts')

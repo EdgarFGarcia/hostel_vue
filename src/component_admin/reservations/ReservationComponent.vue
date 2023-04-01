@@ -1,129 +1,171 @@
 <template>
-    <v-container fluid class="pa-0 ma-0">
-        <v-alert color="deep-purple accent-4" dark>
-            Reservation Details
-        </v-alert>
-        <v-data-table :headers="reservation_header" :items="get_reservation_list" class="elevation-1">
-            <template v-slot:item="{ item }">
-                <tr v-if="item.get_room_info">
-                    <td>
-                        {{ item.get_user.name }}
-                        <br>
-                        {{ item.get_user.email }}
-                    </td>
-                    <td>
-                        <v-btn dark @click="check_details(item)">
-                            {{item.get_room_info.room_name}}
-                        </v-btn>
-                    </td>
-                    <td>
-                        {{ item.check_in_date_time }}
-                    </td>
-                    <td>
-                        {{ item.will_be_available_at }}
-                    </td>
-                    <td>
-                        {{ item.duration }} Day(s)
-                    </td>
-                    <td>
-                        {{ item.total_checked_in }}
-                    </td>
-                    <td>
-                        {{ item.adult_count }}
-                    </td>
-                    <td>
-                        {{ item.child_count }}
-                    </td>
-                    <td>
-                        {{ item.payable | currency('₱') }}
-                    </td>
-                    <td>
-                        <v-btn v-if="!item.is_paid" dark @click="mark_as_paid(item)">
-                            Mark as paid
-                        </v-btn>
-                        <v-btn v-else disabled>
-                            Room paid
-                        </v-btn>
-                    </td>
-                    <td>
-                        <v-btn v-if="item.checked" disabled>
-                            Checked
-                        </v-btn>
-                        <v-btn v-else-if="item.to_check == 0" dark @click="check(item)">
-                            Mark to check
-                        </v-btn>
-                        <v-btn v-else-if="!item.checked" disabled>
-                            To check
-                        </v-btn>
-                    </td>
-                    <td>
-                        <label v-if="item.get_additional != null && item.get_additional.amount_due == 0">
-                            {{ item.get_additional.reason }}
-                        </label>
-                        <label v-else>No report</label>
-                    </td>
-                    <td v-if="item.get_additional != null">
-                        {{ item.get_additional.amount_due | currency('₱') }}
-                    </td>
-                    <td v-else>
-                        No additional
-                    </td>
-                    <td>
-                        <label
-                            v-if="item.get_additional != null && item.get_additional.amount_due > 0 && item.get_additional.amount_paid >= item.get_additional.amount_due">
-                            Paid
-                        </label>
-                        <label v-else>No additional</label>
-                    </td>
-                    <td>
-                    </td>
-                    <td>
-                        <v-btn v-if="item.get_additional != null && item.get_additional.amount_due == 0"
-                            dark @click="charge(item)">
-                            Charge
-                        </v-btn>
-                        <v-btn v-else-if="item.get_additional != null" disabled>
-                            Charged
-                        </v-btn>
-                        <v-btn v-else-if="item.get_additional == null" disabled>
-                            N/A
-                        </v-btn>
-                    </td>
-                    <td>
-                        <v-btn
-                            v-if="item.get_additional != null && item.get_additional.amount_paid < item.get_additional.amount_due"
-                            dark @click="extra_paid(item)">
-                            Paid fee
-                        </v-btn>
-                        <v-btn v-else-if="item.get_additional != null && item.get_additional.amount_due > 0" disabled>
-                            Fee paid
-                        </v-btn>
-                        <v-btn v-else disabled>
-                            N/A
-                        </v-btn>
-                    </td>
-                </tr>
-            </template>
-        </v-data-table>
+    <v-container fill-height fluid class="pa-5 ma-0">
+        <h2 class="pb-10">Bookings</h2>
+        <v-row>
+            <v-col cols="12">
+                <v-data-table :headers="reservation_header" :items="get_reservation_list" class="elevation-1">
+                    <template v-slot:item="{ item }">
+                        <tr v-if="item.get_room_info" @click="check_details(item)" style="cursor: pointer;">
+                            <td>
+                                <small>
+                                    {{ moment(item.created_at).format('YYYY-MM-DD') }}
+                                    <br>
+                                    {{ moment(item.created_at).format('h:mm a') }}
+                                </small>
+                            </td>
+                            <td>
+                                {{ item.get_room_info.get_room_parent_information.name }} - {{ item.get_room_info.room_name }}
+                                <br>
+                                <small>{{ item.get_user.name }} — </small>
+                                <small v-if="item.adult_count == 1">{{ item.adult_count }} adult </small>
+                                <small v-if="item.adult_count > 1">{{ item.adult_count }} adults </small>
+                                <small v-if="item.child_count == 1">and {{ item.child_count }} child</small>
+                                <small v-if="item.child_count > 1">and {{ item.child_count }} children</small>
+                            </td>
+                            <td>
+                                {{ item.check_in_date_time }} to {{ item.will_be_available_at }}
+                            </td>
+                            <td>
+                                {{ item.payable | currency('₱') }}
+                                <br>
+                                <small v-if="item.is_paid">paid</small>
+                                <small v-else>unpaid</small>
+                            </td>
+                            <td>
+                                <v-btn text>
+                                    <small>View ></small>
+                                </v-btn>
+                            </td>
+                        </tr>
+                    </template>
+                </v-data-table>
+            </v-col>
+        </v-row>
+        
         <v-row justify="center">
-            <v-dialog v-model="dialog_room_information" persistent max-width="560">
-                <v-card v-if="Object.keys(get_room_information).length > 0">
+            <v-dialog v-model="dialog_room_information" persistent max-width="650">
+                <v-card v-if="booking_selected != null">
                     <v-card-title class="text-h5">
-                        Room Information of: {{ get_room_information.room_name }}
+                        Booking Details
                     </v-card-title>
-                    <v-card-subtitle>
-                        {{ get_room_information.get_room_parent_information.description }}
-                    </v-card-subtitle>
-                    <v-card-text>
-                        <v-img :src="`${img_src}/images/${get_room_information.get_room_parent_information.image}`" />
-                    </v-card-text>
                     <v-card-text>
                         <v-row>
-                            <v-col cols="4"
-                                v-for="(item, itemindex) in get_room_information.get_room_parent_information.facilities"
-                                :key="itemindex">
-                                <v-icon>mdi-check</v-icon>
-                                {{ item }}
+                            <v-col cols="6">
+                                <v-img style="border-radius:5px;" :src="`${img_src}/images/${booking_selected.get_room_info.get_room_parent_information.image}`" />
+                            </v-col>
+                            <v-col cols="6">
+                                <v-row>
+                                    <v-col cols="8">
+                                        <h3 style="font-weight:400;">{{ booking_selected.get_room_info.get_room_parent_information.name }}</h3>
+                                        <h4 style="font-weight:400;">{{ booking_selected.get_room_info.room_name }}</h4>
+                                    </v-col>
+                                    <v-col cols="4">
+                                        <v-btn small text>View ></v-btn>
+                                    </v-col>
+                                </v-row>
+                                
+                                <p class="mt-5" style="font-weight:700;margin-bottom:9px;">Booked by</p>
+                                
+                                <v-row>
+                                    <v-col cols="2">
+                                        <v-avatar
+                                            color="grey"
+                                            size="45"
+                                            v-if="booking_selected.get_user.image == null"
+                                        >
+                                            <strong style="fontsize: 20px;color:white;">{{ booking_selected.get_user.name[0] }}</strong>
+                                        </v-avatar>
+                                        <v-avatar
+                                            v-else
+                                            color="grey"
+                                            size="45"
+                                        >
+                                            <v-img
+                                                :src="`${img_src}/${booking_selected.get_user.image}`"
+                                                :aspect-ratio="1"
+                                            />
+                                        </v-avatar>
+                                    </v-col>
+                                    <v-col cols="10">
+                                        <v-layout align-center style="height:45px;">
+                                            <h3 class="ml-2">{{ booking_selected.get_user.name }}</h3>
+                                        </v-layout>
+                                    </v-col>
+                                </v-row>
+                                
+                                <v-btn class="mt-3" style="margin-left:47px;" small text>View Profile ></v-btn>
+                            </v-col>
+                        </v-row>
+                        
+                        <v-row>
+                            <v-col cols="6">
+                                Check-in and check-out:
+                            </v-col>
+                            <v-col cols="6">
+                                <b>{{ booking_selected.check_in_date_time }} to {{ booking_selected.will_be_available_at }} - {{ booking_selected.duration }} day(s)</b>
+                            </v-col>
+                            <v-col cols="6">
+                                Number of guests:
+                            </v-col>
+                            <v-col cols="6">
+                                <b v-if="booking_selected.adult_count == 1">{{ booking_selected.adult_count }} adult </b>
+                                <b v-if="booking_selected.adult_count > 1">{{ booking_selected.adult_count }} adults </b>
+                                <b v-if="booking_selected.child_count == 1">and {{ booking_selected.child_count }} child</b>
+                                <b v-if="booking_selected.child_count > 1">and {{ booking_selected.child_count }} children</b>
+                            </v-col>
+                            <v-col cols="6">
+                                Total Amount:
+                            </v-col>
+                            <v-col cols="6">
+                                <b>{{ booking_selected.payable | currency('₱') }}</b>
+                                <small class="ml-3 mr-3">—</small>
+                                <b v-if="booking_selected.is_paid">paid</b>
+                                <b v-else>unpaid <v-btn class="ml-2" small text @click="mark_as_paid(booking_selected)"><small>Mark as paid</small></v-btn></b>
+                            </v-col>
+                            <v-col cols="6">
+                                Housekeeping:
+                            </v-col>
+                            <v-col cols="6">
+                                <b style="margin-left:-12px;">
+                                    <v-btn small text disabled v-if="booking_selected.checked">
+                                        <small>Checked</small>
+                                    </v-btn>
+                                    <v-btn small text v-else-if="booking_selected.to_check == 0" @click="check(booking_selected)">
+                                        <small>Request report</small>
+                                    </v-btn>
+                                    <v-btn small text disabled v-else-if="!booking_selected.checked">
+                                        <small>To check</small>
+                                    </v-btn>
+                                </b>
+                            </v-col>
+                            <v-col cols="6" v-if="booking_selected.get_additional">
+                                Room report:
+                            </v-col>
+                            <v-col cols="6" v-if="booking_selected.get_additional">
+                                <b>
+                                    {{ booking_selected.get_additional.reason }}
+                                </b>
+                            </v-col>
+                            <v-col cols="6" v-if="booking_selected.get_additional != null">
+                                Additional fees:
+                            </v-col>
+                            <v-col cols="6" v-if="booking_selected.get_additional != null">
+                                <v-btn style="margin-left:-12px;" small text v-if="booking_selected.get_additional.amount_due == 0" @click="charge(booking_selected)">
+                                    <small>Charge user</small>
+                                </v-btn>
+                                <div v-else>
+                                    <b>{{ booking_selected.get_additional.amount_due | currency('₱') }}</b>
+                                    <small class="ml-3 mr-3">—</small>
+                                    <b v-if="booking_selected.get_additional.amount_paid >= booking_selected.get_additional.amount_due">paid</b>
+                                    <b v-else>unpaid
+                                        <v-btn
+                                            class="ml-2"
+                                            text small
+                                            @click="extra_paid(booking_selected)">
+                                            <small>Mark as paid</small>
+                                        </v-btn>
+                                    </b>
+                                </div>
                             </v-col>
                         </v-row>
                     </v-card-text>
@@ -164,6 +206,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import moment from 'moment'
 export default {
     components: {
     },
@@ -172,62 +215,27 @@ export default {
     data: () => ({
         reservation_header: [
             {
-                text: 'User'
+                text: 'Created', sortable: false, width: '10%'
             },
             {
-                text: 'Room'
+                text: 'Booking Details', sortable: false
             },
             {
-                text: 'Check-in Date'
+                text: 'Check-in and check-out', sortable: false
             },
             {
-                text: 'Check-out Date'
+                text: 'Price', sortable: false
             },
             {
-                text: 'Duration'
-            },
-            {
-                text: 'Total check-ins'
-            },
-            {
-                text: 'Adult Count'
-            },
-            {
-                text: 'Child Count'
-            },
-            {
-                text: 'Room Price'
-            },
-            {
-                text: 'Paid'
-            },
-            {
-                text: 'Checked'
-            },
-            {
-                text: 'Report'
-            },
-            {
-                text: 'Additional'
-            },
-            {
-                text: 'Additional Paid'
-            },
-            {
-                text: ''
-            },
-            {
-                text: ''
-            },
-            {
-                text: ''
-            },
+                text: '', sortable: false
+            }
         ],
         dialog_room_information: false,
         dialog_additional: false,
         reason: null,
         amount_due: null,
         additional_check_in_id: null,
+        booking_selected: null,
         img_src: null
     }),
     async mounted() {
@@ -248,16 +256,12 @@ export default {
                 { show: true, message: message },
                 { root: 1 })
         },
+        moment: function (time) {
+            return moment(time);
+        },
         async check_details(data) {
-            await this.$axios.get('/admin/reservation/g_reservation_details', {
-                room_id: data.actual_room_id
-            })
-                .then(({ data }) => {
-                    if (data.response) {
-                        this.dialog_room_information = true
-                    }
-                    this.$store.dispatch('admin_reservation/set_room_information', data.data)
-                })
+            this.booking_selected = data
+            this.dialog_room_information = true
         },
         charge(data) {
             this.additional_check_in_id = data.id
@@ -270,6 +274,7 @@ export default {
             })
                 .then(({ data }) => {
                     this.$store.dispatch('admin_reservation/set_reservations', data.data)
+                    this.booking_selected = data.room
                 })
         },
         extra_paid(data) {
@@ -280,6 +285,7 @@ export default {
             })
                 .then(({ data }) => {
                     this.$store.dispatch('admin_reservation/set_reservations', data.data)
+                    this.booking_selected = data.room
                 })
         },
         async check(data) {
@@ -289,6 +295,7 @@ export default {
             })
                 .then(({ data }) => {
                     this.$store.dispatch('admin_reservation/set_reservations', data.data)
+                    this.booking_selected = data.room
                 })
         },
         async confirm_additional_payment() {
@@ -302,6 +309,7 @@ export default {
                     }
                     else {
                         this.dialog_additional = false
+                        this.booking_selected = data.room
                         this.$store.dispatch('admin_reservation/set_reservations', data.data)
                     }
                 })

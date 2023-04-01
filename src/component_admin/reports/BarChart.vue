@@ -1,17 +1,17 @@
 <template>
   <div>
     <v-row>
-      <v-col cols="4">
+      <v-col cols="6">
         <v-select filled dense v-model="chart_type" :items="['Year', 'Month', 'Week', 'Day']" @change="refresh_data"></v-select>
       </v-col>
-      <v-col cols="4">
-        <date-picker v-if="chart_type == 'Year'" v-model="year" @change="pick_year" valueType="format"
+      <v-col cols="6">
+        <date-picker style="width:100%;" v-if="chart_type == 'Year'" v-model="year" @change="pick_year" valueType="format"
           type="year"></date-picker>
-        <date-picker v-if="chart_type == 'Month'" v-model="month" @change="pick_month" valueType="format"
+        <date-picker style="width:100%;" v-if="chart_type == 'Month'" v-model="month" @change="pick_month" valueType="format"
           type="month"></date-picker>
-        <date-picker v-if="chart_type == 'Week'" v-model="week" @change="pick_week" valueType="format"
+        <date-picker style="width:100%;" v-if="chart_type == 'Week'" v-model="week" @change="pick_week" valueType="format"
           type="week"></date-picker>
-        <date-picker v-if="chart_type == 'Day'" v-model="day" @change="pick_day" valueType="format"
+        <date-picker style="width:100%;" v-if="chart_type == 'Day'" v-model="day" @change="pick_day" valueType="format"
           type="day"></date-picker>
       </v-col>
     </v-row>
