@@ -1,171 +1,192 @@
 <template>
     <v-container fill-height fluid class="pa-5 ma-0">
-        <h2 class="pb-10 ml-5">Rooms</h2>
-        <!--<v-row>
+        <h2 class="pb-10 ml-5 mr-4">Rooms</h2>
+        <v-btn class="mb-9" color="#447FA6" dark @click="add_room_model = true">Add Room Type</v-btn>
+        <v-row>
             <v-col cols="12">
                 <v-card style="border-radius: 16px;padding:20px;" width="100%">
-                    <v-data-table :headers="room_header" :items="get_rooms">
+                    <v-data-table :headers="room_header" :items="get_room_types">
+                        <template v-slot:item="{ item }">
+                            <tr @click="open_room_type(item)" style="cursor: pointer;height:90px;">
+                                <td>
+                                    #<small>{{ item.id }}</small>
+                                </td>
+                                <td>
+                                    <v-img style="border-radius:5px;" max-width="120"
+                                        :src="`${img_src}/images/${item.image}`" />
+                                </td>
+                                <td>
+                                    {{ item.name }}
+                                </td>
+                                <td>
+                                    {{ item.description }}
+                                </td>
+                                <td>
+                                    <small
+                                        style="background-color:#447FA6;color:white;border-radius:10px;padding:5px;margin:2px;line-height:2.5;"
+                                        v-for="(facilities, index) in item.facilities" :key="index">
+                                        {{ facilities }}
+                                    </small>
+                                </td>
+                                <td>
+                                    <v-btn text>
+                                        <small>View ></small>
+                                    </v-btn>
+                                </td>
+                            </tr>
+                        </template>
                     </v-data-table>
                 </v-card>
             </v-col>
-        </v-row>-->
-        <v-tabs v-model="tab" grow dark color="basil" background-color="deep-purple accent-4">
-            <v-tabs-slider color="yellow"></v-tabs-slider>
-            <v-tab v-for="room in get_room_categories" :key="room.id" :href="`#tab-${room.id}`" @click="select_room(room)">
-                <label style="color: white;">
-                    {{ room.name }}
-                </label>
-            </v-tab>
-        </v-tabs>
-        <br>
-        <v-btn dark class="mt-5 ml-5" @click="add_room_model = true">Add Room Type</v-btn>
-        <v-tabs-items v-model="tab" class="mt-5 justify-center" style="width:100%;">
-            <v-tab-item v-for="room in get_room_categories" :key="room.id" :value="`tab-${room.id}`">
-                <v-card flat>
-                    <v-card-title class="text-small mb-2">
-                        Room Type: {{ room.name }} <v-btn dark class="ml-3" @click="edit_room(room)">Edit</v-btn><v-btn dark
-                            class="ml-3" @click="delete_room_open(room)">Delete</v-btn>
+        </v-row>
+
+        <v-row justify="center">
+            <v-dialog v-model="show_room_type" persistent max-width="650">
+                <v-card v-if="selected_room_type">
+                    <v-card-title class="text-h5">
+                        {{ selected_room_type.name }}
+                        <v-spacer />
+                        <v-btn @click="delete_room_open(selected_room_type)" text outlined color="red">Delete</v-btn>
                     </v-card-title>
-                    <v-card-subtitle>
-                        <div>
-                            {{ room.full_details }}
-                        </div>
-                        <br>
-                        <div>
-                            <small style="margin-top:20px;" v-for="(facilities, room_facilities_index) in room.facilities"
-                                :key="room_facilities_index">
-                                <v-icon>mdi-check-circle</v-icon>
-                                {{ facilities }}
-                            </small>
-                        </div>
-                        <br>
-                        <div>Price: {{ room.price }}</div>
-                        <br>
-                        <div>Capacity: {{ room.capacity }}</div>
-                        <br>
-                        <div>Max Capacity: {{ room.max_capacity }}</div>
-                        <br>
-                        <div>Additional Price: {{ room.additional_price }}</div>
-                    </v-card-subtitle>
-                </v-card>
-                <v-card>
-                    <v-btn class="ml-10 mt-5" dark @click="add_room_state = true">
-                        <v-icon class="mr-3">mdi-plus</v-icon>
-                        Add Room
-                    </v-btn>
                     <v-card-text>
                         <v-row>
-                            <v-col cols="3" v-for="(rooms, roomsindex) in get_rooms[0].actual_rooms" :key="roomsindex">
+                            <v-col cols="12">
+                                <v-text-field label="Room Type" v-model="selected_room_type.name"></v-text-field>
+                                <v-combobox label="Facilities" v-model="selected_room_type.facilities" filled multiple chips
+                                    dense hide-selected style="line-height:3.5;" :items="selected_room_type.facilities">
+                                    <template v-slot:selection="{ attrs, item, parent, selected }">
+                                        <v-chip v-bind="attrs" :input-value="selected" small color="#447FA6"
+                                            style="color:white;">
+                                            <span class="pr-2">
+                                                {{ item }}
+                                            </span>
+                                            <v-icon color="white" small @click="parent.selectItem(item)">
+                                                $delete
+                                            </v-icon>
+                                        </v-chip>
+                                    </template>
+                                    <template v-slot:no-data>
+                                        <v-list-item>
+                                            <v-list-item-content>
+                                                <v-list-item-title>
+                                                    Press <kbd>enter</kbd> to create a new facility
+                                                </v-list-item-title>
+                                            </v-list-item-content>
+                                        </v-list-item>
+                                    </template>
+                                </v-combobox>
+                            </v-col>
+                            <v-col cols="6">
+                                <v-text-field label="Price per night" type="number"
+                                    v-model="selected_room_type.price"></v-text-field>
+                                <v-text-field label="Capacity (charge additional over this amount)" type="number"
+                                    v-model="selected_room_type.capacity"></v-text-field>
+                            </v-col>
+                            <v-col cols="6">
+                                <v-text-field label="Price per additional person" type="number"
+                                    v-model="selected_room_type.additional_price"></v-text-field>
+                                <v-text-field label="Max capacity (can't book over this amount)" type="number"
+                                    v-model="selected_room_type.max_capacity"></v-text-field>
+                            </v-col>
+                            <v-col cols="12">
+                                <v-textarea label="Short Description" v-model="selected_room_type.description"></v-textarea>
+                                <v-textarea label="Full Description" v-model="selected_room_type.full_details"></v-textarea>
+                            </v-col>
+                            <v-col cols="3">
+                                <h3>Actual Rooms</h3>
+                            </v-col>
+                            <v-col cols="9">
+                                <v-btn style="margin-top:-5px;" color="#447FA6" dark @click="add_actual_room_modal = true">Add Actual Room</v-btn>
+                            </v-col>
+                            <v-col v-for="(actual_room, index) in selected_room_type.actual_rooms" :key="index" cols="4">
                                 <v-card elevation="2">
                                     <v-card-title class="text-small">
-                                        <small>{{ rooms.room_name }}</small>
-                                        <v-spacer />
-                                        <small>ID: {{ rooms.id }}</small>
-                                        <v-text-field v-model="rooms.room_floor"></v-text-field>
-                                        <v-btn block text outlined @click="edit_floor(rooms)">
-                                            Change Room Floor
+                                        <small style="font-size:14px;" class="mr-1">#{{ actual_room.id }}</small>
+                                        <small style="font-size:14px;">{{ actual_room.room_name }}</small>
+                                        <v-text-field label="Room Floor" v-model="actual_room.room_floor"></v-text-field>
+                                        <v-btn class="mb-2" block text outlined @click="edit_floor(actual_room)">
+                                            Save
                                         </v-btn>
-                                    </v-card-title>
-                                    <v-card-actions>
-                                        <v-btn block text outlined @click="delete_room(rooms)">
+                                        <v-btn block text color="red" outlined @click="delete_room(actual_room)">
                                             Delete
                                         </v-btn>
-                                    </v-card-actions>
+                                    </v-card-title>
                                 </v-card>
+                            </v-col>
+                            <v-col v-if="selected_room_type.actual_rooms[0] == null" cols="12">
+                                N/A
                             </v-col>
                         </v-row>
                     </v-card-text>
-                </v-card>
-            </v-tab-item>
-        </v-tabs-items>
-        <v-row justify="center">
-            <v-dialog v-model="edit_room_model" persistent max-width="400">
-                <v-card>
-                    <v-card-title class="mb-5">
-                        <small></small>
-                    </v-card-title>
-                    <v-card-text v-if="room_to_edit != null">
-                        Room Type
-                        <v-text-field v-model="room_to_edit.name"></v-text-field>
-                        Room Floor
-                        <v-text-field v-model="room_to_edit.room_floor"></v-text-field>
-                        Total number of rooms
-                        <v-text-field type="number" v-model="room_to_edit.room_count"></v-text-field>
-                        Short Description
-                        <v-textarea v-model="room_to_edit.description"></v-textarea>
-                        Full Description
-                        <v-textarea v-model="room_to_edit.full_details"></v-textarea>
-                        Facilities
-                        <v-text-field v-model="facility_to_add"></v-text-field>
-                        <v-btn @click="add_facility">Add</v-btn>
-                        <br>
-                        <br>
-                        <small v-for="(facility, index) in room_to_edit.facilities" :key="index">
-                            {{ facility }} <v-btn style="width:10px;height:20px;" @click="delete_facility(index)">x</v-btn>
-                            ,
-                        </small>
-                        <br>
-                        Price
-                        <v-text-field type="number" v-model="room_to_edit.price"></v-text-field>
-                        Additional Price
-                        <v-text-field type="number" v-model="room_to_edit.additional_price"></v-text-field>
-                        Capacity (charge additional over this amount)
-                        <v-text-field type="number" v-model="room_to_edit.capacity"></v-text-field>
-                        Max Capacity (can't accept booking over this amount)
-                        <v-text-field type="number" v-model="room_to_edit.max_capacity"></v-text-field>
-                    </v-card-text>
                     <v-card-actions>
                         <v-spacer></v-spacer>
-                        <v-btn dark @click="submit_edit_room">Confirm</v-btn>
-                        <v-btn dark @click="edit_room_model = false;">Cancel</v-btn>
+                        <v-btn text @click="close_room_type()">
+                            Close
+                        </v-btn>
+                        <v-btn style="background-color:#447FA6;color:white;" @click="submit_edit_room()">Confirm</v-btn>
                     </v-card-actions>
                 </v-card>
             </v-dialog>
         </v-row>
 
         <v-row justify="center">
-            <v-dialog v-model="add_room_model" persistent max-width="400">
+            <v-dialog v-model="add_room_model" persistent max-width="650">
                 <v-card>
                     <v-card-title class="mb-5">
                         <small>Add Room Type</small>
                     </v-card-title>
                     <v-card-text>
-                        Room Type
-                        <v-text-field v-model="room_to_add.name"></v-text-field>
-                        Room Floor
-                        <v-text-field v-model="room_to_add.room_floor"></v-text-field>
-                        Total number of rooms
-                        <v-text-field type="number" v-model="room_to_add.room_count"></v-text-field>
-                        Image
-                        <v-file-input v-model="room_to_add.image" label="Update Image" chips></v-file-input>
-                        Short Description
-                        <v-textarea v-model="room_to_add.description"></v-textarea>
-                        Full Description
-                        <v-textarea v-model="room_to_add.full_details"></v-textarea>
-                        Facilities
-                        <v-text-field v-model="facility_to_add_create"></v-text-field>
-                        <v-btn @click="add_facility_create">Add</v-btn>
-                        <br>
-                        <br>
-                        <small v-for="(facility, index) in room_to_add.facilities" :key="index">
-                            {{ facility }} <v-btn style="width:10px;height:20px;"
-                                @click="delete_facility_create(index)">x</v-btn>
-                            ,
-                        </small>
-                        <br>
-                        Price
-                        <v-text-field type="number" v-model="room_to_add.price"></v-text-field>
-                        Additional Price
-                        <v-text-field type="number" v-model="room_to_add.additional_price"></v-text-field>
-                        Capacity (charge additional over this amount)
-                        <v-text-field type="number" v-model="room_to_add.capacity"></v-text-field>
-                        Max Capacity (can't accept booking over this amount)
-                        <v-text-field type="number" v-model="room_to_add.max_capacity"></v-text-field>
+                        <v-row>
+                            <v-col cols="12">
+                                <v-text-field label="Room Type" v-model="room_to_add.name"></v-text-field>
+                                <v-combobox label="Facilities" v-model="room_to_add.facilities" filled multiple chips dense
+                                    hide-selected style="line-height:3.5;" :items="room_to_add.facilities">
+                                    <template v-slot:selection="{ attrs, item, parent, selected }">
+                                        <v-chip v-bind="attrs" :input-value="selected" small color="#447FA6"
+                                            style="color:white;">
+                                            <span class="pr-2">
+                                                {{ item }}
+                                            </span>
+                                            <v-icon color="white" small @click="parent.selectItem(item)">
+                                                $delete
+                                            </v-icon>
+                                        </v-chip>
+                                    </template>
+                                    <template v-slot:no-data>
+                                        <v-list-item>
+                                            <v-list-item-content>
+                                                <v-list-item-title>
+                                                    Press <kbd>enter</kbd> to create a new facility
+                                                </v-list-item-title>
+                                            </v-list-item-content>
+                                        </v-list-item>
+                                    </template>
+                                </v-combobox>
+                            </v-col>
+                            <v-col cols="6">
+                                <v-text-field label="Price per night" type="number"
+                                    v-model="room_to_add.price"></v-text-field>
+                                <v-text-field label="Capacity (charge additional over this amount)" type="number"
+                                    v-model="room_to_add.capacity"></v-text-field>
+
+                            </v-col>
+                            <v-col cols="6">
+                                <v-text-field label="Price per additional person" type="number"
+                                    v-model="room_to_add.additional_price"></v-text-field>
+                                <v-text-field label="Max capacity (can't book over this amount)" type="number"
+                                    v-model="room_to_add.max_capacity"></v-text-field>
+                            </v-col>
+                            <v-col cols="12">
+                                <v-textarea label="Short description" v-model="room_to_add.description"></v-textarea>
+                                <v-textarea label="Full description" v-model="room_to_add.full_details"></v-textarea>
+                                <v-file-input v-model="room_to_add.image" label="Image" chips></v-file-input>
+                            </v-col>
+                        </v-row>
                     </v-card-text>
                     <v-card-actions>
                         <v-spacer></v-spacer>
-                        <v-btn dark @click="submit_new_room">Confirm</v-btn>
-                        <v-btn dark @click="add_room_model = false;">Cancel</v-btn>
+                        <v-btn outlined text @click="add_room_model = false;">Cancel</v-btn>
+                        <v-btn dark color="#447FA6" @click="submit_new_room()">Confirm</v-btn>
                     </v-card-actions>
                 </v-card>
             </v-dialog>
@@ -178,29 +199,72 @@
                         <small>Are you sure you want to delete this room?</small>
                     </v-card-title>
                     <v-card-actions>
-                        <v-spacer>
-                        </v-spacer><v-btn dark @click="delete_room_type(room_to_delete)" class="ml-2">Confirm</v-btn>
-                        <v-btn dark @click="delete_model = false">Cancel</v-btn>
+                        <v-spacer />
+                        <v-btn outlined text @click="delete_model = false">Cancel</v-btn>
+                        <v-btn text outlined color="red" @click="delete_room_type(room_to_delete)"
+                            class="ml-2">Confirm</v-btn>
                     </v-card-actions>
                 </v-card>
             </v-dialog>
         </v-row>
-        <AddRoomDialog :value="this.add_room_state" @close_add_dialog="close_add_dialog"
-            @add_room_from_dialog="add_room_from_dialog" />
+        
+        <v-row justify="center">
+            <v-dialog v-model="add_actual_room_modal" persistent max-width="650">
+                <v-card v-if="selected_room_type != null">
+                    <v-card-title
+                        class="text-small"
+                    >
+                        <small>Add room for {{ selected_room_type.name }}</small>
+                    </v-card-title>
+                    <v-card-text>
+                        <v-text-field
+                            dense
+                            outlined
+                            label="Room Name"
+                            hint="Room Name"
+                            v-model="new_actual_room"
+                        >
+                        </v-text-field>
+                    </v-card-text>
+                    <v-card-actions>
+                        <v-spacer/>
+                        <v-btn
+                            text
+                            outlined
+                            @click="add_actual_room_modal = false"
+                        >
+                            Close
+                        </v-btn>
+                        <v-btn
+                            color="#588BAD"
+                            class="pl-10 pr-10"
+                            dark
+                            @click="add_actual_room"
+                        >
+                            Add
+                        </v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
+        </v-row>
     </v-container>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
-import AddRoomDialog from './components/DialogAddRoom.vue'
 export default {
     components: {
-        AddRoomDialog
+
     },
     props: [
     ],
     data: () => ({
         tab: null,
+        img_src: null,
+        show_room_type: false,
+        selected_room_type: null,
+        add_actual_room_modal: false,
+        new_actual_room: null,
         add_room_state: false,
         edit_room_model: false,
         add_room_model: false,
@@ -209,16 +273,19 @@ export default {
         room_to_edit: null,
         room_header: [
             {
-                text: 'Room Type', sortable: false, width: '10%'
+                text: '', sortable: false, width: '1%'
+            },
+            {
+                text: '', sortable: false, width: '10%'
+            },
+            {
+                text: 'Room Type', sortable: false, width: '15%'
             },
             {
                 text: 'Description', sortable: false
             },
             {
-                text: 'Check-in and check-out', sortable: false
-            },
-            {
-                text: 'Price', sortable: false
+                text: 'Facilities', sortable: false, width: '300px'
             },
             {
                 text: '', sortable: false
@@ -241,24 +308,32 @@ export default {
         facility_to_add_create: null
     }),
     async mounted() {
-        await this.$store.dispatch('admin_room/set_room_categories')
-        this.select_room(this.get_room_categories[0])
+        this.$store.dispatch('admin_room/fetch_room_types')
     },
     created() {
+        this.img_src = process.env.VUE_APP_URL
     },
     computed: {
         ...mapGetters({
-            get_room_categories: 'admin_room/get_room_categories',
-            get_rooms: 'admin_room/get_rooms'
+            get_room_types: 'admin_room/get_room_types',
         })
     },
     methods: {
+        showSnackBar(message) {
+            this.$store.commit("auth/setMessage",
+                { show: true, message: message },
+                { root: 1 })
+        },
+        open_room_type(room) {
+            this.selected_room_type = room
+            this.show_room_type = true
+        },
+        close_room_type() {
+            this.show_room_type = false
+        },
         edit_room(room) {
             this.edit_room_model = true
             this.room_to_edit = room
-        },
-        close_add_dialog() {
-            this.add_room_state = false
         },
         async edit_floor(rooms) {
             console.log(rooms)
@@ -268,31 +343,21 @@ export default {
                     this.$router.go(0)
                 })
         },
-        async select_room(data) {
-            await this.$axios.get(`admin/rooms/actual_rooms/${data.id}`)
-                .then(({ data }) => {
-                    this.$store.dispatch('admin_room/set_rooms', data.data)
-                })
-        },
-        async add_room_from_dialog(data) {
-            console.log(data)
+        async add_actual_room() {
+            console.log(this.selected_room_type)
             await this.$axios.post('admin/rooms/add_room', {
-                room_name: data,
-                room_id: this.get_rooms[0].id
+                room_name: this.new_actual_room,
+                room_id: this.selected_room_type.id
             })
                 .then(({ data }) => {
                     if (data.response) {
-                        alert(data.message)
-                        this.close_add_dialog()
-                        this.select_room(this.get_rooms[0])
-                        return
+                        this.$router.go(0)
                     }
-                    alert(data.message)
                 })
         },
         async submit_edit_room() {
-            console.log(this.room_to_edit)
-            await this.$axios.post('admin/rooms/update_room', this.room_to_edit)
+            console.log(this.selected_room_type)
+            await this.$axios.post('admin/rooms/update_room', this.selected_room_type)
                 .then(({ data }) => {
                     console.log(data)
                     this.$router.go(0)
@@ -300,18 +365,23 @@ export default {
         },
         async submit_new_room() {
             const formData = new FormData()
-            if (this.room_to_add.image != null) {
-                formData.append('image', this.room_to_add.image)
-                console.log(this.room_to_add.image)
-            }
-            let payload = {
-                data: this.room_to_add,
-                formdata: formData
-            }
-            await this.$axios.post('admin/rooms/add_room_type', payload)
+            formData.append('name', this.room_to_add.name)
+            formData.append('facilities', this.room_to_add.facilities)
+            formData.append('price', this.room_to_add.price)
+            formData.append('additional_price', this.room_to_add.additional_price)
+            formData.append('capacity', this.room_to_add.capacity)
+            formData.append('max_capacity', this.room_to_add.max_capacity)
+            formData.append('description', this.room_to_add.description)
+            formData.append('full_details', this.room_to_add.full_details)
+            formData.append('image', this.room_to_add.image)
+            console.log(this.room_to_add.facilities)
+            await this.$axios.post('admin/rooms/add_room_type', formData)
                 .then(({ data }) => {
                     console.log(data)
-                    //this.$router.go(0)
+                    this.showSnackBar(data.message)
+                    if (data.response) {
+                        this.$router.go(0)
+                    }
                 })
         },
         async delete_room_open(room) {
@@ -319,6 +389,7 @@ export default {
             this.delete_model = true
         },
         async delete_room(room) {
+            this.showSnackBar("Please wait...")
             await this.$axios.post('admin/rooms/delete_room', { room_id: room.id })
                 .then(({ data }) => {
                     console.log(data)
@@ -326,6 +397,7 @@ export default {
                 })
         },
         async delete_room_type(room) {
+            this.showSnackBar("Please wait...")
             await this.$axios.post('admin/rooms/delete_room_type', { room_id: room.id })
                 .then(({ data }) => {
                     console.log(data)

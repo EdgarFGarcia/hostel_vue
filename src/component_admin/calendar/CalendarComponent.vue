@@ -3,7 +3,7 @@
         <h2 class="pb-10">Calendar</h2>
         <v-row>
             <v-col>
-                test
+                Under construction
             </v-col>
         </v-row>
     </v-container>

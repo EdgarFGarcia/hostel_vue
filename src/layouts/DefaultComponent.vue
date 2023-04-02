@@ -95,7 +95,7 @@ export default{
                     this.$router.push({ name: '/housekeeping_request'})
                     return
             }
-        }
+        },
     }),
     computed: {
         ...mapGetters({

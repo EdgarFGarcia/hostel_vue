@@ -7,28 +7,25 @@ export default{
         check_list: [],
         room_information: {},
         requests: [],
-        selected_room: {}
+        selected_room: null
     },
     actions: {
         async fetch_reservations({commit}){
             await Vue.axios.get('admin/reservation/bookings')
             .then(({data}) => {
                 commit('set_reservation_list', data.data)
-                console.log(data)
             })
         },
         async fetch_check_list({commit}){
             await Vue.axios.get('admin/reservation/g_check_list')
             .then(({data}) => {
                 commit('set_check_list', data.data)
-                console.log(data)
             })
         },
         async fetch_requests({commit}){
             await Vue.axios.get('admin/reservation/requests')
             .then(({data}) => {
                 commit('set_requests', data.data)
-                console.log(data)
             })
         },
         set_room_information({commit}, payload){

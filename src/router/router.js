@@ -31,7 +31,6 @@ import FoodRoutesAdmin from '../component_admin/food/router/index.js'
 Vue.use(VueRouter);
 
 const router = new VueRouter({
-    mode: 'history',
     routes: [
         ...Landing,
         ...UserDashboard,

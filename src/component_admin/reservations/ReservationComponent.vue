@@ -1,6 +1,7 @@
 <template>
     <v-container fill-height fluid class="pa-5 ma-0">
-        <h2 class="pb-10 ml-5">Bookings</h2>
+        <h2 class="pb-10 ml-5 mr-4">Bookings</h2>
+        <v-btn class="mb-9" color="#447FA6" dark @click="show_add_data = true">Add Booking</v-btn>
         <v-row>
             <v-col cols="12">
                 <v-card style="border-radius: 16px;padding:20px;" width="100%">
@@ -294,6 +295,47 @@
                 </v-card>
             </v-dialog>
         </v-row>
+        <v-row justify="center">
+            <v-dialog v-model="show_add_data" persistent max-width="560">
+                <v-card>
+                    <v-card-title>
+                        Add Booking (for use in report)
+                    </v-card-title>
+                    <v-card-text>
+                        <v-row>
+                            <v-col cols="6">
+                                <date-picker placeholder="Date of booking" v-model="selected_day" valueType="format" type="datetime"></date-picker>
+                            </v-col>
+                            <v-col cols="6">
+                                <v-select
+                                    label="User"
+                                    outlined
+                                    dense
+                                    style="margin-top:0px;"
+                                    v-model="selected_user"
+                                    :items="[{ text: 'Dillon Gunn 1', value: 91 }, { text: 'Dillon Gunn 2', value: 92 }, { text: 'Dillon Gunn 3', value: 93 }]"
+                                >
+                                    <template v-slot:prepend-inner>
+                                        <v-icon small style="position: relative; top:4px;"> mdi-account-school </v-icon> 
+                                    </template>
+                                </v-select>
+                            </v-col>
+                        </v-row>
+                        <v-card-actions>
+                            <v-spacer/>
+                            <v-btn outlined text @click="show_add_data = false">Cancel</v-btn>
+                            <v-btn
+                                dark
+                                color="#447FA6"
+                                @click="add_data()"
+                            >
+                                Add Data
+                            </v-btn>
+                        </v-card-actions>
+                    </v-card-text>
+                </v-card>
+            </v-dialog>
+        </v-row>
 
         <v-row justify="center">
             <v-dialog v-model="dialog_additional" persistent max-width="560">
@@ -323,8 +365,11 @@
 <script>
 import { mapGetters } from 'vuex'
 import moment from 'moment'
+import DatePicker from 'vue2-datepicker';
+import 'vue2-datepicker/index.css';
 export default {
     components: {
+        DatePicker
     },
     props: [
     ],
@@ -357,7 +402,10 @@ export default {
         show_profile: false,
         booking_selected: null,
         additional_check_in_id: null,
-        img_src: null
+        img_src: null,
+        show_add_data: false,
+        selected_day: null,
+        selected_user: null
     }),
     async mounted() {
         this.$store.dispatch('admin_reservation/fetch_reservations')
@@ -381,6 +429,13 @@ export default {
         },
         moment: function (time) {
             return moment(time);
+        },
+        async add_data() {
+            await this.$axios.post('/admin/accounts/add_data', { day: this.selected_day, user: this.selected_user })
+                .then(() => {
+                    this.showSnackBar("Successfully added")
+                    this.show_add_data = false
+                })
         },
         open_room_from_outside() {
             if (this.get_selected_room != null) {

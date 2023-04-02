@@ -13,10 +13,11 @@ import UserProfileState from '../components_user/profile/states/index.js'
 /**
  * Admin state management
  */
-import AdminRoomState from '../component_admin/rooms/states/index.js'
+import AdminRooms from '../component_admin/rooms/states/index.js'
 import AdminReservation from '../component_admin/reservations/states/index.js'
 import AdminReports from '../component_admin/reports/state/index.js'
 import AdminUsers from '../component_admin/users/states/index.js'
+import Messages from '../component_admin/messages/states/index.js'
 
 import HomeTab from './states/index.js'
 
@@ -33,10 +34,11 @@ export default new Vuex.Store({
         user:               UserState,
         user_profile:       UserProfileState,
         admin_reservation:  AdminReservation,
-        admin_room:         AdminRoomState,
+        admin_room:         AdminRooms,
         admin_report:       AdminReports,
         home_tab:           HomeTab,
-        admin_users:        AdminUsers
+        admin_users:        AdminUsers,
+        admin_messages:     Messages,
     },
     plugins: [createPersistedState()]
 });

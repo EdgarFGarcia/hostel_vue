@@ -163,7 +163,7 @@
                         <v-list-item-content>
                             <v-list-item-title
                                 style="color: white"
-                            >Manage Food</v-list-item-title>
+                            >Menu and Orders</v-list-item-title>
                         </v-list-item-content>
                     </v-list-item>
                     <v-list-item
@@ -240,7 +240,7 @@
                     
                     <v-list-item
                         link
-                        v-if="get_user.udata.role_id > 1"
+                        v-if="get_user.udata.role_id == 3"
                         @click="switch_tabs('/messages')"
                     >
                         <v-list-item-icon>

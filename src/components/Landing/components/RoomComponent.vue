@@ -92,7 +92,16 @@ export default {
       this.$store.dispatch('room/set_selected_room', data)
       window.scrollTo({ top: 0, left: 0 })
       this.$router.push({name: '/view-room'})
-    }
+    },
+    isMobile() {
+      if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+        console.log("mobile")
+        return true
+      } else {
+        console.log("desktop")
+        return false
+      }
+    },
   },
   watch: {
   }

@@ -1,34 +1,28 @@
 import Vue from "vue"
 
-export default{
+export default {
     namespaced: true,
-    state:{
-        room_categories: [],
-        rooms: []
-    },
-    mutations: {
-        set_room_categories(state, payload){
-            state.room_categories = [...payload]
-        },
-        set_rooms(state, payload){
-            state.rooms = [...payload]
-        }
-    },
-    getters: {
-        get_room_categories : state => state.room_categories,
-        get_rooms : state => state.rooms
+    state: {
+        room_types: []
     },
     actions: {
-        async set_room_categories({commit}){
-            // commit('set_room_categories', payload)
+        async fetch_room_types({ commit }) {
             await Vue.axios.get('admin/rooms/room_categories')
-            .then(({data}) => {
-                console.log(data)
-                commit('set_room_categories', data.data)
-            })
+                .then(({ data }) => {
+                    console.log(data)
+                    commit('set_room_types', data.data)
+                })
         },
-        set_rooms({commit}, payload){
-            commit('set_rooms', payload)
-        }
-    }
+        set_room_types({ commit }, payload) {
+            commit('set_room_types', payload)
+        },
+    },
+    mutations: {
+        set_room_types(state, payload) {
+            state.room_types = [...payload]
+        },
+    },
+    getters: {
+        get_room_types: state => state.room_types,
+    },
 }

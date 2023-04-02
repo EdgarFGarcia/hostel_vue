@@ -274,41 +274,15 @@
                 </v-card>
             </v-dialog>
         </v-row>
-        
-        
-        ADD FAKE DATA
-        <v-row
-            no-gutters
-            class="mt-3"
-        >
-            <v-col>
-                <date-picker v-model="selected_day" valueType="format" type="datetime"></date-picker>
-                <v-select
-                    v-model="selected_user"
-                    :items="[{ text: 'Male, 25, student', value: 91 }, { text: 'Female, 29, vacationer', value: 92 }, { text: 'Female, 21, foreigner', value: 93 }]"
-                >
-                    <template v-slot:prepend-inner>
-                        <v-icon small style="position: relative; top:4px;"> mdi-account-school </v-icon> 
-                    </template>
-                </v-select>
-                <v-btn
-                    @click="add_data"
-                >
-                    Add Data
-                </v-btn>
-            </v-col>
-        </v-row>
     </v-container>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
-import DatePicker from 'vue2-datepicker';
-import 'vue2-datepicker/index.css';
 import moment from 'moment'
 export default {
     components: {
-        DatePicker
+        
     },
     computed: {
         ...mapGetters({

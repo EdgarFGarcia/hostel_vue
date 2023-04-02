@@ -4,38 +4,38 @@
             no-gutters
             class="mt-3"
         >
-            <div id="chatbox" class="overflow-y-auto" style="overflow-x:hidden;height:420px;width: 100%">
+            <div id="chatbox" class="overflow-y-auto" style="overflow-x:hidden;height:350px;width: 100%">
                 <v-row
-                    v-for="(message, messageIndex) in messages"
+                    v-for="(message, messageIndex) in get_messages"
                     :key="messageIndex"
-                    class="p-0"
+                    class="p-0 pb-1"
                 >
-                    <v-col cols="12" v-if="message.user_id == get_user.udata.id">
+                    <v-col style="padding-top:0px;padding-bottom:0px;" cols="12" v-if="message.user_id == get_user.udata.id">
                         <v-container>
                             <v-card
                                 color="blue darken-3"
-                                style="float: right;min-width:20%;max-width:70%"
+                                style="float: right;min-width:70%;max-width:70%"
                                 class="d-flex"
                             >
                                 <v-card-text>
-                                    <h3 class="white--text" v-if="message.get_user">{{ message.get_user.name }}</h3>
-                                    <h4 class="white--text">{{ message.message }}</h4>
-                                    <small class="white--text">{{ message.created_at }}</small>
+                                    <h3 style="font-size:14px;" class="white--text" v-if="message.get_user">{{ message.get_user.name }}</h3>
+                                    <h4 style="font-size:12px;font-weight:400;" class="white--text">{{ message.message }}</h4>
+                                    <small class="white--text">{{ moment(message.created_at).format('MMMM D, YYYY h:mm a') }}</small>
                                 </v-card-text>
                             </v-card>
                         </v-container>
                     </v-col>
-                    <v-col cols="12" v-else>
+                    <v-col style="padding-top:0px;padding-bottom:0px;" cols="12" v-else>
                         <v-container>
                             <v-card
                                 color="blue darken-2"
-                                style="float: left;min-width:20%;max-width:70%"
+                                style="float: left;min-width:70%;max-width:70%"
                                 class="d-flex"
                             >
                                 <v-card-text>
-                                    <h3 class="white--text" v-if="message.get_user">{{ message.get_user.name }}</h3>
-                                    <h4 class="white--text">{{ message.message }}</h4>
-                                    <small class="white--text">{{ message.created_at }}</small>
+                                    <h3 style="font-size:14px;" class="white--text" v-if="message.get_user">{{ message.get_user.name }}</h3>
+                                    <h4 style="font-size:12px;font-weight:400;" class="white--text">{{ message.message }}</h4>
+                                    <small class="white--text">{{ moment(message.created_at).format('MMMM D, YYYY h:mm a') }}</small>
                                 </v-card-text>
                             </v-card>
                         </v-container>
@@ -64,6 +64,7 @@
                     <v-text-field
                         placeholder="Write your message here"
                         v-model="new_message"
+                        maxlength="200"
                         :disabled="disable_input"
                         append-outer-icon="mdi-send"
                         @click:append-outer="generate"
@@ -78,18 +79,22 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import moment from 'moment'
 export default {
     components: {
     },
     computed: {
         ...mapGetters({
-            get_user: 'auth/get_user'
+            get_user: 'auth/get_user',
+            get_messages: 'admin_messages/get_messages'
         })
     },
     async mounted() {
+        this.$store.dispatch('admin_messages/fetch_messages')
+        this.scroll_to_bottom()
     },
     async created() {
-        this.get_messages()
+        
     },
     data() {
         return {
@@ -99,15 +104,8 @@ export default {
         }
     },
     methods: {
-        async get_messages() {
-            await this.$axios.get('/admin/messages/get_messages')
-                .then(({ data }) => {
-                    console.log(data)
-                    if (data.response) {
-                        this.messages = data.data
-                        this.scroll_to_bottom()
-                    }
-                })
+        moment: function (time) {
+            return moment(time);
         },
         async generate() {
             if (this.new_message != null && this.new_message.trim().length == 0)
@@ -119,12 +117,13 @@ export default {
             }
             await this.$axios.post('/admin/messages/send_message', payload)
                 .then(({ data }) => {
-                    console.log(data)
-                    this.disable_input = false
-                    this.new_message = null
                     if (data.response) {
-                        this.messages = data.data
-                        this.scroll_to_bottom()
+                        this.$store.dispatch('admin_messages/fetch_messages')
+                            .then(() => {
+                                this.new_message = null
+                                this.disable_input = false
+                                this.scroll_to_bottom()
+                        })
                     }
                     
                 })
