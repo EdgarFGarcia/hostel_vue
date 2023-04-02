@@ -42,6 +42,41 @@
                                     </v-btn>
                                 </td>
                             </tr>
+                            <tr v-else @click="check_details(item)" style="cursor: pointer;height:75px;">
+                                <td>
+                                    #<small>{{ item.id }}</small>
+                                </td>
+                                <td>
+                                    <small>
+                                        {{ moment(item.created_at).format('YYYY-MM-DD') }}
+                                        <br>
+                                        {{ moment(item.created_at).format('h:mm a') }}
+                                    </small>
+                                </td>
+                                <td>
+                                    <b style="font-weight:550;font-size:16px;">Deleted room</b>
+                                    <br>
+                                    <small>{{ item.get_user.name }} — </small>
+                                    <small v-if="item.adult_count == 1">{{ item.adult_count }} adult </small>
+                                    <small v-if="item.adult_count > 1">{{ item.adult_count }} adults </small>
+                                    <small v-if="item.child_count == 1">and {{ item.child_count }} child</small>
+                                    <small v-if="item.child_count > 1">and {{ item.child_count }} children</small>
+                                </td>
+                                <td>
+                                    {{ item.check_in_date_time }} <small class="ml-1 mr-1">—</small> {{ item.will_be_available_at }}
+                                </td>
+                                <td>
+                                    {{ item.payable | currency('₱') }}
+                                    <small class="ml-2 mr-2"> </small>
+                                    <small v-if="item.is_paid">paid</small>
+                                    <small v-else>unpaid</small>
+                                </td>
+                                <td>
+                                    <v-btn text>
+                                        <small>View ></small>
+                                    </v-btn>
+                                </td>
+                            </tr>
                         </template>
                     </v-data-table>
                 </v-card>
@@ -56,14 +91,20 @@
                     </v-card-title>
                     <v-card-text>
                         <v-row>
-                            <v-col cols="6">
+                            <v-col cols="6" v-if="booking_selected.get_room_info">
                                 <v-img style="border-radius:5px;" :src="`${img_src}/images/${booking_selected.get_room_info.get_room_parent_information.image}`" />
+                            </v-col>
+                            <v-col cols="6" v-else>
+                                <v-img style="border-radius:5px;"/>
                             </v-col>
                             <v-col cols="6">
                                 <v-row>
-                                    <v-col cols="8">
+                                    <v-col cols="8" v-if="booking_selected.get_room_info">
                                         <h3 style="font-weight:400;">{{ booking_selected.get_room_info.get_room_parent_information.name }}</h3>
                                         <h4 style="font-weight:400;">{{ booking_selected.get_room_info.room_name }}</h4>
+                                    </v-col>
+                                    <v-col cols="8" v-else>
+                                        <h3 style="font-weight:400;">Deleted room</h3>
                                     </v-col>
                                     <v-col cols="4">
                                         <!--<v-btn small text>View ></v-btn>-->
@@ -376,7 +417,7 @@ export default {
     data: () => ({
         reservation_header: [
             {
-                text: '', sortable: false, width:'1%'
+                text: 'ID', value: 'id', sortable: true, width:'1%'
             },
             {
                 text: 'Created', sortable: false, width: '10%'

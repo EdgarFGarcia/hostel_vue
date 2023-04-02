@@ -179,7 +179,7 @@
                             <v-col cols="12">
                                 <v-textarea label="Short description" v-model="room_to_add.description"></v-textarea>
                                 <v-textarea label="Full description" v-model="room_to_add.full_details"></v-textarea>
-                                <v-file-input v-model="room_to_add.image" label="Image" chips></v-file-input>
+                                <v-file-input label="Image" v-model="room_to_add.image" chips></v-file-input>
                             </v-col>
                         </v-row>
                     </v-card-text>
@@ -273,7 +273,7 @@ export default {
         room_to_edit: null,
         room_header: [
             {
-                text: '', sortable: false, width: '1%'
+                text: 'ID', value: 'id', sortable: true, width: '1%'
             },
             {
                 text: '', sortable: false, width: '10%'

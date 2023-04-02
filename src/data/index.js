@@ -18,6 +18,9 @@ import AdminReservation from '../component_admin/reservations/states/index.js'
 import AdminReports from '../component_admin/reports/state/index.js'
 import AdminUsers from '../component_admin/users/states/index.js'
 import Messages from '../component_admin/messages/states/index.js'
+import Menu from '../component_admin/food/states/index.js'
+import AdminLayout from '../layouts/states/index.js'
+import AdminOrders from '../component_admin/orders/states/index.js'
 
 import HomeTab from './states/index.js'
 
@@ -39,6 +42,9 @@ export default new Vuex.Store({
         home_tab:           HomeTab,
         admin_users:        AdminUsers,
         admin_messages:     Messages,
+        admin_menu:         Menu,
+        admin_layout:       AdminLayout,
+        admin_orders:       AdminOrders
     },
     plugins: [createPersistedState()]
 });

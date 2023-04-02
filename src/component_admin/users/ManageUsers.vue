@@ -8,6 +8,9 @@
                         <template v-slot:item="{ item }">
                             <tr @click="open_profile(item)" style="cursor: pointer;height:75px;">
                                 <td>
+                                    <small>#{{ item.id }}</small>
+                                </td>
+                                <td>
                                     <v-row>
                                         <v-col cols="2">
                                             <v-avatar
@@ -191,8 +194,11 @@
                         :items="get_admins"
                     >
                         <template v-slot:item="{ item }">
-                            <tr>
-                                <td style="height:75px;">
+                            <tr style="height:75px;">
+                                <td>
+                                    <small>#{{ item.id }}</small>
+                                </td>
+                                <td>
                                     <v-row>
                                         <v-col cols="2">
                                             <v-avatar
@@ -296,6 +302,9 @@ export default {
         return {
             user_headers: [
                 {
+                    text: 'ID', value: 'id', sortable: true, width:'1%'
+                },
+                {
                     text: 'Name', sortable: false
                 },
                 {
@@ -309,6 +318,9 @@ export default {
                 },
             ],
             admin_headers: [
+                {
+                    text: 'ID', value: 'id', sortable: true, width: '1%'
+                },
                 {
                     text: 'Name', sortable: false, width: '50%'
                 },
