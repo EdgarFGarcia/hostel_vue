@@ -105,23 +105,7 @@
                         </v-list-item-content>
                     </v-list-item>
                     <small style="color:white;" v-if="get_user.udata.is_guest">Please go to your profile and enter your email to access services</small>
-                    <!--<v-list-item
-                        v-if="!get_user.udata.is_guest"
-                        link
-                        @click="$router.push('/orders_user')"
-                    >
-                        <v-list-item-icon>
-                            <v-icon
-                                style="color: white"
-                            >mdi-food</v-icon>
-                        </v-list-item-icon>
-
-                        <v-list-item-content>
-                            <v-list-item-title
-                                style="color: white"
-                            >My Orders</v-list-item-title>
-                        </v-list-item-content>
-                    </v-list-item>-->
+                    
                     <v-list-item
                         v-if="!get_user.udata.is_guest"
                         link
@@ -137,6 +121,23 @@
                             <v-list-item-title
                                 style="color: white"
                             >Checkout</v-list-item-title>
+                        </v-list-item-content>
+                    </v-list-item>
+                    <v-list-item
+                        v-if="!get_user.udata.is_guest"
+                        link
+                        @click="$router.push('/orders_user')"
+                    >
+                        <v-list-item-icon>
+                            <v-icon
+                                style="color: white"
+                            >mdi-food</v-icon>
+                        </v-list-item-icon>
+
+                        <v-list-item-content>
+                            <v-list-item-title
+                                style="color: white"
+                            >Paid Order History</v-list-item-title>
                         </v-list-item-content>
                     </v-list-item>
                 </v-list>

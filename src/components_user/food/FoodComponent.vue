@@ -212,8 +212,8 @@
                     <v-col
                         cols="6"
                     >
-                        <v-text-field style="width:48%;display:inline-block;margin-right:5px;" v-model="transpo_pick_up" label="Pick up location"></v-text-field>
-                        <v-text-field style="width:48%;display:inline-block;" v-model="transpo_drop_off" label="Drop off location"></v-text-field>
+                        <v-text-field disabled style="width:48%;display:inline-block;margin-right:5px;" v-model="transpo_pick_up" label="Pick up location"></v-text-field>
+                        <v-select :items="[{ text: 'NAIA Terminal 1', value: 'NAIA Terminal 1' }, { text: 'NAIA Terminal 2', value: 'NAIA Terminal 2' },{ text: 'NAIA Terminal 3', value: 'NAIA Terminal 3' },{ text: 'NAIA Terminal 4', value: 'NAIA Terminal 4' }]" style="width:48%;display:inline-block;" v-model="transpo_drop_off" label="Drop off location"></v-select>
                         <v-textarea v-model="transpo_message" label="Message"></v-textarea>
                         <h2 style="margin-bottom:20px;margin-top:70px;">Transportation Type</h2>
                         <div style="width:300px;">
@@ -481,7 +481,6 @@ export default {
     async get_all_food(){
         await this.$axios.get('/user/auth_user/get_all_food_grouped')
             .then(({ data }) => {
-                console.log(data)
                 this.foods = data.Food
                 this.dr_bread = data.dr_bread
                 this.dr_wine = data.dr_wine
@@ -518,7 +517,6 @@ export default {
         this.quantity = 1
     },
     async order(){
-        console.log(this.selected_food, this.quantity)
         await this.$axios.post('/user/auth_user/order_food', { food: this.selected_food, quantity: this.quantity })
         .then(() => {
             this.close_order()
@@ -532,12 +530,10 @@ export default {
         },
     open_massage_model(order){
         this.massage_order = order
-        console.log(this.massage_order)
         this.massage_model = true
     },
     async submit_massage(){
         this.massage_date = moment(this.massage_date).format('YYYY-MM-DD')
-        console.log(this.massage_date)
         let payload = {
             order: this.massage_order,
             date: this.massage_date,

@@ -7,7 +7,6 @@
             style="width:100%;margin-bottom:30px;"
             disable-pagination
             hide-default-footer
-            group-by="created_at"
             class="elevation-1">
             <template v-slot:item="{ item }">
                 <tr>
@@ -29,7 +28,7 @@
             hide-default-footer
             class="elevation-1">
             <template v-slot:item="{ item }">
-                <tr v-if="item.payable > 0">
+                <tr>
                     <td>
                         {{ item.pick_up_location }} to {{ item.drop_off_location }} by {{ item.transpo_type }}
                     </td>
@@ -212,6 +211,7 @@ export default {
         async get_orders() {
             await this.$axios.get('/user/auth_user/get_checkout')
                 .then(({ data }) => {
+                    console.log(data)
                     this.orders = data
                     this.total[0].payable = 0
                     this.orders.food.forEach((item) => {
@@ -231,7 +231,6 @@ export default {
                 .then(({ data }) => {
                     this.orders = data
                     this.total[0].payable = 0
-                    console.log(data)
                 })
         },
         paymongo() {

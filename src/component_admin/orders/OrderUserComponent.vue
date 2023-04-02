@@ -47,20 +47,6 @@
                     <td>
                       ₱{{item.price}}
                     </td>
-                    <td v-if="item.paid">
-                      Yes
-                    </td>
-                    <td v-else>
-                      No
-                    </td>
-                    <td>
-                      <v-btn dark v-if="!item.paid" @click="order_type = 'food'; paymongo(item)">
-                        Pay
-                      </v-btn>
-                      <v-btn disabled v-else>
-                        Paid
-                      </v-btn>
-                    </td>
                   </tr>
                 </template>
               </v-data-table>
@@ -83,22 +69,6 @@
                     <td>
                       {{ item.transpo_type }}
                     </td>
-                    <td v-if="item.payable == 0">
-                        Waiting for quotation
-                    </td>
-                    <td v-else>
-                        ₱{{ item.payable }}
-                    </td>
-                    <td v-if="item.payable > 0">
-                        <v-btn dark v-if="!item.is_paid"
-                            @click="order_type = 'transpo'; paymongo(item)">
-                            Pay
-                        </v-btn>
-                        <v-btn disabled v-else>
-                            Paid
-                        </v-btn>
-                    </td>
-                    <td v-else></td>
                   </tr>
                 </template>
               </v-data-table>
@@ -114,17 +84,6 @@
                     </td>
                     <td>
                       {{ moment(item.massage_date).format("h:mm:ss a, MMM DD, YYYY") }}
-                    </td>
-                    <td>
-                      ₱{{item.payable}}
-                    </td>
-                    <td>
-                      <v-btn dark v-if="!item.paid" @click="order_type = 'massage'; paymongo(item)">
-                        Pay
-                      </v-btn>
-                      <v-btn disabled v-else>
-                        Paid
-                      </v-btn>
                     </td>
                   </tr>
                 </template>
@@ -333,14 +292,6 @@ export default {
             text: 'Price',
             sortable: false
         },
-        {
-            text: 'Paid',
-            sortable: false
-        },
-        {
-            text: 'Pay',
-            sortable: false
-        }
     ],
     orders_header_transpo: [
       {
@@ -359,14 +310,6 @@ export default {
         text: 'Vehicle',
         sortable: false
       },
-      {
-        text: 'Price',
-        sortable: false
-      },
-      {
-        text: '',
-        sortable: false
-      }
     ],
     orders_header_massage: [
       {
@@ -377,14 +320,6 @@ export default {
         text: 'Schedule',
         sortable: false
       },
-      {
-        text: 'Price',
-        sortable: false
-      },
-      {
-        text: 'Pay',
-        sortable: false
-      }
     ],
     orders: [],
     orders_transpo: [],

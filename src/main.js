@@ -28,7 +28,7 @@ Vue.use(VueFbCustomerChat, {
   page_id: '107778234085800', //  change 'null' to your Facebook Page ID,
   theme_color: '#333333', // theme color in HEX
   locale: 'en_US', // default 'en_US'
-})
+});
 Vue.use(VCalendar, {
   componentPrefix: 'vc',  // Use <vc-calendar /> instead of <v-calendar />
 });
