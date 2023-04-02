@@ -479,9 +479,9 @@ export default {
         return moment(time);
     },
     async get_all_food(){
-        await this.$axios.get('/user/auth_user/get_all_food')
+        await this.$axios.get('/user/auth_user/get_all_food_grouped')
             .then(({ data }) => {
-                console.log(data.dr_wine)
+                console.log(data)
                 this.foods = data.Food
                 this.dr_bread = data.dr_bread
                 this.dr_wine = data.dr_wine
@@ -491,20 +491,16 @@ export default {
     async get_available_dates(){
         await this.$axios.get('/r/rooms/get_single_room_checked_in', { user_id: this.get_user.udata.id })
             .then(({ data }) => {
-                console.log(data)
                 if (data.data != null) {
                     
                     let dates = data.data.check_in_date_time.split(' ')
-                    console.log(dates)
                     let newdate = parseInt(dates[1].slice(0, -1)) + data.data.duration
-                    console.log(newdate)
                     //let finaldate = dates[0] + ' ' + newdate.toString() + ', ' + dates[2]
                     //let finaldate = new Date(dates[2], '2', newdate.toString())
                     let finaldate = {
                         start: new Date(dates[2], moment().month(dates[0]).format("M") - 1, dates[1].slice(0, -1).toString()),
                         end: new Date(dates[2], moment().month(dates[0]).format("M") - 1, newdate.toString())
                     }
-                    console.log(finaldate)
                     this.available_dates.push(finaldate)
                 }
                 else {
@@ -524,15 +520,13 @@ export default {
     async order(){
         console.log(this.selected_food, this.quantity)
         await this.$axios.post('/user/auth_user/order_food', { food: this.selected_food, quantity: this.quantity })
-        .then(({data}) => {
-            console.log(data)
+        .then(() => {
             this.close_order()
             this.showSnackBar('Sent!')
         })
       },
     changeQuantity: function (num) {
             this.quantity += +num
-            console.log(this.quantity)
             !isNaN(this.quantity) && this.quantity > 0 ? this.quantity : this.quantity = 0;
 
         },
@@ -550,10 +544,8 @@ export default {
             datetime: this.massage_date + ' ' + this.massage_time,
             time: this.massage_time
         }
-        console.log(payload)
         await this.$axios.post('/user/auth_user/book_massage', payload)
         .then(({data}) => {
-            console.log(data)
             if (data.response == false) {
                 this.showSnackBar(data.message)
             }
@@ -574,7 +566,6 @@ export default {
             }
         }
         this.transpo_pick_up_date = moment(this.transpo_pick_up_date).format('YYYY-MM-DD')
-        console.log(this.transpo_pick_up_date)
         let payload = {
             transpo_pick_up: this.transpo_pick_up,
             transpo_drop_off: this.transpo_drop_off,
@@ -583,14 +574,12 @@ export default {
             transpo_message: this.transpo_message,
             transpo_type: ttype,
         }
-        console.log(payload)
         await this.$axios.post('/user/auth_user/book_transpo', payload)
         .then(({data}) => {
             if(data.response == false){
                 this.showSnackBar(data.message)
                 return
             }
-            console.log(data)
             this.showSnackBar('Sent!')
             this.transpo_pick_up = null
             this.transpo_drop_off = null
