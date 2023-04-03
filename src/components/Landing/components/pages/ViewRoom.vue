@@ -456,8 +456,6 @@ export default {
   }),
   mounted () {
     this.img_url = process.env.VUE_APP_URL
-    this.room_price = this.get_reserve_this_room_selected.price
-    this.discount = this.get_reserve_this_room_selected.price / 10
   },
   created () {
   },
@@ -485,6 +483,7 @@ export default {
         this.$store.dispatch('room/set_reserve_this_room', room_data)
         this.$store.dispatch('room/set_selected_room_for_reservation', selected_room_data)
         this.room_price = this.get_reserve_this_room_selected.price
+        this.discount = this.get_reserve_this_room_selected.price / 10
         this.$axios.post('/r/rooms/checked_in_dates', this.get_reserve_this_room.id)
             .then(({ data }) => {
                 this.disabled_days = []
@@ -541,10 +540,10 @@ export default {
     },
     check_discount(){
         if (this.senior_pwd) {
-            this.room_price = this.get_reserve_this_room_selected.price - this.discount.toFixed(0)
+            this.room_price -= this.discount.toFixed(0)
         }
         else {
-            this.room_price = this.get_reserve_this_room_selected.price
+            this.room_price += this.discount.toFixed(0)
         }
         console.log(this.total)
     },
