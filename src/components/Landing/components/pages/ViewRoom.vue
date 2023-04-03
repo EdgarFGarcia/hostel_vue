@@ -480,11 +480,11 @@ export default {
     },
     select_room_for_reservation(room_data, selected_room_data){
         console.log(selected_room_data)
-        this.room_price = this.get_reserve_this_room_selected.price
         this.show_booking_details = true
         this.dates = []
         this.$store.dispatch('room/set_reserve_this_room', room_data)
         this.$store.dispatch('room/set_selected_room_for_reservation', selected_room_data)
+        this.room_price = this.get_reserve_this_room_selected.price
         this.$axios.post('/r/rooms/checked_in_dates', this.get_reserve_this_room.id)
             .then(({ data }) => {
                 this.disabled_days = []
