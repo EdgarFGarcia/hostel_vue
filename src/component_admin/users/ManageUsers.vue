@@ -6,7 +6,7 @@
                 <v-card style="border-radius: 16px;padding:20px;" width="100%">
                     <v-data-table :headers="user_headers" :items="get_users">
                         <template v-slot:item="{ item }">
-                            <tr @click="open_profile(item)" style="cursor: pointer;height:75px;">
+                            <tr v-if="!isMobile()" @click="open_profile(item)" style="cursor: pointer;height:75px;">
                                 <td>
                                     <small>#{{ item.id }}</small>
                                 </td>
@@ -51,6 +51,59 @@
                                     </v-btn>
                                 </td>
                             </tr>
+                            <tr v-else @click="open_profile(item)" style="cursor: pointer;height:auto;padding-top:10px;padding-bottom:10px;">
+                                <td>
+                                    <v-row>
+                                        <v-col cols="12">
+                                            <small>#{{ item.id }}</small>
+                                        </v-col>
+                                    </v-row>
+                                    <v-row>
+                                        <v-col cols="2">
+                                            <v-avatar
+                                                color="#447FA6"
+                                                size="45"
+                                                v-if="item.image == null"
+                                            >
+                                                <strong style="font-size: 20px;color:white;text-transform:uppercase;">{{ item.name[0] }}</strong>
+                                            </v-avatar>
+                                            <v-avatar
+                                                v-else
+                                                color="#447FA6"
+                                                size="45"
+                                            >
+                                                <v-img
+                                                    :src="`${img_src}/${item.image}`"
+                                                    :aspect-ratio="1"
+                                                />
+                                            </v-avatar>
+                                        </v-col>
+                                        <v-col cols="10">
+                                            <v-layout align-center style="height:45px;">
+                                                <h3 class="ml-5">{{ item.name }}</h3>
+                                            </v-layout>
+                                        </v-col>
+                                    </v-row>
+                                    <v-row>
+                                        <v-col cols="12">
+                                            {{ moment(item.created_at).format('MMMM D, YYYY') }}
+                                        </v-col>
+                                    </v-row>
+                                    <v-row>
+                                        <v-col cols="12">
+                                            <div v-if="item.get_current_booking && item.get_current_booking.get_room_info && item.get_current_booking.get_room_info.get_room_parent_information">{{ item.get_current_booking.get_room_info.get_room_parent_information.name }} - {{ item.get_current_booking.get_room_info.room_name }}</div>
+                                            <div v-else>None</div>
+                                        </v-col>
+                                    </v-row>
+                                    <v-row>
+                                        <v-col cols="12">
+                                            <v-btn text>
+                                                <small>View profile ></small>
+                                            </v-btn>
+                                        </v-col>
+                                    </v-row>
+                                </td>
+                            </tr>
                         </template>
                     </v-data-table>
                 </v-card>
@@ -83,16 +136,24 @@
                                     />
                                 </v-avatar>
                             </v-col>
-                            <v-col cols="11">
+                            <v-col v-if="!isMobile()" cols="11">
                                 <v-layout align-center style="height:60px;">
                                     <h2 class="ml-7">{{ profile.name }}</h2>
                                     <v-spacer/>
                                     <h5 class="ml-7">Member since {{ moment(profile.created_at).format('MMMM D, YYYY') }}</h5>
                                 </v-layout>
                             </v-col>
+                            <v-col v-else cols="11">
+                                <v-layout align-center style="height:60px;">
+                                    <h2 class="ml-11">{{ profile.name }}</h2>
+                                </v-layout>
+                            </v-col>
+                            <v-col v-if="isMobile()" cols="12">
+                                <h5 class="ml-7">Member since {{ moment(profile.created_at).format('MMMM D, YYYY') }}</h5>
+                            </v-col>
                         </v-row>
                         <v-row>
-                            <v-col cols="6">
+                            <v-col :cols="isMobile() ? 12 : 6">
                                 <v-row>
                                     <v-col cols="3">
                                         Status:
@@ -124,7 +185,7 @@
                                     </v-col>
                                 </v-row>
                             </v-col>
-                            <v-col cols="6">
+                            <v-col :cols="isMobile() ? 12 : 6">
                                 <v-row>
                                     <v-col cols="3">
                                         Age:
@@ -185,7 +246,7 @@
         </v-row>
         
         <h2 class="pb-10 ml-5 mt-15">Admin and Housekeeping Users</h2>
-        <v-btn style="color:white;background-color:#447FA6;" class="ml-5 mt-4" @click="add_account_modal = true;"><b>Add</b></v-btn>
+        <v-btn style="color:white;background-color:#447FA6;" class="ml-5 mt-4 mb-3" @click="add_account_modal = true;"><b>Add</b></v-btn>
         <v-row>
             <v-col cols="12">
                 <v-card style="border-radius: 16px;padding:20px;" width="100%">
@@ -194,7 +255,7 @@
                         :items="get_admins"
                     >
                         <template v-slot:item="{ item }">
-                            <tr style="height:75px;">
+                            <tr v-if="!isMobile()" style="height:75px;">
                                 <td>
                                     <small>#{{ item.id }}</small>
                                 </td>
@@ -233,6 +294,53 @@
                                 <td style="text-align:right;">
                                     <v-btn v-if="item.id != 9 && item.id != 2" text color="red" @click="delete_account(item.id)"><small>Remove account</small></v-btn>
                                     <v-btn v-else disabled text color="red"><small>Can't remove</small></v-btn>
+                                </td>
+                            </tr>
+                            <tr v-else style="height:auto;padding-top:10px;padding-bottom:10px;">
+                                <td>
+                                    <v-row>
+                                        <v-col cols="12">
+                                            <small>#{{ item.id }}</small>
+                                        </v-col>
+                                    </v-row>
+                                    <v-row>
+                                        <v-col cols="2">
+                                            <v-avatar
+                                                color="#447FA6"
+                                                size="45"
+                                                v-if="item.image == null"
+                                            >
+                                                <strong style="font-size: 20px;color:white;text-transform:uppercase;">{{ item.name[0] }}</strong>
+                                            </v-avatar>
+                                            <v-avatar
+                                                v-else
+                                                color="#447FA6"
+                                                size="45"
+                                            >
+                                                <v-img
+                                                    :src="`${img_src}/${item.image}`"
+                                                    :aspect-ratio="1"
+                                                />
+                                            </v-avatar>
+                                        </v-col>
+                                        <v-col cols="10">
+                                            <v-layout align-center style="height:45px;">
+                                                <h3 class="ml-7">{{ item.name }}</h3>
+                                            </v-layout>
+                                        </v-col>
+                                    </v-row>
+                                    <v-row>
+                                        <v-col cols="12">
+                                            <div v-if="item.role_id == 2">Admin</div>
+                                            <div v-else>Housekeeping</div>
+                                        </v-col>
+                                    </v-row>
+                                    <v-row>
+                                        <v-col cols="12">
+                                            <v-btn v-if="item.id != 9 && item.id != 2" text color="red" @click="delete_account(item.id)"><small>Remove account</small></v-btn>
+                                            <v-btn v-else disabled text color="red"><small>Can't remove</small></v-btn>
+                                        </v-col>
+                                    </v-row>
                                 </td>
                             </tr>
                         </template>
@@ -400,7 +508,16 @@ export default {
                     this.showSnackBar(data.message)
                     this.$store.dispatch('admin_users/fetch_users')
                 })
-        }
+        },
+        isMobile() {
+            if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                console.log("mobile")
+                return true
+            } else {
+                console.log("desktop")
+                return false
+            }
+        },
     }
 
 }

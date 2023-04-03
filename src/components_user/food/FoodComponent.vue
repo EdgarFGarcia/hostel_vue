@@ -32,7 +32,7 @@
                 <h1 class="ml-5" v-if="foods != null">Food and Drinks</h1>
                 <v-row>
                     <v-col
-                        cols="3"
+                        :cols="isMobile() ? 12 : 3"
                         v-for="(food, foodindex) in foods"
                         :key="foodindex"
                     >
@@ -75,7 +75,7 @@
                 <h1 class="ml-5" v-if="dr_bread != null">Dr. Bread</h1>
                 <v-row>
                     <v-col
-                        cols="3"
+                        :cols="isMobile() ? 12 : 3"
                         v-for="(food, foodindex) in dr_bread"
                         :key="foodindex"
                     >
@@ -118,7 +118,7 @@
                 <h1 class="ml-5" v-if="dr_wine != null">Dr. Wine</h1>
                 <v-row>
                     <v-col
-                        cols="3"
+                        :cols="isMobile() ? 12 : 3"
                         v-for="(food, foodindex) in dr_wine"
                         :key="foodindex"
                     >
@@ -161,7 +161,7 @@
                 <h1 class="ml-5" v-if="buccaneers != null">Buccaneers</h1>
                 <v-row>
                     <v-col
-                        cols="3"
+                        :cols="isMobile() ? 12 : 3"
                         v-for="(food, foodindex) in buccaneers"
                         :key="foodindex"
                     >
@@ -210,7 +210,7 @@
                     style="padding:50px;"
                 >
                     <v-col
-                        cols="6"
+                        :cols="isMobile() ? 12 : 6"
                     >
                         <v-text-field disabled style="width:48%;display:inline-block;margin-right:5px;" v-model="transpo_pick_up" label="Pick up location"></v-text-field>
                         <v-select :items="[{ text: 'NAIA Terminal 1', value: 'NAIA Terminal 1' }, { text: 'NAIA Terminal 2', value: 'NAIA Terminal 2' },{ text: 'NAIA Terminal 3', value: 'NAIA Terminal 3' },{ text: 'NAIA Terminal 4', value: 'NAIA Terminal 4' }]" style="width:48%;display:inline-block;" v-model="transpo_drop_off" label="Drop off location"></v-select>
@@ -230,12 +230,11 @@
                         </div>
                     </v-col>
                     <v-col
-                        cols="4"
+                        :cols="isMobile() ? 12 : 4"
                     >
                         <h2 style="margin-bottom:20px;">Pick up date</h2>
                         <DatePicker
                             v-model="transpo_pick_up_date"
-                            color="#596377"
                             width="inherit"
                             :available-dates="available_dates"
                         />
@@ -255,7 +254,7 @@
                 <h1 class="ml-5">Spa and Massage</h1>
                 <v-row>
                     <v-col
-                        cols="3"
+                        :cols="isMobile() ? 12 : 3"
                         v-for="(food, foodindex) in massage"
                         :key="foodindex"
                     >
@@ -304,7 +303,6 @@
             <v-card-text>
                 <DatePicker
                     v-model="massage_date"
-                    color="#596377"
                     width="inherit"
                     :available-dates="available_dates"
                 />
@@ -585,7 +583,16 @@ export default {
             this.transpo_car = false
             this.transpo_van = false
         })
-    }
+    },
+    isMobile() {
+      if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+        console.log("mobile")
+        return true
+      } else {
+        console.log("desktop")
+        return false
+      }
+    },
   },
   watch: {
   }

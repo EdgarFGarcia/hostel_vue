@@ -2,7 +2,7 @@
     <v-container fill-height fluid>
       <v-row>
         <v-col
-          cols="3"
+          :cols="isMobile() ? 12 : 3"
           v-for="(room, roomindex) in get_rooms_list"
           :key="roomindex"
         >

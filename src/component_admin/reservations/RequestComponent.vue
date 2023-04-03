@@ -12,9 +12,7 @@
             class="elevation-1"
         >
             <template v-slot:item="{ item }">
-                <tr
-                    class="mx-5"
-                >
+                <tr class="mx-5" v-if="!isMobile()">
                     <td>
                         {{moment(item.created_at).format('MMMM Do YYYY, h:mm:ss a')}}
                     </td>
@@ -38,6 +36,36 @@
                         >
                             Done
                         </v-btn>
+                    </td>
+                </tr>
+                <tr class="mx-5" v-else style="padding-top:10px;padding-bottom:10px;">
+                    <td>
+                        <v-row>
+                            <v-col cols="12">
+                                {{ moment(item.created_at).format('MMMM Do YYYY, h:mm:ss a') }}
+                            </v-col>
+                            <v-col cols="12">
+                                {{ item.get_user.name }}
+                            </v-col>
+                            <v-col cols="12">
+                                {{ item.request }}
+                            </v-col>
+                            <v-col cols="12">
+                                <v-btn
+                                    v-if="!item.done"
+                                    dark
+                                    @click="done(item.id)"
+                                >
+                                    Mark as done
+                                </v-btn>
+                                <v-btn
+                                    v-else
+                                    disabled
+                                >
+                                    Done
+                                </v-btn>
+                            </v-col>
+                        </v-row>
                     </td>
                 </tr>
             </template>
@@ -96,7 +124,16 @@ export default {
             console.log(data)
             this.$store.dispatch('admin_reservation/set_requests', data.data)
         })
-    }
+    },
+    isMobile() {
+        if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+            console.log("mobile")
+            return true
+        } else {
+            console.log("desktop")
+            return false
+        }
+    },
   },
   watch: {
   }

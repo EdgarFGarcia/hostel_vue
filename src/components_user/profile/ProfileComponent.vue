@@ -1,7 +1,7 @@
 <template>
     <v-container fill-height fluid>
       <v-row>
-        <v-col cols="4">
+        <v-col :cols="isMobile() ? 12 : 4">
             <v-card class="pt-5 pl-5 pr-5">
                 <v-card-title class="justify-center">
                     <v-avatar
@@ -44,11 +44,11 @@
                 Save changes to profile
             </v-btn>
         </v-col>
-        <v-col cols="8">
+        <v-col :cols="isMobile() ? 12 : 8">
             <v-card class="pt-5 pl-5 pr-5">
                 <v-row>
                     <v-col
-                        cols="6"
+                        :cols="isMobile() ? 12 : 6"
                     >
                         Status
                         <v-text-field
@@ -119,7 +119,7 @@
                         </v-text-field>
                     </v-col>
                     <v-col
-                        cols="6"
+                        :cols="isMobile() ? 12 : 6"
                     >
                         Age
                         <v-text-field
@@ -178,6 +178,16 @@
                     </v-col>
                 </v-row>
             </v-card>
+            <v-btn
+                v-if="isMobile()"
+                color="primary"
+                class="pl-15 pr-15 mt-5"
+                style="width:100%;"
+                dark
+                @click="edit_profile_fn"
+            >
+                Save changes to profile
+            </v-btn>
         </v-col>
       </v-row>
         <v-dialog
@@ -379,7 +389,16 @@ export default {
                 this.showSnackBar('Profile updated successfully!')
             }
         })
-    }
+    },
+    isMobile() {
+      if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+        console.log("mobile")
+        return true
+      } else {
+        console.log("desktop")
+        return false
+      }
+    },
   },
   watch: {
   }

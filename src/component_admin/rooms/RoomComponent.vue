@@ -7,7 +7,7 @@
                 <v-card style="border-radius: 16px;padding:20px;" width="100%">
                     <v-data-table :headers="room_header" :items="get_room_types">
                         <template v-slot:item="{ item }">
-                            <tr @click="open_room_type(item)" style="cursor: pointer;height:90px;">
+                            <tr v-if="!isMobile()" @click="open_room_type(item)" style="cursor: pointer;height:90px;">
                                 <td>
                                     #<small>{{ item.id }}</small>
                                 </td>
@@ -32,6 +32,47 @@
                                     <v-btn text>
                                         <small>View ></small>
                                     </v-btn>
+                                </td>
+                            </tr>
+                            <tr v-else @click="open_room_type(item)" style="cursor: pointer;height:auto;padding-top:10px;padding-bottom:10px;">
+                                <td>
+                                    <v-row>
+                                        <v-col cols="12">
+                                            #<small>{{ item.id }}</small>
+                                        </v-col>
+                                    </v-row>
+                                    <v-row>
+                                        <v-col cols="12">
+                                            <v-img style="border-radius:5px;" max-width="120"
+                                            :src="`${img_src}/images/${item.image}`" />
+                                        </v-col>
+                                    </v-row>
+                                    <v-row>
+                                        <v-col cols="12">
+                                            {{ item.name }}
+                                        </v-col>
+                                    </v-row>
+                                    <v-row>
+                                        <v-col cols="12">
+                                            {{ item.description }}
+                                        </v-col>
+                                    </v-row>
+                                    <v-row>
+                                        <v-col cols="12">
+                                            <small
+                                                style="background-color:#447FA6;color:white;border-radius:10px;padding:5px;margin:2px;line-height:2.5;"
+                                                v-for="(facilities, index) in item.facilities" :key="index">
+                                                {{ facilities }}
+                                            </small>
+                                        </v-col>
+                                    </v-row>
+                                    <v-row>
+                                        <v-col cols="12">
+                                            <v-btn text>
+                                                <small>View ></small>
+                                            </v-btn>
+                                        </v-col>
+                                    </v-row>
                                 </td>
                             </tr>
                         </template>
@@ -98,7 +139,7 @@
                             <v-col cols="9">
                                 <v-btn style="margin-top:-5px;" color="#447FA6" dark @click="add_actual_room_modal = true">Add Actual Room</v-btn>
                             </v-col>
-                            <v-col v-for="(actual_room, index) in selected_room_type.actual_rooms" :key="index" cols="4">
+                            <v-col v-for="(actual_room, index) in selected_room_type.actual_rooms" :key="index" :cols="isMobile() ? 12 : 4">
                                 <v-card elevation="2">
                                     <v-card-title class="text-small">
                                         <small style="font-size:14px;" class="mr-1">#{{ actual_room.id }}</small>
@@ -417,6 +458,15 @@ export default {
         },
         delete_facility(facility) {
             this.room_to_edit.facilities.splice(facility, 1)
+        },
+        isMobile() {
+            if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                console.log("mobile")
+                return true
+            } else {
+                console.log("desktop")
+                return false
+            }
         },
     },
     watch: {

@@ -5,7 +5,7 @@
         </v-alert>
         <v-data-table :headers="reservation_header" :items="get_check_list" class="elevation-1">
             <template v-slot:item="{ item }">
-                <tr class="mx-5" v-if="item.get_room_info != null">
+                <tr class="mx-5" v-if="!isMobile()">
                     <td>
                         {{ item.get_user.name }}
                     </td>
@@ -14,9 +14,11 @@
                     </td>
                     <td>
                         <div v-if="item.get_room_info != null">{{ item.get_room_info.get_room_parent_information.name }}</div>
+                        <div v-else>Deleted room</div>
                     </td>
                     <td>
                         <div v-if="item.get_room_info != null">{{ item.get_room_info.room_name }}</div>
+                        <div v-else>Deleted room</div>
                     </td>
                     <td>
                         {{ item.check_in_date_time }}
@@ -39,6 +41,48 @@
                         <v-btn v-else disabled>
                             Checked
                         </v-btn>
+                    </td>
+                </tr>
+                <tr class="mx-5" v-else style="padding-top:10px;padding-bottom:10px;">
+                    <td>
+                        <v-row>
+                            <v-col cols="12">
+                                {{ item.get_user.name }}
+                            </v-col>
+                            <v-col cols="12">
+                                {{ item.total_checked_in }}
+                            </v-col>
+                            <v-col cols="12">
+                                <div v-if="item.get_room_info != null">{{ item.get_room_info.get_room_parent_information.name }}</div>
+                                <div v-else>Deleted room</div>
+                            </v-col>
+                            <v-col cols="12">
+                                <div v-if="item.get_room_info != null">{{ item.get_room_info.room_name }}</div>
+                                <div v-else>Deleted room</div>
+                            </v-col>
+                            <v-col cols="12">
+                                {{ item.check_in_date_time }}
+                            </v-col>
+                            <v-col cols="12">
+                                {{ item.will_be_available_at }}
+                            </v-col>
+                            <v-col cols="12">
+                                <v-btn v-if="item.get_additional == null" dark @click="charge(item)">
+                                    Report
+                                </v-btn>
+                                <v-btn v-else disabled>
+                                    Reported
+                                </v-btn>
+                            </v-col>
+                            <v-col cols="12">
+                                <v-btn v-if="!item.checked" dark @click="checked(item)">
+                                    Mark As Checked
+                                </v-btn>
+                                <v-btn v-else disabled>
+                                    Checked
+                                </v-btn>
+                            </v-col>
+                        </v-row>
                     </td>
                 </tr>
             </template>
@@ -222,7 +266,16 @@ export default {
                         this.$store.dispatch('admin_reservation/set_check_list', data.data)
                     }
                 })
-        }
+        },
+        isMobile() {
+            if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                console.log("mobile")
+                return true
+            } else {
+                console.log("desktop")
+                return false
+            }
+        },
     },
     watch: {
     }

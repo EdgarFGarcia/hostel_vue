@@ -6,7 +6,7 @@
                 <v-card style="border-radius: 16px;padding:20px;" width="100%">
                     <v-data-table :headers="order_header" :items="get_orders">
                         <template v-slot:item="{ item }">
-                            <tr style="height:90px;">
+                            <tr v-if="!isMobile()" style="height:90px;">
                                 <td>
                                     <small>#{{ item.id }}</small>
                                 </td>
@@ -33,6 +33,43 @@
                                         <small>Mark as paid</small>
                                     </v-btn>
                                 </td>-->
+                            </tr>
+                            <tr v-else style="height:auto;padding-top:10px;padding-bottom:10px;">
+                                <td>
+                                    <v-row>
+                                        <v-col cols="12">
+                                            <small>#{{ item.id }}</small>
+                                        </v-col>
+                                    </v-row>
+                                    <v-row>
+                                        <v-col cols="12">
+                                            {{ item.order_type }}
+                                        </v-col>
+                                    </v-row>
+                                    <v-row>
+                                        <v-col cols="12">
+                                            {{ item.name }}
+                                        </v-col>
+                                    </v-row>
+                                    <v-row>
+                                        <v-col cols="12">
+                                            {{ item.get_user.name }}
+                                        </v-col>
+                                    </v-row>
+                                    <v-row>
+                                        <v-col cols="12">
+                                            {{ item.price | currency('₱') }}
+                                            <small class="ml-2 mr-2"> </small>
+                                            <small v-if="item.paid">paid</small>
+                                            <small v-else>unpaid</small>
+                                        </v-col>
+                                    </v-row>
+                                    <v-row>
+                                        <v-col cols="12">
+                                            {{ item.quantity }}
+                                        </v-col>
+                                    </v-row>
+                                </td>
                             </tr>
                         </template>
                     </v-data-table>
@@ -166,7 +203,16 @@ export default {
                     arr.push(...data["Food"], ...data["Dr. Bread"], ...data['Dr. Wine'], ...data['Buccaneers'])
                     this.orders_food = arr
                 })
-        }
+        },
+        isMobile() {
+            if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                console.log("mobile")
+                return true
+            } else {
+                console.log("desktop")
+                return false
+            }
+        },
     },
     watch: {
     }

@@ -3,7 +3,7 @@
       <v-row
       >
         <v-col
-            cols="8"
+            :cols="isMobile() ? 12 : 8"
         >
             <v-btn
                 text
@@ -24,18 +24,21 @@
                         <v-col cols="12">
                             <div style="display: block;">
                                 <v-icon color="#958de3">mdi-account</v-icon>
-                                <small>Sleeps {{get_selected_room.capacity}}</small>
+                                <small style="word-break: normal;">Sleeps {{get_selected_room.capacity}}</small>
                 
+                                <br v-if="isMobile()"/>
                                 <v-icon color="#958de3" class="ml-2">mdi-bed-king</v-icon>
-                                <small>1 King-size Bed</small>
-                
+                                <small style="word-break: normal;">1 King-size Bed</small>
+                                
+                                <br v-if="isMobile()"/>
                                 <v-icon color="#958de3" class="ml-2">mdi-bathtub</v-icon>
-                                <small>1 Bathroom</small>
+                                <small style="word-break: normal;">1 Bathroom</small>
                             </div>
                         </v-col>
                         <v-col cols="12">
-                            <small v-for="(facilities, facility_id) in get_selected_room.facilities" :key="facility_id"
-                                class="mt-5 mx-5">
+                            <small style="word-break: normal;" v-for="(facilities, facility_id) in get_selected_room.facilities" :key="facility_id"
+                                class="mt-5 mx-3">
+                                <br v-if="isMobile()"/>
                                 <v-icon color="#958de3">
                                     mdi-check-circle
                                 </v-icon>
@@ -43,7 +46,7 @@
                             </small>
                         </v-col>
                         <v-col cols="12">
-                            <small>{{get_selected_room.full_details}}</small>
+                            <small style="word-break: normal;">{{get_selected_room.full_details}}</small>
                         </v-col>
                     </v-row>
                 </v-card-title>
@@ -54,7 +57,7 @@
                 :key="roomindex"
                 class="ma-5"
                 fluid
-                style="width:25%;display:inline-block"
+                style="display:inline-block"
             >
                 <h3 class="pa-3">{{room.room_name}}</h3>
                 <p class="pa-3">Floor: {{ room.room_floor }}</p>
@@ -93,7 +96,7 @@
                 No rooms available
             </h5>
             <h2 class="ma-5">Reviews</h2>
-            <v-card class="ma-5">
+            <v-card class="ma-5" elevation="0">
                 <v-card-title>
                     <v-row class="ml-2 mb-5" v-if="get_selected_room.reviews.length > 0">
                         <v-col
@@ -104,11 +107,13 @@
                         <div
                             v-for="(review, reviewindex) in orderBy(get_selected_room.reviews, 'created_at', -1)"
                             :key="reviewindex"
-                            class="ml-5 pl-5 pt-5 pr-5 pb-5 mb-5"
-                            style="box-shadow:0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%);width:80%"
+                            class="ml-5 pt-5 pb-5 mb-5"
+                            style="box-shadow:0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%);width:95%"
                         >
                             <v-col cols="12" style="padding:0!important; display:flex;">
-                                <strong style="font-size:18px">{{review.get_user.name}}</strong>
+                                <strong style="word-break: normal;font-size:18px;">{{review.get_user.name}}</strong>
+                                
+                                <br v-if="isMobile()"/>
                                 <star-rating
                                     read-only
                                     :increment=0.5
@@ -145,6 +150,7 @@
             cols="4"
             style="position: sticky;top: 0;height: 620px;overflow-y: scroll;"
             class="mt-15"
+            v-if="!isMobile()"
         >
             <v-card
                 class="ma-5"
@@ -174,7 +180,7 @@
                                 <label
                                     style="display: block;"
                                     v-if="total != null"
-                                >total days of stay: {{ total }}</label>
+                                >total nights of stay: {{ total }}</label>
                             </div>
                         </v-col>
                         <v-col
@@ -220,24 +226,28 @@
                             >
                             </v-text-field>
                         </v-col>
+                        <v-col cols="12">
+                            <v-select @change="check_discount" v-model="senior_pwd" filled dense label="Included senior or PWD?" :items="[{ text: 'Yes', value: true }, { text: 'No', value: false }]">
+                            </v-select>
+                        </v-col>
                         <v-col
                             cols="6"
                         >
                             <!-- {{get_reserve_this_room_selected.capacity}} guests -->
                             {{ parseInt(b.adult) + parseInt(b.child) }} guest(s)
-                            <label v-if="total > 0"> - {{total}} day(s) & {{ total - 1 }} night(s)</label>
+                            <label v-if="total > 0"> - {{total + 1}} day(s) & {{ total }} night(s)</label>
                         </v-col>
                         <v-col
                             cols="6"
                             v-if="total > 0"
                         >
-                            {{ get_reserve_this_room_selected.price * total + additional_price | currency('₱') }}
+                            {{ room_price * total + additional_price | currency('₱') }}
                         </v-col>
                         <v-col
                             cols="12"
                             v-if="total > 0"
                         >
-                            Total {{ get_reserve_this_room_selected.price * total + additional_price | currency('₱') }}
+                            Total {{ room_price * total + additional_price | currency('₱') }}
                         </v-col>
                     </v-row>
                 </v-card-text>
@@ -273,6 +283,139 @@
             </v-card>
         </v-col>
       </v-row>
+      <v-row justify="center" v-if="isMobile()">
+        <v-dialog v-model="show_booking_details" persistent max-width="560">
+            <v-card>
+                <v-card-title class="text-small">
+                    <small>Reservation Details</small>
+                    <v-spacer/>
+                    <v-btn text @click="show_booking_details = false">X</v-btn>
+                </v-card-title>
+                <v-card-subtitle
+                    v-if="Object.keys(get_reserve_this_room_selected).length > 0">
+                    <h3>{{ get_reserve_this_room.room_name }}</h3>
+                </v-card-subtitle>
+                <v-card-text v-if="get_reserve_this_room.room_name != null">
+                    <v-row>
+                        <v-col
+                            cols="12"
+                        >
+                            <label>Reservation Date</label>
+                            <DatePicker
+                                v-model="dates"
+                                is-range
+                                width="inherit"
+                                :disabled-dates="disabled_days"
+                                :min-date="new Date().toISOString().substr(0, 10)"
+                            />
+                            <div v-if="dates">
+                                <label>{{ format(dates) }}</label>
+                                <label
+                                    style="display: block;"
+                                    v-if="total != null"
+                                >total nights of stay: {{ total }}</label>
+                            </div>
+                        </v-col>
+                        <v-col
+                            :cols="isMobile() ? 12 : 6"
+                        >
+                            <h5>Check in</h5>
+                            <vuetify-time-select v-model="check_in"></vuetify-time-select>
+                        </v-col>
+                        <v-col
+                            :cols="isMobile() ? 12 : 6"
+                        >
+                            <h5>Check out</h5>
+                            <vuetify-time-select v-model="check_out"></vuetify-time-select>
+                        </v-col>
+                        <v-col
+                            :cols="isMobile() ? 12 : 6"
+                        >
+                            <v-text-field
+                                v-model="b.adult"
+                                dense
+                                type="number"
+                                min="0"
+                                oninput="validity.valid||(value='');"
+                                outlined
+                                label="# of Adult"
+                                class="input_count"
+                                @change="check_head_count"
+                            >
+                            </v-text-field>
+                        </v-col>
+                        <v-col
+                            :cols="isMobile() ? 12 : 6"
+                        >
+                            <v-text-field
+                                v-model="b.child"
+                                dense
+                                type="number"
+                                min="0"
+                                outlined
+                                label="# of Child"
+                                class="input_count"
+                                @change="check_head_count"
+                            >
+                            </v-text-field>
+                        </v-col>
+                        <v-col cols="12">
+                            <v-select @change="check_discount" v-model="senior_pwd" filled dense label="Included senior or PWD?" :items="[{ text: 'Yes', value: true }, { text: 'No', value: false }]">
+                            </v-select>
+                        </v-col>
+                        <v-col
+                            :cols="isMobile() ? 12 : 6"
+                        >
+                            <!-- {{get_reserve_this_room_selected.capacity}} guests -->
+                            {{ parseInt(b.adult) + parseInt(b.child) }} guest(s)
+                            <label v-if="total > 0"> - {{total + 1}} day(s) & {{ total }} night(s)</label>
+                        </v-col>
+                        <v-col
+                            :cols="isMobile() ? 12 : 6"
+                            v-if="total > 0"
+                        >
+                            {{ room_price * total + additional_price | currency('₱') }}
+                        </v-col>
+                        <v-col
+                            cols="12"
+                            v-if="total > 0"
+                        >
+                            Total {{ room_price * total + additional_price | currency('₱') }}
+                        </v-col>
+                    </v-row>
+                </v-card-text>
+                <v-card-text v-else>
+                    <div v-if="get_user.udata != null">
+                        <div v-if="get_user.udata.role_id == 2">
+                            Admins may only view rooms
+                        </div>
+                    </div>
+                    <div v-else>
+                        Please select a room...
+                    </div>
+                </v-card-text>
+                <v-card-actions v-if="get_reserve_this_room.room_name != null">
+                    <v-btn
+                        v-if="!booked"
+                        block
+                        color="#6757F7"
+                        dark
+                        @click="book_now"
+                    >
+                        Book
+                    </v-btn>
+                    <v-btn
+                        v-else
+                        block
+                        color="#6757F7"
+                        disabled
+                    >
+                        Please Wait
+                    </v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+      </v-row>
     </v-container>
 </template>
 
@@ -306,9 +449,15 @@ export default {
     menuout: false,
     booked: false,
     disable_booking: false,
+    show_booking_details: false,
+    senior_pwd: false,
+    discount: 0,
+    room_price: 0
   }),
   mounted () {
     this.img_url = process.env.VUE_APP_URL
+    this.room_price = this.get_reserve_this_room_selected.price
+    this.discount = this.get_reserve_this_room_selected.price / 10
   },
   created () {
   },
@@ -331,6 +480,7 @@ export default {
     },
     select_room_for_reservation(room_data, selected_room_data){
         console.log(selected_room_data)
+        this.show_booking_details = true
         this.dates = []
         this.$store.dispatch('room/set_reserve_this_room', room_data)
         this.$store.dispatch('room/set_selected_room_for_reservation', selected_room_data)
@@ -388,6 +538,15 @@ export default {
         this.total = difference_in_time / (1000 * 3600 * 24)
         return first + ' to ' + last;
     },
+    check_discount(){
+        if (this.senior_pwd) {
+            this.room_price -= this.discount.toFixed(0)
+        }
+        else {
+            this.room_price += this.discount.toFixed(0)
+        }
+        console.log(this.total)
+    },
     check_head_count(){
         console.log(this.get_reserve_this_room_selected)
         const adult = this.b.adult
@@ -427,7 +586,7 @@ export default {
                 actual_room_data: this.get_reserve_this_room,
                 capacity: parseInt(adult) + parseInt(child),
                 date: newdates,
-                payable: this.get_reserve_this_room_selected.price * this.total + this.additional_price,
+                payable: this.room_price * this.total + this.additional_price,
                 check_in: this.check_in,
                 check_out: this.check_out,
                 adult_count: this.b.adult,
@@ -461,7 +620,7 @@ export default {
                                 actual_room_data: this.get_reserve_this_room,
                                 capacity: parseInt(adult) + parseInt(child),
                                 date: newdates,
-                                payable: this.get_reserve_this_room_selected.price * this.total + this.additional_price,
+                                payable: this.room_price * this.total + this.additional_price,
                                 check_in: this.check_in,
                                 check_out: this.check_out,
                                 adult_count: this.b.adult,
@@ -481,7 +640,14 @@ export default {
                     }
                 })
         }
-    }
+    },
+    isMobile() {
+        if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+            return true
+        } else {
+            return false
+        }
+    },
   },
   watch: {
   }

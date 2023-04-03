@@ -7,7 +7,7 @@
                 <v-card style="border-radius: 16px;padding:20px;" width="100%">
                     <v-data-table :headers="menu_header" :items="get_menu">
                         <template v-slot:item="{ item }">
-                            <tr v-if="item != null" @click="open_food_dialog(item)" style="cursor: pointer;height:100px;">
+                            <tr v-if="!isMobile()" @click="open_food_dialog(item)" style="cursor: pointer;height:100px;">
                                 <td>
                                     <small>#{{ item.id }}</small>
                                 </td>
@@ -48,6 +48,63 @@
                                     </v-btn>
                                 </td>
                             </tr>
+                            <tr v-else @click="open_food_dialog(item)" style="cursor: pointer;height:auto;padding-top:10px;padding-bottom:10px;">
+                                <td>
+                                    <v-row>
+                                        <v-col cols="12">
+                                            <small>#{{ item.id }}</small>
+                                        </v-col>
+                                    </v-row>
+                                    <v-row>
+                                        <v-col cols="12">
+                                            <v-img v-if="item.id < 47" style="border-radius:5px;" max-width="120"
+                                                :src="require('../../assets/' + item.image)" />
+                                            <v-img v-else style="border-radius:5px;" max-width="120"
+                                                :src="`${img_src}/images/${item.image}`" />
+                                        </v-col>
+                                    </v-row>
+                                    <v-row>
+                                        <v-col v-if="item.type == 'dr_bread'" cols="12">
+                                                Dr. Bread
+                                        </v-col>
+                                        <v-col v-else-if="item.type == 'dr_wine'" cols="12">
+                                                Dr. Wine
+                                        </v-col>
+                                        <v-col v-else>
+                                            {{ item.type }}
+                                        </v-col>
+                                    </v-row>
+                                    <v-row>
+                                        <v-col cols="12">
+                                            {{ item.name }}
+                                        </v-col>
+                                    </v-row>
+                                    <v-row>
+                                        <v-col v-if="item.desc" cols="12">
+                                            {{ item.desc }}
+                                        </v-col>
+                                        <v-col v-else>
+                                            N/A
+                                        </v-col>
+                                    </v-row>
+                                    <v-row>
+                                        <v-col cols="12">
+                                            {{ item.price }}
+                                        </v-col>
+                                    </v-row>
+                                    <v-row>
+                                        <v-col cols="12" v-if="item.available">Yes</v-col>
+                                        <v-col cols="12" v-else>No</v-col>
+                                    </v-row>
+                                    <v-row>
+                                        <v-col cols="12">
+                                            <v-btn text>
+                                                <small>View ></small>
+                                            </v-btn>
+                                        </v-col>
+                                    </v-row>
+                                </td>
+                            </tr>
                         </template>
                     </v-data-table>
                 </v-card>
@@ -62,11 +119,11 @@
                     </v-card-title>
                     <v-card-text>
                         <v-row>
-                            <v-col cols="6">
+                            <v-col :cols="isMobile() ? 12 : 6">
                                 <v-text-field label="Name" v-model="new_food.name"></v-text-field>
                                 <v-text-field label="Price" v-model="new_food.price"></v-text-field>
                             </v-col>
-                            <v-col cols="6">
+                            <v-col :cols="isMobile() ? 12 : 6">
                                 <v-select label="Type" v-model="new_food.type"
                                     :items="[{ text: 'Food', value: 'Food' }, { text: 'Dr. Bread', value: 'dr_bread' }, { text: 'Dr. Wine', value: 'dr_wine' }, { text: 'Buccaneers', value: 'Buccaneers' }]"></v-select>
                                 <v-select label="Available" v-model="new_food.available"
@@ -238,7 +295,16 @@ export default {
                     this.show_food_dialog = false
                     this.$store.dispatch('admin_menu/fetch_menu')
                 })
-        }
+        },
+        isMobile() {
+            if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                console.log("mobile")
+                return true
+            } else {
+                console.log("desktop")
+                return false
+            }
+        },
     },
     watch: {
     }

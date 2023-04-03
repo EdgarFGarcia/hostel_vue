@@ -18,23 +18,24 @@
                 </v-col>
             </v-row>
             <v-row>
-                <v-col cols="6">
+                <v-col :cols="isMobile() ? 12 : 6">
                     <div align="center"
+                        :class="isMobile() ? 'pt-4 pb-4' : ''"
                         style="background-color:#fcf6dc;padding-top:25%;box-shadow: 0px 0px 3px 1px #888888;height:100%">
                         <strong><small>7:30AM to 10:00AM</small></strong>
                         <h2>Dr. Bread Manila</h2>
                         <h4>START YOUR DAY WITH A YUMMY BREAKFAST</h4>
                     </div>
                 </v-col>
-                <v-col cols="6">
+                <v-col :cols="isMobile() ? 12 : 6">
                     <img :src="require('../../../../assets/drbread.jpg')" style="max-width: 100%;" />
                 </v-col>
             </v-row>
-            <v-row>
-                <v-col cols="6">
+            <v-row v-if="!isMobile()">
+                <v-col :cols="isMobile() ? 12 : 6">
                     <img :src="require('../../../../assets/drwine.jpg')" style="max-width: 100%;" />
                 </v-col>
-                <v-col cols="6">
+                <v-col :cols="isMobile() ? 12 : 6">
                     <div align="center"
                         style="background-color:#fcf6dc;padding-top:25%;box-shadow: 0px 0px 3px 1px #888888;height:100%">
                         <strong><small>12:00PM to 3:00PM</small></strong>
@@ -43,16 +44,31 @@
                     </div>
                 </v-col>
             </v-row>
-            <v-row>
-                <v-col cols="6">
+            <v-row v-else>
+                <v-col :cols="isMobile() ? 12 : 6">
                     <div align="center"
+                        :class="isMobile() ? 'pt-4 pb-4' : ''"
+                        style="background-color:#fcf6dc;padding-top:25%;box-shadow: 0px 0px 3px 1px #888888;height:100%">
+                        <strong><small>12:00PM to 3:00PM</small></strong>
+                        <h2>Dr. Wine Manila</h2>
+                        <h4>LIVE A LUXURIOUS EXPERIENCE</h4>
+                    </div>
+                </v-col>
+                <v-col :cols="isMobile() ? 12 : 6">
+                    <img :src="require('../../../../assets/drwine.jpg')" style="max-width: 100%;" />
+                </v-col>
+            </v-row>
+            <v-row>
+                <v-col :cols="isMobile() ? 12 : 6">
+                    <div align="center"
+                        :class="isMobile() ? 'pt-4 pb-4' : ''"
                         style="background-color:#fcf6dc;padding-top:25%;box-shadow: 0px 0px 3px 1px #888888;height:100%">
                         <strong><small>6:00PM to 2:00AM</small></strong>
                         <h2>Buccaneers Rum & Cocktail</h2>
                         <h4>TAKE A DRINK AND HAVE FUN</h4>
                     </div>
                 </v-col>
-                <v-col cols="6">
+                <v-col :cols="isMobile() ? 12 : 6">
                     <img :src="require('../../../../assets/buccaneers.jpg')" style="max-width: 100%;" />
                 </v-col>
             </v-row>

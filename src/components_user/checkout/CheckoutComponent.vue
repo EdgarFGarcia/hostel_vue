@@ -239,7 +239,7 @@ export default {
         async paymongo_card_create_intent() { // PAY WITH CARD, CREATE PAYMENT
             this.paymongo_model = false
             this.redirect_model = true
-            await this.$axios.post('r/payment/paymongo_card_create_intent_food', { payable: this.total[0].payable })
+            await this.$axios.post('r/payment/paymongo_card_create_intent_food', { payable: this.total[0].payable.toFixed(0) })
                 .then(({ data }) => {
                     this.intent_id = data.data.attributes.client_key
                     this.to_paymongo = data.data.attributes.amount

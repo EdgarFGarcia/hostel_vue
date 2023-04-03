@@ -49,7 +49,7 @@
                         @close_dialog="close_dialog"
                     />
                 </v-col>
-                <v-col cols="12">
+                <v-col cols="12" :class="isMobile()?'mt-10':''">
                     <img
                         :src="require('../assets/logo.png')"
                         class="mb-5"
@@ -95,6 +95,15 @@ export default{
                 case 3:
                     this.$router.push({ name: '/housekeeping_request'})
                     return
+            }
+        },
+        isMobile() {
+            if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                console.log("mobile")
+                return true
+            } else {
+                console.log("desktop")
+                return false
             }
         },
     }),

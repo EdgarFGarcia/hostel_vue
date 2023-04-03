@@ -7,7 +7,7 @@
                 <v-card style="border-radius: 16px;padding:20px;" width="100%">
                     <v-data-table :headers="reservation_header" :items="get_reservation_list">
                         <template v-slot:item="{ item }">
-                            <tr v-if="item.get_room_info" @click="check_details(item)" style="cursor: pointer;height:75px;">
+                            <tr v-if="!isMobile()" @click="check_details(item)" style="cursor: pointer;height:75px;">
                                 <td>
                                     #<small>{{ item.id }}</small>
                                 </td>
@@ -19,7 +19,8 @@
                                     </small>
                                 </td>
                                 <td>
-                                    <b style="font-weight:550;font-size:16px;">{{ item.get_room_info.get_room_parent_information.name }} - {{ item.get_room_info.room_name }}</b>
+                                    <b v-if="item.get_room_info" style="font-weight:550;font-size:16px;">{{ item.get_room_info.get_room_parent_information.name }} - {{ item.get_room_info.room_name }}</b>
+                                    <b v-else style="font-weight:550;font-size:16px;">Deleted room</b>
                                     <br>
                                     <small>{{ item.get_user.name }} — </small>
                                     <small v-if="item.adult_count == 1">{{ item.adult_count }} adult </small>
@@ -42,39 +43,53 @@
                                     </v-btn>
                                 </td>
                             </tr>
-                            <tr v-else @click="check_details(item)" style="cursor: pointer;height:75px;">
+                            <tr v-else @click="check_details(item)" style="cursor: pointer;height:auto;padding-top:10px;padding-bottom:10px;">
                                 <td>
-                                    #<small>{{ item.id }}</small>
-                                </td>
-                                <td>
-                                    <small>
-                                        {{ moment(item.created_at).format('YYYY-MM-DD') }}
-                                        <br>
-                                        {{ moment(item.created_at).format('h:mm a') }}
-                                    </small>
-                                </td>
-                                <td>
-                                    <b style="font-weight:550;font-size:16px;">Deleted room</b>
-                                    <br>
-                                    <small>{{ item.get_user.name }} — </small>
-                                    <small v-if="item.adult_count == 1">{{ item.adult_count }} adult </small>
-                                    <small v-if="item.adult_count > 1">{{ item.adult_count }} adults </small>
-                                    <small v-if="item.child_count == 1">and {{ item.child_count }} child</small>
-                                    <small v-if="item.child_count > 1">and {{ item.child_count }} children</small>
-                                </td>
-                                <td>
-                                    {{ item.check_in_date_time }} <small class="ml-1 mr-1">—</small> {{ item.will_be_available_at }}
-                                </td>
-                                <td>
-                                    {{ item.payable | currency('₱') }}
-                                    <small class="ml-2 mr-2"> </small>
-                                    <small v-if="item.is_paid">paid</small>
-                                    <small v-else>unpaid</small>
-                                </td>
-                                <td>
-                                    <v-btn text>
-                                        <small>View ></small>
-                                    </v-btn>
+                                    <v-row>
+                                        <v-col cols="12">
+                                            #<small>{{ item.id }}</small>
+                                        </v-col>
+                                    </v-row>
+                                    <v-row>
+                                        <v-col cols="12">
+                                            <small>
+                                                {{ moment(item.created_at).format('YYYY-MM-DD') }} - 
+                                                {{ moment(item.created_at).format('h:mm a') }}
+                                            </small>
+                                        </v-col>
+                                    </v-row>
+                                    <v-row>
+                                        <v-col cols="12">
+                                            <b v-if="item.get_room_info" style="font-weight:550;font-size:16px;">{{ item.get_room_info.get_room_parent_information.name }} - {{ item.get_room_info.room_name }}</b>
+                                            <b v-else style="font-weight:550;font-size:16px;">Deleted room</b>
+                                            <br>
+                                            <small>{{ item.get_user.name }} — </small>
+                                            <small v-if="item.adult_count == 1">{{ item.adult_count }} adult </small>
+                                            <small v-if="item.adult_count > 1">{{ item.adult_count }} adults </small>
+                                            <small v-if="item.child_count == 1">and {{ item.child_count }} child</small>
+                                            <small v-if="item.child_count > 1">and {{ item.child_count }} children</small>
+                                        </v-col>
+                                    </v-row>
+                                    <v-row>
+                                        <v-col cols="12">
+                                            {{ item.check_in_date_time }} <small class="ml-1 mr-1">—</small> {{ item.will_be_available_at }}
+                                        </v-col>
+                                    </v-row>
+                                    <v-row>
+                                        <v-col cols="12">
+                                            {{ item.payable | currency('₱') }}
+                                            <small class="ml-2 mr-2"> </small>
+                                            <small v-if="item.is_paid">paid</small>
+                                            <small v-else>unpaid</small>
+                                        </v-col>
+                                    </v-row>
+                                    <v-row>
+                                        <v-col cols="12">
+                                            <v-btn text>
+                                                <small>View ></small>
+                                            </v-btn>
+                                        </v-col>
+                                    </v-row>
                                 </td>
                             </tr>
                         </template>
@@ -97,7 +112,7 @@
                             <v-col cols="6" v-else>
                                 <v-img style="border-radius:5px;"/>
                             </v-col>
-                            <v-col cols="6">
+                            <v-col :cols="isMobile() ? 12 : 6">
                                 <v-row>
                                     <v-col cols="8" v-if="booking_selected.get_room_info">
                                         <h3 style="font-weight:400;">{{ booking_selected.get_room_info.get_room_parent_information.name }}</h3>
@@ -344,10 +359,10 @@
                     </v-card-title>
                     <v-card-text>
                         <v-row>
-                            <v-col cols="6">
+                            <v-col :cols="isMobile() ? 12 : 6">
                                 <date-picker placeholder="Date of booking" v-model="selected_day" valueType="format" type="datetime"></date-picker>
                             </v-col>
-                            <v-col cols="6">
+                            <v-col :cols="isMobile() ? 12 : 6">
                                 <v-select
                                     label="User"
                                     outlined
@@ -550,7 +565,16 @@ export default {
                         this.$store.dispatch('admin_reservation/set_reservations', data.data)
                     }
                 })
-        }
+        },
+        isMobile() {
+            if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                console.log("mobile")
+                return true
+            } else {
+                console.log("desktop")
+                return false
+            }
+        },
     },
     watch: {
     }

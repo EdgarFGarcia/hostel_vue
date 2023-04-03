@@ -58,11 +58,12 @@
                     </v-row>
                 </v-card-text>
                 <v-card-title>
-                    <small>Don't have an account yet? <label style="color: blue; cursor: pointer; text-decoration: underline;" @click="login_state = false">register here</label></small>
+                    <small style="word-break: normal;">Don't have an account yet?<br v-if="isMobile()"/> <label style="color: blue; cursor: pointer; text-decoration: underline;" @click="login_state = false">register here</label></small>
                     <v-spacer/>
                     <small 
                         style="text-decoration: underline; cursor:pointer;"
                         @click="reset_password_fn"
+                        :class="isMobile() ? 'mt-5' : ''"
                     >
                         Reset Password
                     </small>
@@ -309,7 +310,16 @@ export default {
                 return
             }
         })
-    }
+    },
+    isMobile() {
+      if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+        console.log("mobile")
+        return true
+      } else {
+        console.log("desktop")
+        return false
+      }
+    },
   },
   watch: {
   }

@@ -2,7 +2,7 @@
   <v-container fill-height fluid class="pa-5 ma-0">
     <h2 class="pb-10 ml-5">Overview</h2>
     <v-row>
-      <v-col cols="7">
+      <v-col :cols="isMobile() ? 12 : 7">
         <v-card style="border-radius: 16px;padding:20px;" width="100%">
           <v-card-title>
             Bookings <v-spacer/><v-btn text style="font-size:12px;" class="mt-1" @click="switch_tabs('/admin_reservations')"><u>View all bookings</u></v-btn>
@@ -21,7 +21,7 @@
           </v-card-text>
         </v-card>
       </v-col>
-      <v-col cols="5">
+      <v-col :cols="isMobile() ? 12 : 5">
         <v-card style="border-radius: 16px;" width="100%">
           <v-card-title style="padding-left:20px;padding-top:40px;padding-bottom:0px;">
             Messages
@@ -58,7 +58,16 @@ export default {
     switch_tabs(route) {
       window.scrollTo({ top: 0, left: 0 })
       this.$router.push(route)
-    }
+    },
+    isMobile() {
+      if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+        console.log("mobile")
+        return true
+      } else {
+        console.log("desktop")
+        return false
+      }
+    },
   },
   watch: {
   }

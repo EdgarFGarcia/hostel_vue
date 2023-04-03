@@ -2,7 +2,7 @@
   <v-container fill-height fluid>
     <v-row>
       <p v-if="get_my_rooms.length == 0" class="ml-10 mt-10">No bookings yet</p>
-      <v-col cols="4" v-for="(room, roomindex) in orderBy(get_my_rooms, 'created_at', -1)" :key="roomindex">
+      <v-col :cols="isMobile() ? 12 : 4" v-for="(room, roomindex) in orderBy(get_my_rooms, 'created_at', -1)" :key="roomindex">
         <v-card style="height:auto">
           <v-card-title class="text-small">
             <small v-if="room.get_room_info">{{ room.get_room_info.room_name }}</small>
@@ -471,7 +471,16 @@ export default {
           this.showSnackBar(data.message)
           this.$store.dispatch('user/set_my_rooms')
         })
-    }
+    },
+    isMobile() {
+      if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+        console.log("mobile")
+        return true
+      } else {
+        console.log("desktop")
+        return false
+      }
+    },
   },
   watch: {
   }
