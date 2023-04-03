@@ -262,11 +262,12 @@ export default {
   props: [
   ],
   data: () => ({
-    drawer: true,
+    drawer: false,
     tab: '/admin_dashboard'
   }),
   mounted () {
-    this.tab = this.get_tab
+      this.tab = this.get_tab
+    this.isMobile()
   },
   created () {
   },
@@ -289,7 +290,17 @@ export default {
         this.$store.dispatch('admin_layout/set_tab', route)
         window.scrollTo({ top: 0, left: 0 })
         this.$router.push(route)
-      }
+      },
+        isMobile() {
+            if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                console.log("mobile")
+                return true
+            } else {
+                console.log("desktop")
+                this.drawer = true
+                return false
+            }
+        },
   },
   watch: {
   }
