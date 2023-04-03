@@ -267,16 +267,24 @@
                                     />
                                 </v-avatar>
                             </v-col>
-                            <v-col cols="11">
+                            <v-col v-if="!isMobile()" cols="11">
                                 <v-layout align-center style="height:60px;">
                                     <h2 class="ml-7">{{ profile.name }}</h2>
                                     <v-spacer/>
                                     <h5 class="ml-7">Member since {{ moment(profile.created_at).format('MMMM D, YYYY') }}</h5>
                                 </v-layout>
                             </v-col>
+                            <v-col v-else cols="11">
+                                <v-layout align-center style="height:60px;">
+                                    <h2 class="ml-11">{{ profile.name }}</h2>
+                                </v-layout>
+                            </v-col>
+                            <v-col v-if="isMobile()" cols="12">
+                                <h5 class="ml-7">Member since {{ moment(profile.created_at).format('MMMM D, YYYY') }}</h5>
+                            </v-col>
                         </v-row>
                         <v-row>
-                            <v-col cols="6">
+                            <v-col :cols="isMobile() ? 12 : 6">
                                 <v-row>
                                     <v-col cols="3">
                                         Status:
@@ -308,7 +316,7 @@
                                     </v-col>
                                 </v-row>
                             </v-col>
-                            <v-col cols="6">
+                            <v-col :cols="isMobile() ? 12 : 6">
                                 <v-row>
                                     <v-col cols="3">
                                         Age:
