@@ -25,7 +25,7 @@ Vue.use(Vue2Filters)
 Vue.use(require('moment'))
 Vue.component('vuetify-time-select', VuetifyTimeSelect)
 Vue.use(VueFbCustomerChat, {
-  page_id: '107778234085800', //  change 'null' to your Facebook Page ID,
+  page_id: 'whitebananamanila', //  change 'null' to your Facebook Page ID,
   theme_color: '#333333', // theme color in HEX
   locale: 'en_US', // default 'en_US'
 });
