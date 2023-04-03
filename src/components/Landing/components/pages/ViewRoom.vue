@@ -540,10 +540,10 @@ export default {
     },
     check_discount(){
         if (this.senior_pwd) {
-            this.room_price -= this.discount.toFixed(0)
+            this.room_price = this.get_reserve_this_room_selected.price - this.discount.toFixed(0)
         }
         else {
-            this.room_price += this.discount.toFixed(0)
+            this.room_price = this.get_reserve_this_room_selected.price
         }
         console.log(this.total)
     },
