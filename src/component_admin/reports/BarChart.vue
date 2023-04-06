@@ -58,6 +58,7 @@ export default {
       datasets: [
         {
           label: 'Bookings',
+          backgroundColor: ["#B3CDDE"],
           data: {}
         }
       ]
