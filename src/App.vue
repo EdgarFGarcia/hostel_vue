@@ -9,7 +9,7 @@
               class="ml-5"
               icon
               color="#6757F7"
-              href="https://web.facebook.com/whitebananamnl"
+              href="https://web.facebook.com/whitebananamanila"
               target='#'
           >
               <v-icon
@@ -19,7 +19,7 @@
           <v-btn
               icon
               color="#6757F7"
-              href="https://www.instagram.com/whitebanana.mnl/"
+              href="https://www.instagram.com/whitebanana.mnl"
               target='#'
           >
               <v-icon
