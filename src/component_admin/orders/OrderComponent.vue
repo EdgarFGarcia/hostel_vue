@@ -4,7 +4,12 @@
         <v-row>
             <v-col cols="12">
                 <v-card style="border-radius: 16px;padding:20px;" width="100%">
-                    <v-data-table :headers="order_header" :items="get_orders">
+                    <div class="mb-5">
+                        <v-btn class="primary mr-3" @click="order_type = 'food'">Food</v-btn>
+                        <v-btn class="primary mr-3" @click="order_type = 'transpo'">Transportation</v-btn>
+                        <v-btn class="primary mr-3" @click="order_type = 'massage'">Massage and Spa</v-btn>
+                    </div>
+                    <v-data-table v-if="order_type == 'food'" :headers="order_header" :items="get_orders">
                         <template v-slot:item="{ item }">
                             <tr v-if="!isMobile()" style="height:90px;">
                                 <td>
@@ -28,11 +33,6 @@
                                 <td>
                                     {{ item.quantity }}
                                 </td>
-                                <!--<td>
-                                    <v-btn text @click="mark_as_paid(item.id)">
-                                        <small>Mark as paid</small>
-                                    </v-btn>
-                                </td>-->
                             </tr>
                             <tr v-else style="height:auto;padding-top:10px;padding-bottom:10px;">
                                 <td>
@@ -60,6 +60,143 @@
                                         <v-col cols="12">
                                             {{ item.price | currency('₱') }}
                                             <small class="ml-2 mr-2"> </small>
+                                            <small v-if="item.paid">paid</small>
+                                            <small v-else>unpaid</small>
+                                        </v-col>
+                                    </v-row>
+                                    <v-row>
+                                        <v-col cols="12">
+                                            {{ item.quantity }}
+                                        </v-col>
+                                    </v-row>
+                                </td>
+                            </tr>
+                        </template>
+                    </v-data-table>
+                    <v-data-table v-if="order_type == 'transpo'" :headers="transpo_header" :items="get_transpo">
+                        <template v-slot:item="{ item }">
+                            <tr v-if="!isMobile()" style="height:90px;">
+                                <td>
+                                    <small>#{{ item.id }}</small>
+                                </td>
+                                <td>
+                                    {{ item.transpo_type }}
+                                </td>
+                                <td>
+                                    {{ item.get_user.name }}
+                                </td>
+                                <td>
+                                    {{ item.pick_up_location }}
+                                    <br>
+                                    {{ item.pick_up_date }}
+                                </td>
+                                <td>
+                                    {{ item.drop_off_location }}
+                                </td>
+                                <td>
+                                    {{ item.message }}
+                                </td>
+                                <td>
+                                    {{ item.payable | currency('₱') }}
+                                    <br>
+                                    <small v-if="item.is_paid">paid</small>
+                                    <small v-else>unpaid</small>
+                                </td>
+                            </tr>
+                            <tr v-else style="height:auto;padding-top:10px;padding-bottom:10px;">
+                                <td>
+                                    <v-row>
+                                        <v-col cols="12">
+                                            <small>#{{ item.id }}</small>
+                                        </v-col>
+                                    </v-row>
+                                    <v-row>
+                                        <v-col cols="12">
+                                            {{ item.transpo_type }}
+                                        </v-col>
+                                    </v-row>
+                                    <v-row>
+                                        <v-col cols="12">
+                                            {{ item.get_user.name }}
+                                        </v-col>
+                                    </v-row>
+                                    <v-row>
+                                        <v-col cols="12">
+                                            {{ item.pick_up_location }}
+                                            <br>
+                                            {{ item.pick_up_date }}
+                                        </v-col>
+                                    </v-row>
+                                    <v-row>
+                                        <v-col cols="12">
+                                            {{ item.drop_off_location }}
+                                        </v-col>
+                                    </v-row>
+                                    <v-row>
+                                        <v-col cols="12">
+                                            {{ item.payable | currency('₱') }}
+                                            <br>
+                                            <small v-if="item.is_paid">paid</small>
+                                            <small v-else>unpaid</small>
+                                        </v-col>
+                                    </v-row>
+                                    <v-row>
+                                        <v-col cols="12">
+                                            {{ item.quantity }}
+                                        </v-col>
+                                    </v-row>
+                                </td>
+                            </tr>
+                        </template>
+                    </v-data-table>
+                    <v-data-table v-if="order_type == 'massage'" :headers="massage_header" :items="get_massage">
+                        <template v-slot:item="{ item }">
+                            <tr v-if="!isMobile()" style="height:90px;">
+                                <td>
+                                    <small>#{{ item.id }}</small>
+                                </td>
+                                <td>
+                                    {{ item.name }}
+                                </td>
+                                <td>
+                                    {{ item.massage_date }}
+                                </td>
+                                <td>
+                                    {{ item.get_user.name }}
+                                </td>
+                                <td>
+                                    {{ item.payable | currency('₱') }}
+                                    <br>
+                                    <small v-if="item.paid">paid</small>
+                                    <small v-else>unpaid</small>
+                                </td>
+                            </tr>
+                            <tr v-else style="height:auto;padding-top:10px;padding-bottom:10px;">
+                                <td>
+                                    <v-row>
+                                        <v-col cols="12">
+                                            <small>#{{ item.id }}</small>
+                                        </v-col>
+                                    </v-row>
+                                    <v-row>
+                                        <v-col cols="12">
+                                            {{ item.name }}
+                                        </v-col>
+                                    </v-row>
+                                    <v-row>
+                                        <v-col cols="12">
+                                            {{ item.massage_date }}
+                                        </v-col>
+                                    </v-row>
+                                    <v-row>
+                                        <v-col cols="12">
+                                            {{ item.get_user.name }}
+                                        </v-col>
+                                    </v-row>
+                                    <v-row>
+                                        <v-col cols="12">
+                                            {{ item.payable | currency('₱') }}
+                                            <br>
                                             <small v-if="item.paid">paid</small>
                                             <small v-else>unpaid</small>
                                         </v-col>
@@ -123,12 +260,50 @@ export default {
             },
             {
                 text: 'Quantity', sortable: false
+            }
+        ],
+        transpo_header: [
+            {
+                text: 'ID', value: 'id', sortable: true, width: '1%'
             },
-            /*{
-                text: '', sortable: false
-            },*/
+            {
+                text: 'Transpo Type', value: 'transpo_type', sortable: true, width: '10%'
+            },
+            {
+                text: 'User', sortable: false
+            },
+            {
+                text: 'Pick Up', sortable: true, width: '50%'
+            },
+            {
+                text: 'Drop Off', sortable: true, width: '50%'
+            },
+            {
+                text: 'Message', sortable: false
+            },
+            {
+                text: 'Payable', sortable: false
+            }
+        ],
+        massage_header: [
+            {
+                text: 'ID', value: 'id', sortable: true, width: '1%'
+            },
+            {
+                text: 'Date', sortable: false, width: '50%'
+            },
+            {
+                text: 'Name', value: 'name', sortable: true, width: '50%'
+            },
+            {
+                text: 'User', value: 'get_user.name', sortable: true, width: '50%'
+            },
+            {
+                text: 'Price', sortable: false
+            }
         ],
         transpo_id: 0,
+        order_type: 'food',
         add_price_model: false,
         added_price: 0
 
@@ -141,6 +316,8 @@ export default {
     computed: {
         ...mapGetters({
             get_orders: 'admin_orders/get_orders',
+            get_transpo: 'admin_orders/get_transpo',
+            get_massage: 'admin_orders/get_massage',
         })
     },
     methods: {
@@ -178,13 +355,6 @@ export default {
             await this.$axios.post('/user/auth_user/mark_as_paid_massage', id)
                 .then(({ data }) => {
                     this.orders_massage = data
-                })
-        },
-        async get_transpo() {
-            await this.$axios.get('/user/auth_user/get_booked_transpo')
-                .then(({ data }) => {
-                    console.log(data)
-                    this.orders_transpo = data
                 })
         },
         async get_massages() {

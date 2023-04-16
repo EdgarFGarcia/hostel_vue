@@ -212,8 +212,8 @@
                     <v-col
                         :cols="isMobile() ? 12 : 6"
                     >
-                        <v-text-field disabled style="width:48%;display:inline-block;margin-right:5px;" v-model="transpo_pick_up" label="Pick up location"></v-text-field>
-                        <v-select :items="[{ text: 'NAIA Terminal 1', value: 'NAIA Terminal 1' }, { text: 'NAIA Terminal 2', value: 'NAIA Terminal 2' },{ text: 'NAIA Terminal 3', value: 'NAIA Terminal 3' },{ text: 'NAIA Terminal 4', value: 'NAIA Terminal 4' }]" style="width:48%;display:inline-block;" v-model="transpo_drop_off" label="Drop off location"></v-select>
+                        <v-select :items="[{ text: 'NAIA Terminal 1', value: 'NAIA Terminal 1' }, { text: 'NAIA Terminal 2', value: 'NAIA Terminal 2' },{ text: 'NAIA Terminal 3', value: 'NAIA Terminal 3' },{ text: 'NAIA Terminal 4', value: 'NAIA Terminal 4' }]" style="width:48%;display:inline-block;" v-model="transpo_pick_up" label="Pick up location"></v-select>
+                        <v-text-field disabled style="width:48%;display:inline-block;margin-right:5px;" v-model="transpo_drop_off" label="Drop off location"></v-text-field>
                         <v-textarea v-model="transpo_message" label="Message"></v-textarea>
                         <h2 style="margin-bottom:20px;margin-top:70px;">Transportation Type</h2>
                         <div style="width:300px;">
@@ -364,8 +364,8 @@ export default {
     available_dates: [],
     tab: null,
     quantity: 1,
-    transpo_pick_up: "Connector Hostel",
-    transpo_drop_off: null,
+    transpo_pick_up: null,
+    transpo_drop_off: "Connector Hostel",
     transpo_pick_up_date: null,
     transpo_pick_up_time: null,
     transpo_message: null,

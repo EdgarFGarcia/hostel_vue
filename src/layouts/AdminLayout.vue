@@ -19,7 +19,8 @@
                 <v-card-text
                     style="color: white !important;"
                 >
-                    <h2>Admin</h2>
+                    <h2 v-if="get_user.udata.role_id == 2">Admin</h2>
+                    <h2 v-if="get_user.udata.role_id == 3">Housekeeping</h2>
                 </v-card-text>
                 <v-divider></v-divider>
                 <v-list
