@@ -377,7 +377,7 @@
                                     dense
                                     style="margin-top:0px;"
                                     v-model="selected_user"
-                                    :items="[{ text: 'Dillon Gunn 1', value: 91 }, { text: 'Dillon Gunn 2', value: 92 }, { text: 'Dillon Gunn 3', value: 93 }]"
+                                    :items="[{ text: 'John Doe', value: 91 }, { text: 'Jane Doe', value: 92 }, { text: 'Jim Doe', value: 93 }]"
                                 >
                                     <template v-slot:prepend-inner>
                                         <v-icon small style="position: relative; top:4px;"> mdi-account-school </v-icon> 
