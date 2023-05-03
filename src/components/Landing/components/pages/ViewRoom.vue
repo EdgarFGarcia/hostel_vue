@@ -229,6 +229,13 @@
                         <v-col cols="12">
                             <v-select @change="check_discount" v-model="senior_pwd" filled dense label="Included senior or PWD?" :items="[{ text: 'Yes', value: true }, { text: 'No', value: false }]">
                             </v-select>
+                            <v-text-field
+                                v-if="senior_pwd == true"
+                                v-model="pwdid"
+                                dense
+                                label="ID Number"
+                            >
+                            </v-text-field>
                         </v-col>
                         <v-col
                             cols="6"
@@ -451,6 +458,7 @@ export default {
     disable_booking: false,
     show_booking_details: false,
     senior_pwd: false,
+    pwdid: null,
     discount: 0,
     original_price: 0,
     room_price: 0
@@ -580,66 +588,81 @@ export default {
         let newdates = []
         newdates.push(moment(this.dates.start).format('YYYY-MM-DD'))
         newdates.push(moment(this.dates.end).format('YYYY-MM-DD'))
-        console.log(this.get_user.udata)
-        if (Object.keys(this.get_user).length === 0 || this.get_user.udata == null) {
-            console.log('guest')
-            this.$axios.post('/r/rooms/guest_book_room_now', {
-                actual_room_data: this.get_reserve_this_room,
-                capacity: parseInt(adult) + parseInt(child),
-                date: newdates,
-                payable: this.room_price * this.total + this.additional_price,
-                check_in: this.check_in,
-                check_out: this.check_out,
-                adult_count: this.b.adult,
-                child_count: this.b.child
-            })
-                .then(({ data }) => {
-                    console.log(data)
-                    if (data.response) {
-                        this.$store.dispatch('auth/set_user', data)
-                        alert('Booking successful! Your email is: ' + data.udata.email + ', and your password is: ' + data.udata.name + ', you can change this later.')
-                        this.$router.push({ name: '/user_dashboard' })
-                        return
-                    }
-                    this.booked = false
-                    this.showSnackBar(data.message)
-                    return
+          console.log(this.get_user.udata)
+          let is_pwd = false
+          if (this.senior_pwd == true && this.pwdid != null) {
+              is_pwd = true
+          }
+          else {
+              is_pwd = false
+          }
+        if (is_pwd || this.senior_pwd == false){
+            if (Object.keys(this.get_user).length === 0 || this.get_user.udata == null) {
+                console.log('guest')
+                this.$axios.post('/r/rooms/guest_book_room_now', {
+                    actual_room_data: this.get_reserve_this_room,
+                    capacity: parseInt(adult) + parseInt(child),
+                    date: newdates,
+                    payable: this.room_price * this.total + this.additional_price,
+                    check_in: this.check_in,
+                    check_out: this.check_out,
+                    adult_count: this.b.adult,
+                    child_count: this.b.child,
+                    pwdid: this.pwdid
                 })
+                    .then(({ data }) => {
+                        console.log(data)
+                        if (data.response) {
+                            this.$store.dispatch('auth/set_user', data)
+                            alert('Booking successful! Your email is: ' + data.udata.email + ', and your password is: ' + data.udata.name + ', you can change this later.')
+                            this.$router.push({ name: '/user_dashboard' })
+                            return
+                        }
+                        this.booked = false
+                        this.showSnackBar(data.message)
+                        return
+                    })
+            }
+            else {
+                console.log('user')
+                await this.$axios.get('/r/rooms/get_single_room', { user_id: this.get_user.udata.id })
+                    .then(({ data }) => {
+                        console.log(data.data.length)
+                        if (data.data.length >= 1) {
+                            this.showSnackBar('You may only book one room at a time')
+                                this.booked = false
+                            return
+                        }
+                        else {
+                                this.$axios.post('/r/rooms/book_room_now', {
+                                    actual_room_data: this.get_reserve_this_room,
+                                    capacity: parseInt(adult) + parseInt(child),
+                                    date: newdates,
+                                    payable: this.room_price * this.total + this.additional_price,
+                                    check_in: this.check_in,
+                                    check_out: this.check_out,
+                                    adult_count: this.b.adult,
+                                    child_count: this.b.child,
+                                    pwdid: this.pwdid
+                                })
+                                    .then(({ data }) => {
+                                        console.log(data)
+                                        if (data.response) {
+                                            this.showSnackBar('Booking successful!')
+                                            this.$router.push({ name: '/user_dashboard' })
+                                            return
+                                        }
+                                        this.booked = false
+                                        this.showSnackBar(data.message)
+                                        return
+                                    })
+                        }
+                    })
+            }
         }
         else {
-            console.log('user')
-            await this.$axios.get('/r/rooms/get_single_room', { user_id: this.get_user.udata.id })
-                .then(({ data }) => {
-                    console.log(data.data.length)
-                    if (data.data.length >= 1) {
-                        this.showSnackBar('You may only book one room at a time')
-                            this.booked = false
-                        return
-                    }
-                    else {
-                            this.$axios.post('/r/rooms/book_room_now', {
-                                actual_room_data: this.get_reserve_this_room,
-                                capacity: parseInt(adult) + parseInt(child),
-                                date: newdates,
-                                payable: this.room_price * this.total + this.additional_price,
-                                check_in: this.check_in,
-                                check_out: this.check_out,
-                                adult_count: this.b.adult,
-                                child_count: this.b.child
-                            })
-                                .then(({ data }) => {
-                                    console.log(data)
-                                    if (data.response) {
-                                        this.showSnackBar('Booking successful!')
-                                        this.$router.push({ name: '/user_dashboard' })
-                                        return
-                                    }
-                                    this.booked = false
-                                    this.showSnackBar(data.message)
-                                    return
-                                })
-                    }
-                })
+            this.showSnackBar("Please enter an ID")
+            this.booked = false
         }
     },
     isMobile() {

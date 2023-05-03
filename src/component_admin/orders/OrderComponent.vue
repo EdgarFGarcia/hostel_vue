@@ -156,10 +156,10 @@
                                     <small>#{{ item.id }}</small>
                                 </td>
                                 <td>
-                                    {{ item.name }}
+                                    {{ item.massage_date }}
                                 </td>
                                 <td>
-                                    {{ item.massage_date }}
+                                    {{ item.name }}
                                 </td>
                                 <td>
                                     {{ item.get_user.name }}
@@ -180,12 +180,12 @@
                                     </v-row>
                                     <v-row>
                                         <v-col cols="12">
-                                            {{ item.name }}
+                                            {{ item.massage_date }}
                                         </v-col>
                                     </v-row>
                                     <v-row>
                                         <v-col cols="12">
-                                            {{ item.massage_date }}
+                                            {{ item.name }}
                                         </v-col>
                                     </v-row>
                                     <v-row>

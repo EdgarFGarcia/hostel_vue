@@ -185,6 +185,13 @@
                                 <b v-else>unpaid <v-btn class="ml-2" small outlined text @click="mark_as_paid(booking_selected)"><small>Mark as paid</small></v-btn></b>
                             </v-col>
                             <v-col cols="6">
+                                PWD/Senior ID:
+                            </v-col>
+                            <v-col cols="6">
+                                <b v-if="booking_selected.get_user.pwd_id">{{ booking_selected.get_user.pwd_id }}</b>
+                                <b v-else>None</b>
+                            </v-col>
+                            <v-col cols="6">
                                 Housekeeping:
                             </v-col>
                             <v-col cols="6">
