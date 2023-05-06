@@ -34,6 +34,7 @@
     "vue-chartjs": "^4.1.2",
     "vue-facebook-chat": "^1.0.6",
     "vue-fb-customer-chat": "^0.2.2",
+    "vue-json-excel": "^0.3.0",
     "vue-router": "^3.6.0",
     "vue-star-rating": "^1.7.0",
     "vue2-datepicker": "^3.11.0",

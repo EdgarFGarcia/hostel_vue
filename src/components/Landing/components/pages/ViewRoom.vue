@@ -679,10 +679,6 @@ export default {
 </script>
 
 <style scoped lang="scss">
-/* Chrome, Safari, Edge, Opera */
-.input_count >>> input[type="number"] {
-  -moz-appearance: textfield;
-}
 .input_count >>> input::-webkit-outer-spin-button,
 .input_count >>> input::-webkit-inner-spin-button {
   appearance: none;

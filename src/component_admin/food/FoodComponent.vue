@@ -38,7 +38,7 @@
                                     N/A
                                 </td>
                                 <td>
-                                    {{ item.price }}
+                                    ₱{{ item.price }}
                                 </td>
                                 <td v-if="item.available">Yes</td>
                                 <td v-else>No</td>
@@ -89,7 +89,7 @@
                                     </v-row>
                                     <v-row>
                                         <v-col cols="12">
-                                            {{ item.price }}
+                                            ₱{{ item.price }}
                                         </v-col>
                                     </v-row>
                                     <v-row>

@@ -1,6 +1,56 @@
 <template>
     <v-container fill-height fluid class="pa-5 ma-0">
-        <h2 class="pb-10 ml-5">Users</h2>
+        <v-row>
+            <v-col cols="6">
+                <h2 class="pb-10 ml-5">Users</h2>
+            </v-col>
+            <v-col cols="4">
+                <v-menu
+                    ref="menu"
+                    v-model="menu"
+                    :close-on-content-click="false"
+                    :return-value.sync="date"
+                    transition="scale-transition"
+                    offset-y
+                    min-width="auto"
+                >
+                    <template v-slot:activator="{ on, attrs }">
+                    <v-text-field
+                        v-model="date"
+                        label="Filter by created date"
+                        prepend-icon="mdi-calendar"
+                        readonly
+                        v-bind="attrs"
+                        v-on="on"
+                    ></v-text-field>
+                    </template>
+                    <v-date-picker
+                        v-model="date"
+                        no-title
+                        range
+                        scrollable
+                    >
+                    <v-spacer></v-spacer>
+                    <v-btn
+                        text
+                        color="primary"
+                        @click="menu = false"
+                    >
+                        Cancel
+                    </v-btn>
+                    <v-btn
+                        text
+                        color="primary"
+                        @click="filterDate(date)"
+                    >
+                        Filter
+                    </v-btn>
+                    </v-date-picker>
+                </v-menu>
+            </v-col>
+            <v-col cols="3">
+            </v-col>
+        </v-row>
         <v-row>
             <v-col cols="12">
                 <v-card style="border-radius: 16px;padding:20px;" width="100%">
@@ -396,7 +446,6 @@ import { mapGetters } from 'vuex'
 import moment from 'moment'
 export default {
     components: {
-        
     },
     computed: {
         ...mapGetters({
@@ -451,6 +500,8 @@ export default {
             account_type: null,
             selected_day: null,
             selected_user: null,
+            date: null,
+            menu: false,
             img_src: null
         }
     },
@@ -468,6 +519,16 @@ export default {
         },
         moment: function (time) {
             return moment(time);
+        },
+        async filterDate(date) {
+            this.menu = false
+            let payload = { start_date: date[0], end_date: date[1] }
+            console.log(payload)
+            await this.$axios.get('admin/accounts/get_accounts_by_date', payload)
+                .then(({ data }) => {
+                    console.log(data)
+                    this.$store.commit('admin_users/set_users', data.user)
+                })
         },
         view_booking(booking) {
             this.$store.dispatch('admin_reservation/set_selected_room', booking)
@@ -511,10 +572,8 @@ export default {
         },
         isMobile() {
             if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-                console.log("mobile")
                 return true
             } else {
-                console.log("desktop")
                 return false
             }
         },

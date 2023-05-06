@@ -88,7 +88,7 @@
                         </v-list-item-content>
                     </v-list-item>
                     <v-list-item
-                        v-if="!get_user.udata.is_guest"
+                        v-if="!get_user.udata.is_guest && get_my_rooms.length > 0 && moment(Date()).format() >= moment(get_my_rooms[0].check_in_date_time).format() && moment(Date()).format() <= moment(get_my_rooms[0].will_be_available_at).format()"
                         link
                         @click="$router.push('/user_fnb_order')"
                     >
@@ -107,7 +107,7 @@
                     <small style="color:white;" v-if="get_user.udata.is_guest">Please go to your profile and enter your email to access services</small>
                     
                     <v-list-item
-                        v-if="!get_user.udata.is_guest"
+                        v-if="!get_user.udata.is_guest && get_my_rooms.length > 0 && moment(Date()).format() >= moment(get_my_rooms[0].check_in_date_time).format() && moment(Date()).format() <= moment(get_my_rooms[0].will_be_available_at).format()"
                         link
                         @click="$router.push('/checkout')"
                     >
@@ -124,7 +124,7 @@
                         </v-list-item-content>
                     </v-list-item>
                     <v-list-item
-                        v-if="!get_user.udata.is_guest"
+                        v-if="!get_user.udata.is_guest && get_my_rooms.length > 0 && moment(Date()).format() >= moment(get_my_rooms[0].check_in_date_time).format() && moment(Date()).format() <= moment(get_my_rooms[0].will_be_available_at).format()"
                         link
                         @click="$router.push('/orders_user')"
                     >
@@ -179,6 +179,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import moment from 'moment'
 export default {
   components: {
   },
@@ -247,7 +248,8 @@ export default {
   },
   computed: {
     ...mapGetters({
-        get_user:           'auth/get_user'
+        get_user:           'auth/get_user',
+        get_my_rooms: 'user/get_my_rooms',
     })
   },
   methods: {
@@ -257,7 +259,10 @@ export default {
             this.$store.commit('auth/clear_user_state')
             this.$router.push({name: '/'})
         })
-    }
+    },
+    moment: function (time) {
+        return moment(time);
+    },
   },
   watch: {
   }

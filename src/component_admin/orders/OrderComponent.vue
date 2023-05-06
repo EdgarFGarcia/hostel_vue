@@ -213,6 +213,33 @@
                 </v-card>
             </v-col>
         </v-row>
+        
+        <v-row v-if="order_type == 'food'">
+            <v-col cols="8"></v-col>
+            <v-col cols="4">
+                <download-excel :data="paid_orders" name="paid_orders.xls">
+                    <v-btn color="#447FA6" dark>Export Paid Orders</v-btn>
+                </download-excel>
+            </v-col>
+        </v-row>
+        
+        <v-row v-if="order_type == 'transpo'">
+            <v-col cols="8"></v-col>
+            <v-col cols="4">
+                <download-excel :data="paid_transpo" name="paid_transpo.xls">
+                    <v-btn color="#447FA6" dark>Export Paid Transpo</v-btn>
+                </download-excel>
+            </v-col>
+        </v-row>
+        
+        <v-row v-if="order_type == 'massage'">
+            <v-col cols="8"></v-col>
+            <v-col cols="4">
+                <download-excel :data="paid_massage" name="paid_massage.xls">
+                    <v-btn color="#447FA6" dark>Export Paid Massage</v-btn>
+                </download-excel>
+            </v-col>
+        </v-row>
 
         <v-row justify="center">
             <v-dialog v-model="add_price_model" persistent max-width="400">
@@ -305,16 +332,24 @@ export default {
         transpo_id: 0,
         order_type: 'food',
         add_price_model: false,
-        added_price: 0
+        added_price: 0,
+        paid_orders: [],
+        paid_transpo: [],
+        paid_massage: [],
 
     }),
     async mounted() {
         this.$store.dispatch('admin_orders/fetch_orders')
+        this.$store.dispatch('admin_orders/fetch_paid_orders')
+        this.set_paid()
     },
     created() {
     },
     computed: {
         ...mapGetters({
+            get_paid_orders: 'admin_orders/get_paid_orders',
+            get_paid_transpo: 'admin_orders/get_paid_transpo',
+            get_paid_massage: 'admin_orders/get_paid_massage',
             get_orders: 'admin_orders/get_orders',
             get_transpo: 'admin_orders/get_transpo',
             get_massage: 'admin_orders/get_massage',
@@ -323,6 +358,59 @@ export default {
     methods: {
         moment: function (time) {
             return moment(time);
+        },
+        set_paid() {
+            for (let i = 0; i < this.get_paid_orders.length; i++) {
+                this.paid_orders[i] = { Date: null, User: null, Food: null, Quantity: null, Price: null }
+                if (this.get_paid_orders[i].get_user) {
+                    let user = this.get_paid_orders[i].get_user.name
+                    this.paid_orders[i].User = user
+                }
+                else {
+                    this.paid_orders[i].User = "Deleted user"
+                }
+
+                this.paid_orders[i].Date = moment(this.get_paid_orders[i].created_at).format('MMM DD, YYYY')
+                this.paid_orders[i].Food = this.get_paid_orders[i].name
+                this.paid_orders[i].Quantity = this.get_paid_orders[i].quantity
+                this.paid_orders[i].Price = this.get_paid_orders[i].price
+            }
+            console.log(this.paid_orders)
+            
+            for (let i = 0; i < this.get_paid_transpo.length; i++) {
+                this.paid_transpo[i] = { User: null, Transpo: null, Date: null, PickupLocation: null, DropoffLocation: null, Message: null, Price: null }
+                if (this.get_paid_transpo[i].get_user) {
+                    let user = this.get_paid_transpo[i].get_user.name
+                    this.paid_transpo[i].User = user
+                }
+                else {
+                    this.paid_transpo[i].User = "Deleted user"
+                }
+
+                this.paid_transpo[i].Transpo = this.get_paid_transpo[i].transpo_type
+                this.paid_transpo[i].Date = this.get_paid_transpo[i].pick_up_date
+                this.paid_transpo[i].PickupLocation = this.get_paid_transpo[i].pick_up_location
+                this.paid_transpo[i].DropoffLocation = this.get_paid_transpo[i].drop_off_location
+                this.paid_transpo[i].Message = this.get_paid_transpo[i].message
+                this.paid_transpo[i].Price = this.get_paid_transpo[i].payable
+            }
+            console.log(this.paid_transpo)
+
+            for (let i = 0; i < this.get_paid_massage.length; i++) {
+                this.paid_massage[i] = { User: null, Massage: null, Date: null, Price: null }
+                if (this.get_paid_massage[i].get_user) {
+                    let user = this.get_paid_massage[i].get_user.name
+                    this.paid_massage[i].User = user
+                }
+                else {
+                    this.paid_massage[i].User = "Deleted user"
+                }
+
+                this.paid_massage[i].Massage = this.get_paid_massage[i].name
+                this.paid_massage[i].Date = this.get_paid_massage[i].massage_date
+                this.paid_massage[i].Price = this.get_paid_massage[i].payable
+            }
+            console.log(this.paid_massage)
         },
         add_transpo_price(id) {
             this.transpo_id = id
@@ -376,10 +464,8 @@ export default {
         },
         isMobile() {
             if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-                console.log("mobile")
                 return true
             } else {
-                console.log("desktop")
                 return false
             }
         },

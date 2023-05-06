@@ -5,7 +5,7 @@
         </v-alert>
         <v-data-table :headers="reservation_header" :items="get_check_list" class="elevation-1">
             <template v-slot:item="{ item }">
-                <tr class="mx-5" v-if="!isMobile()">
+                <tr class="mx-5" v-if="!isMobile() && item.will_be_available_at > moment(this_day).format('MMM D, YYYY')">
                     <td>
                         {{ item.get_user.name }}
                     </td>
@@ -27,7 +27,7 @@
                         {{ item.will_be_available_at }}
                     </td>
                     <td>
-                        <v-btn v-if="item.get_additional == null" dark @click="charge(item)">
+                        <v-btn v-if="item.get_additional == null && !item.checked" dark @click="charge(item)">
                             Report
                         </v-btn>
                         <v-btn v-else disabled>
@@ -43,7 +43,7 @@
                         </v-btn>
                     </td>
                 </tr>
-                <tr class="mx-5" v-else style="padding-top:10px;padding-bottom:10px;">
+                <tr class="mx-5" v-else-if="isMobile() && item.will_be_available_at > moment(this_day).format('MMM D, YYYY')" style="padding-top:10px;padding-bottom:10px;">
                     <td>
                         <v-row>
                             <v-col cols="12">
@@ -67,7 +67,7 @@
                                 {{ item.will_be_available_at }}
                             </v-col>
                             <v-col cols="12">
-                                <v-btn v-if="item.get_additional == null" dark @click="charge(item)">
+                                <v-btn v-if="item.get_additional == null && !item.checked" dark @click="charge(item)">
                                     Report
                                 </v-btn>
                                 <v-btn v-else disabled>
@@ -151,6 +151,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import moment from 'moment'
 export default {
     components: {
     },
@@ -186,6 +187,7 @@ export default {
         dialog_room_information: false,
         dialog_additional: false,
         reason: null,
+        this_day: Date(),
         amount_due: null,
         additional_check_in_id: null,
         img_src: null
@@ -207,6 +209,9 @@ export default {
             this.$store.commit("auth/setMessage",
                 { show: true, message: message },
                 { root: 1 })
+        },
+        moment: function (time) {
+            return moment(time);
         },
         async check_details(data) {
             await this.$axios.get('/admin/reservation/g_reservation_details', {
@@ -269,10 +274,8 @@ export default {
         },
         isMobile() {
             if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-                console.log("mobile")
                 return true
             } else {
-                console.log("desktop")
                 return false
             }
         },

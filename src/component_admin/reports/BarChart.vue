@@ -9,7 +9,7 @@
           type="year"></date-picker>
         <date-picker style="width:100%;" v-if="chart_type == 'Month'" v-model="month" @change="pick_month" valueType="format"
           type="month"></date-picker>
-        <date-picker style="width:100%;" v-if="chart_type == 'Week'" v-model="week" @change="pick_week" valueType="format"
+        <date-picker style="width:100%;" v-if="chart_type == 'Week'" v-model="week" @change="pick_week" valueType="w" format="YYYY-MM-DD" :show-week-number="false"
           type="week"></date-picker>
         <date-picker style="width:100%;" v-if="chart_type == 'Day'" v-model="day" @change="pick_day" valueType="format"
           type="day"></date-picker>
@@ -121,6 +121,7 @@ export default {
         })
     },
     async pick_week() {
+      console.log(this.week)
       this.loaded = false
       this.chartData.datasets[0].data = {}
       await this.$axios.get('/admin/report/report_weekly', this.week)

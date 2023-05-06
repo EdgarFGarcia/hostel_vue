@@ -1,9 +1,18 @@
 <template>
     <div>
         <v-row>
-            <v-col cols="12">
-                <v-select filled dense v-model="chart_type" placeholder="Filter by"
-                    :items="['Age', 'Gender', 'User type']" @change="refresh_data"></v-select>
+            <v-col cols="6">
+                <v-select filled dense v-model="chart_type" :items="['Year', 'Month', 'Week', 'Day']"
+                    @change="refresh_data"></v-select>
+            </v-col>
+            <v-col cols="6">
+                <date-picker style="width:100%;" v-if="chart_type == 'Year'" v-model="year" @change="pick_year"
+                    valueType="format" type="year"></date-picker>
+                <date-picker style="width:100%;" v-if="chart_type == 'Month'" v-model="month" @change="pick_month"
+                    valueType="format" type="month"></date-picker>
+                <date-picker style="width:100%;" v-if="chart_type == 'Week'" v-model="week" @change="pick_week" valueType="w" format="YYYY-MM-DD" :show-week-number="false" type="week"></date-picker>
+                <date-picker style="width:100%;" v-if="chart_type == 'Day'" v-model="day" @change="pick_day"
+                    valueType="format" type="day"></date-picker>
             </v-col>
         </v-row>
         <Bar v-if="loaded" :chart-data="chartData" :chart-id="chartId" :dataset-id-key="datasetIdKey" style="width:100%" />
@@ -15,10 +24,15 @@
 <script>
 import { Bar } from 'vue-chartjs'
 import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js'
+import DatePicker from 'vue2-datepicker';
+import 'vue2-datepicker/index.css';
+import moment from 'moment'
+
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
+
 export default {
     name: 'BarChart',
-    components: { Bar },
+    components: { Bar, DatePicker },
     props: {
         chartId: {
             type: String,
@@ -34,13 +48,17 @@ export default {
         },
     },
     data: () => ({
-        chart_type: 'Age',
+        year: moment().format('YYYY'),
+        month: moment().format('YYYY-MM'),
+        week: moment().format('w'),
+        day: moment().format('YYYY-MM-DD'),
+        chart_type: 'Year',
         loaded: false,
         chartData: {
-            labels: [],
+            labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
             datasets: [
                 {
-                    label: 'Users',
+                    label: 'Income',
                     backgroundColor: ["#B3CDDE"],
                     data: {}
                 }
@@ -56,79 +74,120 @@ export default {
             ]
         }
     }),
-    async mounted() {
-        this.get_age()
-    },
     methods: {
         async refresh_data() {
-            if (this.chart_type == "Age") {
-                this.get_age()
+            if (this.chart_type == "Year") {
+                this.pick_year()
             }
-            if (this.chart_type == "Gender") {
-                this.get_gender()
+            if (this.chart_type == "Month") {
+                this.pick_month()
             }
-            if (this.chart_type == "User type") {
-                this.get_user_type()
+            if (this.chart_type == "Week") {
+                this.pick_week()
+            }
+            if (this.chart_type == "Day") {
+                this.pick_day()
             }
         },
-        async get_age() {
+        async pick_year() {
             this.loaded = false
             this.chartData.datasets[0].data = {}
-            await this.$axios.get('/admin/report/analytics_age')
+            await this.$axios.get('/admin/report/report_yearly_paid', this.year)
                 .then(({ data }) => {
-                    var ages_names = ["18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52", "53", "54", "55", "56", "57", "58", "59", "60", "61", "62", "63", "64", "65", "66", "67", "68", "69", "70", "71", "72", "73", "74", "75", "76", "77", "78", "79", "80"]
-                    this.chartData.labels = ages_names
-                    this.chartData.datasets[0].backgroundColor = ['#B3CDDE']
-                    for (var i = 18; i < 90; i++){
+                    var months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+                    var months_name = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+                    this.chartData.labels = months_name
+                    months.forEach(i => {
+                        this.chartData.datasets[0].data[months_name[i - 1]] = 0
                         if (data.data[i] != null) {
-                            this.chartData.datasets[0].data[ages_names[i - 18]] = data.data[i].length
+                            for (let u = 0; u < data.data[i].length; u++) {
+                                this.chartData.datasets[0].data[months_name[i - 1]] += data.data[i][u].payable
+                            }
                         }
-                    }
+                    })
                     this.loaded = true
                 })
         },
-        async get_gender() {
+        async pick_month() {
             this.loaded = false
             this.chartData.datasets[0].data = {}
-            await this.$axios.get('/admin/report/analytics_gender')
+            await this.$axios.get('/admin/report/report_monthly_paid', this.month.substring(5))
                 .then(({ data }) => {
-                    var genders_name = ['Male', 'Female', 'Non-binary']
-                    this.chartData.labels = genders_name
-                    this.chartData.datasets[0].backgroundColor = ['pink', '#B3CDDE', 'lightgrey']
-                    if (data.data['Female']) {
-                        this.chartData.datasets[0].data['Female'] = data.data['Female'].length
-                    }
-                    if (data.data['Male']) {
-                        this.chartData.datasets[0].data['Male'] = data.data['Male'].length
-                    }
-                    if (data.data['Non-binary']) {
-                        this.chartData.datasets[0].data['Non-binary'] = data.data['Non-binary'].length
-                    }
-                    
+                    var days = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31]
+                    var days_name = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31']
+                    this.chartData.labels = days_name
+                    days.forEach(i => {
+                        this.chartData.datasets[0].data[days_name[i - 1]] = 0
+                        if (data.data[i] != null) {
+                            for (let u = 0; u < data.data[i].length; u++) {
+                                this.chartData.datasets[0].data[days_name[i - 1]] += data.data[i][u].payable
+                            }
+                        }
+                    })
                     this.loaded = true
                 })
         },
-        async get_user_type() {
+        async pick_week() {
             this.loaded = false
             this.chartData.datasets[0].data = {}
-            await this.$axios.get('/admin/report/analytics_user_type')
+            await this.$axios.get('/admin/report/report_weekly_paid', this.week)
                 .then(({ data }) => {
-                    var type_name = ['Student', 'Vacationer', 'Foreigner']
-                    this.chartData.labels = type_name
-                    this.chartData.datasets[0].backgroundColor = ['#B3CDDE']
-                    if (data.student) {
-                        this.chartData.datasets[0].data['Student'] = data.student.length
-                    }
-                    if (data.vacationer) {
-                        this.chartData.datasets[0].data['Vacationer'] = data.vacationer.length
-                    }
-                    if (data.foreigner) {
-                        this.chartData.datasets[0].data['Foreigner'] = data.foreigner.length
-                    }
+                    var days = [0, 1, 2, 3, 4, 5, 6]
+                    var days_name = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+                    this.chartData.labels = days_name
+                    days.forEach(i => {
+                        this.chartData.datasets[0].data[days_name[i]] = 0
+                        if (data.data[i] != null) {
+                            for (let u = 0; u < data.data[i].length; u++) {
+                                this.chartData.datasets[0].data[days_name[i]] += data.data[i][u].payable
+                            }
+                        }
+                    })
                     this.loaded = true
                 })
         },
+        async pick_day() {
+            this.loaded = false
+            this.chartData.datasets[0].data = {}
+            await this.$axios.get('/admin/report/report_daily_paid', this.day.substring(8))
+                .then(({ data }) => {
+                    var days = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]
+                    var days_name = ['12AM', '1AM', '2AM', '3AM', '4AM', '5AM', '6AM', '7AM', '8AM', '9AM', '10AM', '11AM', '12PM', '1PM', '2PM', '3PM', '4PM', '5PM', '6PM', '7PM', '8PM', '9PM', '10PM', '11PM']
+                    this.chartData.labels = days_name
+                    days.forEach(i => {
+                        this.chartData.datasets[0].data[days_name[i]] = 0
+                        if (data.data[i] != null) {
+                            for (let u = 0; u < data.data[i].length; u++) {
+                                this.chartData.datasets[0].data[days_name[i]] += data.data[i][u].payable
+                            }
+                        }
+                    })
+                    this.loaded = true
+                })
+        }
     },
+    async mounted() {
+        this.loaded = false
+        try {
+            await this.$axios.get('/admin/report/report_yearly_paid', this.year)
+                .then(({ data }) => {
+                    var months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+                    var months_name = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+                    months.forEach(i => {
+                        this.chartData.datasets[0].data[months_name[i - 1]] = 0
+                        if (data.data[i] != null) {
+                            for (let u = 0; u < data.data[i].length; u++){
+                                this.chartData.datasets[0].data[months_name[i - 1]] += data.data[i][u].payable
+                            }
+                        }
+                    })
+                })
+
+            this.loaded = true
+        } catch (e) {
+            console.error(e)
+        }
+    }
 }
 </script>
 

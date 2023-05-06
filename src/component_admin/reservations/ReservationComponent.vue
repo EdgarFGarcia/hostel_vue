@@ -1,7 +1,53 @@
 <template>
     <v-container fill-height fluid class="pa-5 ma-0">
         <h2 class="pb-10 ml-5 mr-4">Bookings</h2>
-        <v-btn class="mb-9" color="#447FA6" dark @click="show_add_data = true">Add Booking</v-btn>
+        <v-btn class="mb-9 mr-5" color="#447FA6" dark @click="show_add_data = true">Add Booking</v-btn>
+        <v-menu
+            ref="menu"
+            v-model="menu"
+            :close-on-content-click="false"
+            :return-value.sync="date"
+            transition="scale-transition"
+            offset-y
+            min-width="auto"
+        >
+            <template v-slot:activator="{ on, attrs }">
+            <v-text-field
+                v-model="date"
+                style="margin-top:-20px;"
+                label="Filter by date or date range"
+                prepend-icon="mdi-calendar"
+                readonly
+                v-bind="attrs"
+                v-on="on"
+            ></v-text-field>
+            </template>
+            <v-date-picker
+                v-model="date"
+                no-title
+                range
+                scrollable
+            >
+            <v-select
+                label="Filter by"
+                outlined
+                dense
+                v-model="selected_filter"
+                return-object
+                :items="[{ text: 'Created', value: 'created_at' }, { text: 'Check-in date', value: 'check_in_date_time' }, { text: 'Check-out date', value: 'will_be_available_at' }]"
+            ></v-select>
+            <v-spacer></v-spacer>
+            <v-btn
+                text
+                color="primary"
+                @click="filterDate(date)"
+                style="margin-top:-20px;"
+            >
+                Filter
+            </v-btn>
+            </v-date-picker>
+        </v-menu>
+        <v-btn @click="reset_data()" color="primary" text style="margin-top:-20px;">Reset</v-btn>
         <v-row>
             <v-col cols="12">
                 <v-card style="border-radius: 16px;padding:20px;" width="100%">
@@ -33,7 +79,8 @@
                                 </td>
                                 <td>
                                     {{ item.payable | currency('₱') }}
-                                    <small class="ml-2 mr-2"> </small>
+                                    <br>
+                                    <small class="mr-2"> </small>
                                     <small v-if="item.is_paid">paid</small>
                                     <small v-else>unpaid</small>
                                 </td>
@@ -78,7 +125,8 @@
                                     <v-row>
                                         <v-col cols="12">
                                             {{ item.payable | currency('₱') }}
-                                            <small class="ml-2 mr-2"> </small>
+                                            <br>
+                                            <small class="mr-2"> </small>
                                             <small v-if="item.is_paid">paid</small>
                                             <small v-else>unpaid</small>
                                         </v-col>
@@ -95,6 +143,15 @@
                         </template>
                     </v-data-table>
                 </v-card>
+            </v-col>
+        </v-row>
+        
+        <v-row>
+            <v-col cols="8"></v-col>
+            <v-col cols="4">
+                <download-excel :data="sales" name="booking_sales.xls">
+                    <v-btn color="#447FA6" dark>Export Sales</v-btn>
+                </download-excel>
             </v-col>
         </v-row>
         
@@ -476,10 +533,16 @@ export default {
         img_src: null,
         show_add_data: false,
         selected_day: null,
-        selected_user: null
+        selected_user: null,
+        menu: false,
+        date: null,
+        sales: [],
+        selected_filter: { text: 'Created', value: 'created_at' },
     }),
     async mounted() {
         this.$store.dispatch('admin_reservation/fetch_reservations')
+        this.$store.dispatch('admin_reservation/fetch_sales')
+        this.set_sales()
         this.open_room_from_outside()
     },
     created() {
@@ -488,6 +551,7 @@ export default {
     computed: {
         ...mapGetters({
             get_reservation_list: 'admin_reservation/get_reservation_list',
+            get_sales: 'admin_reservation/get_sales',
             get_room_information: 'admin_reservation/get_room_information',
             get_selected_room: 'admin_reservation/get_selected_room'
         })
@@ -500,6 +564,44 @@ export default {
         },
         moment: function (time) {
             return moment(time);
+        },
+        set_sales() {
+            for (let i = 0; i < this.get_sales.length; i++){
+                this.sales[i] = { User: null, Room: null, Checkin: null, Checkout: null, Amount: null }
+                if (this.get_sales[i].get_user) {
+                    let user = this.get_sales[i].get_user.name
+                    this.sales[i].User = user
+                }
+                else {
+                    this.sales[i].User = "Deleted user"
+                }
+                if (this.get_sales[i].get_room_info) {
+                    let room = this.get_sales[i].get_room_info.room_name
+                    this.sales[i].Room = room
+                }
+                else {
+                    this.sales[i].Room = "Deleted room"
+                }
+
+                this.sales[i].Checkin = this.get_sales[i].check_in_date_time
+                this.sales[i].Checkout = this.get_sales[i].will_be_available_at
+                this.sales[i].Amount = this.get_sales[i].payable
+            }
+            console.log(this.sales)
+        },
+        reset_data() {
+            this.$store.dispatch('admin_reservation/fetch_reservations')
+        },
+        async filterDate(date) {
+            this.menu = false
+            console.log(this.selected_filter.value)
+            let payload = { start_date: date[0], end_date: date[1], filter_type: this.selected_filter.value }
+            console.log(payload)
+            await this.$axios.get('admin/reservation/bookings_by_date', payload)
+                .then(({ data }) => {
+                    console.log(data)
+                    this.$store.commit('admin_reservation/set_reservation_list', data.data)
+                })
         },
         async add_data() {
             await this.$axios.post('/admin/accounts/add_data', { day: this.selected_day, user: this.selected_user })
@@ -583,10 +685,8 @@ export default {
         },
         isMobile() {
             if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-                console.log("mobile")
                 return true
             } else {
-                console.log("desktop")
                 return false
             }
         },

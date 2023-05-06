@@ -13,6 +13,7 @@ import AdminDashboard from './layouts/AdminLayout.vue'
 import VuetifyTimeSelect from 'vuetify-time-select'
 import VCalendar from 'v-calendar';
 import VueFbCustomerChat from 'vue-fb-customer-chat';
+import JsonExcel from "vue-json-excel";
 
 Vue.component('default-layout', Default)
 Vue.component('user_dashboard-layout', UserDashboard)
@@ -29,6 +30,7 @@ Vue.use(VueFbCustomerChat, {
   theme_color: '#333333', // theme color in HEX
   locale: 'en_US', // default 'en_US'
 });
+Vue.component("downloadExcel", JsonExcel);
 Vue.use(VCalendar, {
   componentPrefix: 'vc',  // Use <vc-calendar /> instead of <v-calendar />
 });

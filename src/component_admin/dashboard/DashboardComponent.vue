@@ -14,7 +14,7 @@
         
         <v-card style="border-radius: 16px;padding:20px;margin-top:20px;" width="100%">
           <v-card-title>
-            User Analytics <v-spacer/><v-btn text style="font-size:12px;" class="mt-1" @click="switch_tabs('/manage_users')"><u>View all users</u></v-btn>
+            Income
           </v-card-title>
           <v-card-text>
             <BarChartAnalytics />
@@ -61,10 +61,8 @@ export default {
     },
     isMobile() {
       if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-        console.log("mobile")
         return true
       } else {
-        console.log("desktop")
         return false
       }
     },

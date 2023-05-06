@@ -4,6 +4,7 @@ export default{
     namespaced: true,
     state: {
         reservation_list: [],
+        sales: [],
         check_list: [],
         room_information: {},
         requests: [],
@@ -14,6 +15,12 @@ export default{
             await Vue.axios.get('admin/reservation/bookings')
             .then(({data}) => {
                 commit('set_reservation_list', data.data)
+            })
+        },
+        async fetch_sales({commit}){
+            await Vue.axios.get('admin/reservation/bookings_sales')
+            .then(({data}) => {
+                commit('set_sales', data.data)
             })
         },
         async fetch_check_list({commit}){
@@ -37,6 +44,9 @@ export default{
         set_reservations({commit}, payload){
             commit('set_reservation_list', payload)
         },
+        set_sales({commit}, payload){
+            commit('set_sales', payload)
+        },
         set_requests({commit}, payload){
             commit('set_requests', payload)
         },
@@ -47,6 +57,9 @@ export default{
     mutations: {
         set_reservation_list(state, payload){
             state.reservation_list = [...payload]
+        },
+        set_sales(state, payload) {
+            state.sales = [...payload]
         },
         set_check_list(state, payload) {
             state.check_list = [...payload]
@@ -63,6 +76,7 @@ export default{
     },
     getters: {
         get_reservation_list : state => state.reservation_list,
+        get_sales : state => state.sales,
         get_check_list : state => state.check_list,
         get_requests : state => state.requests,
         get_room_information: state => state.room_information,
