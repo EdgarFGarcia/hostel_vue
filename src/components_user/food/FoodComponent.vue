@@ -217,8 +217,8 @@
                         <v-textarea v-model="transpo_message" label="Message"></v-textarea>
                         <h2 style="margin-bottom:20px;margin-top:70px;">Transportation Type</h2>
                         <div style="width:300px;">
-                            <h3 style="width:100px;display:inline-block;margin-right:20px;">Car</h3>
-                            <h3 style="width:100px;display:inline-block;">Van</h3>
+                            <h3 style="width:100px;display:inline-block;margin-right:20px;">Car (₱500)</h3>
+                            <h3 style="width:100px;display:inline-block;">Van (₱800)</h3>
                         </div>
                         <div style="width:300px;">
                             <v-btn @click="transpo_car = true; transpo_van = false;" style="width:100px;height:100px;margin-right:20px;" :disabled="(transpo_car)?true:false">
