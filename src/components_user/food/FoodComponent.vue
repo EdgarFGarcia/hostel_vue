@@ -551,12 +551,15 @@ export default {
     },
     async book_transpo(){
         let ttype = null
+        let payable = 0
         if (this.transpo_car || this.transpo_van){
             if (this.transpo_car) {
                 ttype = "Car"
+                payable = 500
             }
             else {
                 ttype = "Van"
+                payable = 800
             }
         }
         this.transpo_pick_up_date = moment(this.transpo_pick_up_date).format('YYYY-MM-DD')
@@ -567,6 +570,7 @@ export default {
             transpo_pick_up_time: this.transpo_pick_up_time,
             transpo_message: this.transpo_message,
             transpo_type: ttype,
+            payable: payable
         }
         await this.$axios.post('/user/auth_user/book_transpo', payload)
         .then(({data}) => {
